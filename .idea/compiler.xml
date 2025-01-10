@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel>
+      <module name="it.unicam.cs.filieraagricola.app.main" target="22" />
+      <module name="it.unicam.cs.filieraagricola.app.test" target="22" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
