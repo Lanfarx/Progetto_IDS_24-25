@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Service Client</title>
+</head>
+<body>
+
+<h1>Product Service Client</h1>
+
+<button onclick="getProducts()">Get Products</button>
+<h2>Product List</h2>
+<ul id="productList"></ul>
+
+<h2>Create Product</h2>
+<label for="productId">Product ID:</label>
+<input type="text" id="productId">
+<label for="productName">Product Name:</label>
+<input type="text" id="productName">
+<button onclick="createProduct()">Create Product</button>
+
+
+<h2>Update Product</h2>
+<label for="updateProductId">Product ID:</label>
+<input type="text" id="updateProductId">
+<label for="updateProductName">New Product Name:</label>
+<input type="text" id="updateProductName">
+<button onclick="updateProduct()">Update Product</button>
+
+<h2>Delete Product</h2>
+<label for="deleteProductId">Product ID:</label>
+<input type="text" id="deleteProductId">
+<button onclick="deleteProduct()">Delete Product</button>
+
+<h2>Get Product by ID</h2>
+<label for="getProductId">Product ID:</label>
+<input type="text" id="getProductId">
+<button onclick="getProductById()">Get Product</button>
+<div id="productResult"></div>
+
+<h2>File Upload</h2>
+<form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="fileInput">
+    <br>
+    <label>File name to save:</label><br>
+    <input type="text" id="fileName">
+    <br>
+    <button type="button" onclick="uploadFile()">Upload File</button>
+</form>
+
+<hr>
+
+<h2>File Download</h2>
+<p>Enter the filename to download:</p>
+<input type="text" id="downloadFilename" placeholder="Filename">
+<br>
+<button type="button" onclick="downloadFile()">Download File</button>
+
+
+<script>
+    const baseUrl = 'http://localhost:8080';
+
+    function getProducts() {
+        fetch(`${baseUrl}/products`)
+            .then(response => response.json())
+            .then(data => {
+                const productList = document.getElementById('productList');
+                productList.innerHTML = '';
+
+                data.forEach(product => {
+                    const listItem = document.createElement('li');
+                    listItem.textContent = `ID: ${product.id}, Name: ${product.name}`;
+                    productList.appendChild(listItem);
+                });
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function createProduct() {
+        const productId = document.getElementById('productId').value;
+        const productName = document.getElementById('productName').value;
+        const product = { id: productId, name: productName };
+
+        fetch(`${baseUrl}/addproduct`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(product),
+        })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function updateProduct() {
+        const productId = document.getElementById('updateProductId').value;
+        const newProductName = document.getElementById('updateProductName').value;
+        const updatedProduct = { id: productId, name: newProductName };
+
+        fetch(`${baseUrl}/update?id=${productId}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedProduct),
+        })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function deleteProduct() {
+        const productId = document.getElementById('deleteProductId').value;
+
+        fetch(`${baseUrl}/product/${productId}`, {
+            method: 'DELETE',
+        })
+            .then(response => response.text())
+            .then(data => console.log(data))
+            .catch(error => console.error('Error:', error));
+    }
+
+    function getProductById() {
+        const productId = document.getElementById('getProductId').value;
+
+        fetch(`${baseUrl}/product?id=${productId}`)
+            .then(response => response.json())
+            .then(data => {
+                const resultDiv = document.getElementById('productResult');
+                resultDiv.innerHTML = `<p>ID: ${data.id}, Name: ${data.name}</p>`;
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function uploadFile() {
+        var fileInput = document.getElementById('fileInput');
+        var fileName = document.getElementById('fileName').value;
+        var file = fileInput.files[0];
+        var formData = new FormData();
+        formData.append('file', file);
+        formData.append('fileName', fileName);
+
+        fetch(`${baseUrl}/fileUpload`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.text())
+            .then(data => {
+                console.log(data);
+
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function downloadFile() {
+        var filenameInput = document.getElementById('downloadFilename');
+        var filename = filenameInput.value;
+        window.location.href = `${baseUrl}/download?filename=` + filename;
+    }
+</script>
+</body>
+</html>
