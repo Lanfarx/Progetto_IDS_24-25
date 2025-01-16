@@ -17,7 +17,7 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable) // Disabilita CSRF se non necessario per le API REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/register", "/api/login", "/h2-console/**").permitAll() // Permette l'accesso alla console H2 senza autenticazione
+                        .requestMatchers("/auth/register", "/auth/login", "/h2-console/**").permitAll() // Permette l'accesso alla console H2 senza autenticazione
                         .anyRequest().authenticated() // Protegge gli altri endpoint
                 )
                 .httpBasic(Customizer.withDefaults()) // Configura l'autenticazione HTTP Basic
