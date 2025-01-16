@@ -1,7 +1,7 @@
 
 package it.unicam.cs.filieraagricola.api.RestWebService;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface ProductListRepository extends CrudRepository<Product, String> {
-}
+public interface ProductListRepository extends JpaRepository<Product, String> {
+    }
