@@ -1,13 +1,13 @@
 package it.unicam.cs.filieraagricola.api.security;
 
-import it.unicam.cs.filieraagricola.api.RestWebService.Product;
-import it.unicam.cs.filieraagricola.api.RestWebService.ProductListRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.Optional;
 
 @Service
 public class UserServiceController implements UserDetailsService {
@@ -24,7 +24,10 @@ public class UserServiceController implements UserDetailsService {
         user.setPassword(passwordEncoder.encode("admin"));
         user.setRole("ROLE_ADMIN");
         userRepository.save(user);
+    }
 
+    public Optional<Users> findByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     @Override
@@ -50,3 +53,4 @@ public class UserServiceController implements UserDetailsService {
         userRepository.save(user);
     }
 }
+
