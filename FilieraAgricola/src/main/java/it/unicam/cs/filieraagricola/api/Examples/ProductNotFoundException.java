@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.RestWebService;
+package it.unicam.cs.filieraagricola.api.Examples;
 
 public class ProductNotFoundException extends RuntimeException {
     private static final long serialVersionUID = 1L;

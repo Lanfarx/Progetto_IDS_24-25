@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.RestWebService;
+package it.unicam.cs.filieraagricola.api.Examples;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

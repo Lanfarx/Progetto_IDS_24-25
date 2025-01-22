@@ -1,10 +1,8 @@
-package it.unicam.cs.filieraagricola.api.security;
+package it.unicam.cs.filieraagricola.api.controller;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.boot.autoconfigure.web.servlet.WebMvcAutoConfiguration;
+import it.unicam.cs.filieraagricola.api.services.UserService;
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;

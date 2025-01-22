@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.RestWebService;
+package it.unicam.cs.filieraagricola.api.Examples;
 
 import jakarta.websocket.server.PathParam;
 import java.io.File;

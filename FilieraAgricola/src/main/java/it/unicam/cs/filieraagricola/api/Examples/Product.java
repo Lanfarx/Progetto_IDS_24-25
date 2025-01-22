@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.RestWebService;
+package it.unicam.cs.filieraagricola.api.Examples;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;

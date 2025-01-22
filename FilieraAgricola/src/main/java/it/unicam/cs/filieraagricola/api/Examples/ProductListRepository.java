@@ -1,5 +1,5 @@
 
-package it.unicam.cs.filieraagricola.api.RestWebService;
+package it.unicam.cs.filieraagricola.api.Examples;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 

@@ -1,5 +1,6 @@
-package it.unicam.cs.filieraagricola.api.security;
+package it.unicam.cs.filieraagricola.api.repository;
 
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
