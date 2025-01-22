@@ -1,11 +1,12 @@
 package it.unicam.cs.filieraagricola.api.security;
 
-import it.unicam.cs.filieraagricola.api.security.autentication.JwtAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -14,26 +15,26 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebSecurityConfig {
 
-    private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
-    public WebSecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
-        this.jwtAuthenticationFilter = jwtAuthenticationFilter;
-    }
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(AbstractHttpConfigurer::disable) // Disabilita CSRF se non necessario per le API REST
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**", "/h2-console/**").permitAll() // Permette l'accesso alla console H2 senza autenticazione
-                        .anyRequest().authenticated() // Protegge gli altri endpoint
+                        .requestMatchers("/auth/**").permitAll() // Consenti l'accesso alle API di autenticazione
+                        .requestMatchers("/h2-console/**").permitAll() // Consenti l'accesso alla console H2
+                        .anyRequest().authenticated() // Proteggi tutti gli altri endpoint
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        return http.build();
-    }
+                .csrf(csrf -> csrf
+                        .ignoringRequestMatchers("/h2-console/**") // Disabilita CSRF solo per la console H2
+                        .disable() // Disabilita globalmente il CSRF
+                )
+                .headers(headers -> headers
+                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Consenti frame dalla stessa origine per la console H2
+                )
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura sessioni stateless
+                )
+                .httpBasic(Customizer.withDefaults()); // Abilita autenticazione basic
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(); // Usa BCrypt per codificare le password
+        return http.build();
     }
 }

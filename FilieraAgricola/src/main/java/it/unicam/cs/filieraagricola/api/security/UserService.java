@@ -10,18 +10,16 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public class UserServiceController implements UserDetailsService {
+public class UserService implements UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
 
-    public UserServiceController(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
         Users user = new Users();
         user.setUsername("admin");
-        user.setPassword(passwordEncoder.encode("admin"));
+        user.setPassword("admin");
         user.setRole("ROLE_ADMIN");
         userRepository.save(user);
     }
@@ -48,7 +46,7 @@ public class UserServiceController implements UserDetailsService {
         }
         Users user = new Users();
         user.setUsername(username);
-        user.setPassword(passwordEncoder.encode(password));
+        user.setPassword(password);
         user.setRole(role);
         userRepository.save(user);
     }
