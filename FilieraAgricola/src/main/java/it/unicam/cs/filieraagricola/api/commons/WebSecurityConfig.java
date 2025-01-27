@@ -18,11 +18,15 @@ public class WebSecurityConfig {
                         .requestMatchers("/auth/**").permitAll() // Consenti l'accesso alle API di autenticazione
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/prodottibase/**").permitAll()// Consenti l'accesso alla console H2
+                        .requestMatchers("/prodottitrasformati/**").permitAll()
+                        .requestMatchers("/pacchetti/**").permitAll()
                         .anyRequest().authenticated() // Proteggi tutti gli altri endpoint
                 )
                 .csrf(csrf -> csrf
                         .ignoringRequestMatchers("/h2-console/**")
                         .ignoringRequestMatchers("/prodottibase/**") // Disabilita CSRF solo per la console H2
+                        .ignoringRequestMatchers("/prodottitrasformati/**")
+                        .ignoringRequestMatchers("/pacchetti/**")
                         .disable() // Disabilita globalmente il CSRF
                 )
                 .headers(headers -> headers

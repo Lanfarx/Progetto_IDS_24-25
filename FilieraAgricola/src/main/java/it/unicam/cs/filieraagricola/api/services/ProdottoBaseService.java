@@ -3,7 +3,6 @@ package it.unicam.cs.filieraagricola.api.services;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoBaseRepository;
 import jakarta.annotation.PostConstruct;
-import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +20,6 @@ public class ProdottoBaseService {
     @PostConstruct
     public void initSampleData() {
         ProdottoBase miele = new ProdottoBase();
-        miele.setId(1);
         miele.setNome("Miele");
         miele.setCertificazioni("Allevato in Italia");
         miele.setMetodiDiColtivazione("Raccolto senza maltrattare api");
@@ -29,7 +27,6 @@ public class ProdottoBaseService {
         prodottoBaseRepository.save(miele);
 
         ProdottoBase pomodoro = new ProdottoBase();
-        pomodoro.setId(2);
         pomodoro.setNome("Pomodoro");
         pomodoro.setCertificazioni("Coltivato in Italia");
         pomodoro.setMetodiDiColtivazione("Coltivato usando acqua depurata");
@@ -53,7 +50,9 @@ public class ProdottoBaseService {
 
     @PostMapping({"/prodottibase/aggiungi"})
     public ResponseEntity<Object> addProduct(@RequestBody ProdottoBase prodotto) {
-        if (!this.prodottoBaseRepository.existsById(prodotto.getId())) {
+        if (!this.prodottoBaseRepository.existsByNomeAndCertificazioniAndMetodiDiColtivazioneAndPrezzo(
+                prodotto.getNome(), prodotto.getCertificazioni(),
+                prodotto.getMetodiDiColtivazione(), prodotto.getPrezzo())) {
             this.prodottoBaseRepository.save(prodotto);
             return new ResponseEntity<>("Product Created", HttpStatus.CREATED);
         } else {
@@ -61,15 +60,14 @@ public class ProdottoBaseService {
         }
     }
 
-    @RequestMapping({"prodottibase/aggiungiconparametri"})
-    public ResponseEntity<Object> addProductWithParam(@PathParam("id") int id,
-                                                      @PathParam("nome") String nome,
-                                                      @PathParam("prezzo") double prezzo,
-                                                      @PathParam("metodiDiColtivazione") String metodiDiColtivazione,
-                                                      @PathParam("certificazioni") String certificazioni) {
-        if (!this.prodottoBaseRepository.existsById(id)) {
+    @PostMapping({"prodottibase/aggiungiconparametri"})
+    public ResponseEntity<Object> addProductWithParam(@RequestParam("nome") String nome,
+                                                      @RequestParam("prezzo") double prezzo,
+                                                      @RequestParam("metodiDiColtivazione") String metodiDiColtivazione,
+                                                      @RequestParam("certificazioni") String certificazioni) {
+        if (!this.prodottoBaseRepository.existsByNomeAndCertificazioniAndMetodiDiColtivazioneAndPrezzo(
+                nome, certificazioni, metodiDiColtivazione, prezzo)) {
             ProdottoBase prodotto = new ProdottoBase();
-            prodotto.setId(id);
             prodotto.setNome(nome);
             prodotto.setMetodiDiColtivazione(metodiDiColtivazione);
             prodotto.setCertificazioni(certificazioni);
