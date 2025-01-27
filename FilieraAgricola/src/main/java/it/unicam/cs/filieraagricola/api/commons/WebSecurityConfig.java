@@ -6,6 +6,9 @@ import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -17,26 +20,29 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // Consenti l'accesso alle API di autenticazione
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/prodottibase/**").permitAll()// Consenti l'accesso alla console H2
-                        .requestMatchers("/prodottitrasformati/**").permitAll()
-                        .requestMatchers("/pacchetti/**").permitAll()
+                        .requestMatchers("/produttore/**").hasRole("PRODUTTORE")// Consenti l'accesso alla console H2
+                        .requestMatchers("/trasformatore/**").hasRole("TRASFORMATORE")// Consenti l'accesso alla console H2
+                        .requestMatchers("/distributore/**").hasRole("DISTRIBUTORE_DI_TIPICITA")// Consenti l'accesso alla console H2
+                        .requestMatchers("/curatore/**").hasRole("CURATORE")// Consenti l'accesso alla console H2
+                        .requestMatchers("/animatore/**").hasRole("ANIMATORE_DELLA_FILIERA")// Consenti l'accesso alla console H2
+                        .requestMatchers("/acquirente/**").hasRole("ACQUIRENTE")// Consenti l'accesso alla console H2
+                        .requestMatchers("/gestore/**").hasRole("GESTORE_DELLA_PIATTAFORMA")// Consenti l'accesso alla console H2
                         .anyRequest().authenticated() // Proteggi tutti gli altri endpoint
                 )
-                .csrf(csrf -> csrf
-                        .ignoringRequestMatchers("/h2-console/**")
-                        .ignoringRequestMatchers("/prodottibase/**") // Disabilita CSRF solo per la console H2
-                        .ignoringRequestMatchers("/prodottitrasformati/**")
-                        .ignoringRequestMatchers("/pacchetti/**")
-                        .disable() // Disabilita globalmente il CSRF
+                .csrf(AbstractHttpConfigurer::disable // Disabilita globalmente il CSRF
                 )
-                .headers(headers -> headers
-                        .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Consenti frame dalla stessa origine per la console H2
+                 .headers(headers -> headers
+                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Consenti frame dalla stessa origine per la console H2
                 )
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS) // Configura sessioni stateless
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .httpBasic(Customizer.withDefaults()); // Abilita autenticazione basic
+                .httpBasic(Customizer.withDefaults());
 
         return http.build();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return NoOpPasswordEncoder.getInstance(); // Permette di usare password in chiaro
     }
 }

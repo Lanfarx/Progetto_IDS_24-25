@@ -20,7 +20,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<String> register(@RequestParam String username,
                                            @RequestParam String password) {
-        userService.registerUser(username, password, "ROLE_USER"); // Registra l'utente
+        userService.registerUser(username, password); // Registra l'utente
         return ResponseEntity.ok("User successfully registered");
     }
 
@@ -38,7 +38,7 @@ public class AuthController {
             return ResponseEntity.status(401).body("Invalid password");
         }
 
-        return ResponseEntity.ok("Login successful for user: " + username);
+        return ResponseEntity.ok("Login successful for user: " + username + " with roles: " + user.get().getRoles());
     }
 }
 

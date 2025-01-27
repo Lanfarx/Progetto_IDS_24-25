@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @RestController
+@RequestMapping("/distributore")
 public class PacchettoService {
     @Autowired
     private PacchettoRepository pacchettoRepository;
@@ -56,13 +57,18 @@ public class PacchettoService {
         pacchettoRepository.save(samplePacchetto);
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<String> getDashboard() {
+        return ResponseEntity.ok("Benvenuto nella dashboard del Distributore");
+    }
+
 
     @RequestMapping({"/pacchetti"})
     public ResponseEntity<Object> getPacchetto() {
         return new ResponseEntity<>(this.pacchettoRepository.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping({"/pacchetti/mostra/{id}"})
+    @RequestMapping({"/pacchetti/{id}"})
     public ResponseEntity<Object> GetPacchetto(@PathVariable("id") int id) {
         if (!this.pacchettoRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -114,7 +120,7 @@ public class PacchettoService {
                                                              @RequestParam("descrizione") String descrizione,
                                                              @RequestParam("prezzo") double prezzo,
                                                              @RequestParam("ProdottiSet") Set<Integer> idProdottiSet){
-
+        //TODO AGGIUNGERE CHECK MINIMO PRODOTTI 2+
         Set<Prodotto> prodottoSet = new HashSet<>();
         for (int i : idProdottiSet) {
             System.out.println(i);

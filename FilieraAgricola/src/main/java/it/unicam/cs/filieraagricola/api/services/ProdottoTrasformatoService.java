@@ -14,6 +14,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @RestController
+@RequestMapping("/trasformatore")
 public class ProdottoTrasformatoService {
 
     @Autowired
@@ -47,12 +48,17 @@ public class ProdottoTrasformatoService {
 
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<String> getDashboard() {
+        return ResponseEntity.ok("Benvenuto nella dashboard del Trasformatore");
+    }
+
     @RequestMapping({"/prodottitrasformati"})
     public ResponseEntity<Object> getProducts() {
         return new ResponseEntity<>(this.prodottoTrasformatoRepository.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping({"/prodottitrasformati/mostra/{id}"})
+    @RequestMapping({"/prodottitrasformati/{id}"})
     public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
         if (!this.prodottoTrasformatoRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -82,7 +88,6 @@ public class ProdottoTrasformatoService {
         ProdottoBase prodottoBase = prodottoBaseOptional.get();
         if (!this.prodottoTrasformatoRepository.existsByNomeAndProcessoTrasformazioneAndCertificazioniAndPrezzoAndProdottoBase(
                 nome, processoTrasformazione, certificazioni, prezzo, prodottoBase)) {
-            System.out.println("Qui entro");
             ProdottoTrasformato prodotto = new ProdottoTrasformato();
             prodotto.setNome(nome);
             prodotto.setCertificazioni(certificazioni);

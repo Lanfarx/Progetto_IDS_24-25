@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/produttore")
 public class ProdottoBaseService {
     @Autowired
     private ProdottoBaseRepository prodottoBaseRepository;
@@ -34,12 +35,17 @@ public class ProdottoBaseService {
         prodottoBaseRepository.save(pomodoro);
     }
 
+    @GetMapping("/dashboard")
+    public ResponseEntity<String> getDashboard() {
+        return ResponseEntity.ok("Benvenuto nella dashboard del Produttore");
+    }
+
     @RequestMapping({"/prodottibase"})
     public ResponseEntity<Object> getProducts() {
         return new ResponseEntity<>(this.prodottoBaseRepository.findAll(), HttpStatus.OK);
     }
 
-    @RequestMapping({"/prodottibase/mostra/{id}"})
+    @RequestMapping({"/prodottibase/{id}"})
     public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
         if (!this.prodottoBaseRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -79,7 +85,7 @@ public class ProdottoBaseService {
         }
     }
 
-    @RequestMapping({"/prodottibase/elimina/{id}"})
+    @DeleteMapping({"/prodottibase/elimina/{id}"})
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
         this.prodottoBaseRepository.deleteById(id);
         return new ResponseEntity<>("Product " + id + " Deleted", HttpStatus.OK);

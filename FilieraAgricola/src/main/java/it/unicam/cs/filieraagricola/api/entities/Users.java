@@ -1,7 +1,11 @@
 package it.unicam.cs.filieraagricola.api.entities;
 
 
+import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 public class Users {
@@ -16,7 +20,9 @@ public class Users {
     @Column(nullable = false)
     private String password;
 
-    private String role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Enumerated(EnumType.STRING) // Converte l'enum in una stringa
+    private Set<UserRole> roles = new HashSet<>();
 
     public Long getId() {
         return id;
@@ -42,11 +48,11 @@ public class Users {
         this.password = password;
     }
 
-    public String getRole() {
-        return role;
+    public Set<UserRole> getRoles() {
+        return roles;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setRoles(Set<UserRole> roles) {
+        this.roles = roles;
     }
 }
