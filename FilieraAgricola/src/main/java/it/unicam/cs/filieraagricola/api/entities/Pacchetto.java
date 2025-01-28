@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Pacchetto {
+public class Pacchetto implements Elemento{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
