@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services;
 
+import it.unicam.cs.filieraagricola.api.controller.ContenutoController;
 import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.Prodotto;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
@@ -15,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/distributore")
@@ -28,6 +28,8 @@ public class PacchettoService {
     private ProdottoTrasformatoRepository prodottoTrasformatoRepository;
     @Autowired
     private ProdottoRepository prodottoRepository;
+    @Autowired
+    private ContenutoController contenutoController;
 
     public PacchettoService(PacchettoRepository pacchettoRepository,
                             ProdottoBaseRepository prodottoBaseRepository,
@@ -55,6 +57,7 @@ public class PacchettoService {
         samplePacchetto.addProdotto(polpa);
         samplePacchetto.setPrezzo(1.0);
         pacchettoRepository.save(samplePacchetto);
+        contenutoController.aggiungiContenutoWithParam("paila", "sos", 2, 1);
     }
 
     @GetMapping("/dashboard")
@@ -81,6 +84,7 @@ public class PacchettoService {
     public ResponseEntity<Object> aggiungiPacchetto(@RequestBody Pacchetto pacchetto) {
         ResponseEntity<Object> BAD_REQUEST = getObjectResponseEntity(pacchetto.getNome(),
                 pacchetto.getDescrizione(), pacchetto.getPrezzo(), pacchetto.getProdottiSet());
+        if(BAD_REQUEST != null) return BAD_REQUEST;
         return new ResponseEntity<>("Product Created", HttpStatus.CREATED);
     }
 

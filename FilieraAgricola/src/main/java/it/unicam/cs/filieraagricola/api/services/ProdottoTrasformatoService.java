@@ -40,8 +40,7 @@ public class ProdottoTrasformatoService {
         passataPomodoro.setNome("Passata Pomodoro");
         passataPomodoro.setCertificazioni("DOP");
         passataPomodoro.setPrezzo(30);
-        ProdottoBase pomodoro = prodottoBaseRepository.getReferenceById(3);
-        passataPomodoro.setProdottoBase(pomodoro);
+        passataPomodoro.setProdottoBase(prodottoBase);
         passataPomodoro.setProcessoTrasformazione("Schiacciato da pressa");
         prodottoTrasformatoRepository.save(passataPomodoro);
         System.out.println("Prodotto trasformato creato: " + passataPomodoro);
