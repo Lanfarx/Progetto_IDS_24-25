@@ -37,6 +37,12 @@ public class UserService implements UserDetailsService {
         operatore.getRoles().add(UserRole.TRASFORMATORE);
         operatore.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
         userRepository.save(operatore);
+
+        Users animatore = new Users();
+        animatore.setUsername("animatore");
+        animatore.setPassword("animatore");
+        animatore.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
+        userRepository.save(animatore);
     }
 
     public Optional<Users> findByUsername(String username) {
@@ -62,7 +68,7 @@ public class UserService implements UserDetailsService {
 
     public void registerUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new RuntimeException("Username già esistente");
         }
         Users newUser = new Users();
         newUser.setUsername(username);

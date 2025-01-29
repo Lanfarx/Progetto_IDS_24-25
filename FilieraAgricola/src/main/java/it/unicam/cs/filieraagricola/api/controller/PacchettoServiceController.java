@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services;
+package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.Prodotto;
@@ -15,11 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/distributore")
-public class PacchettoService {
+public class PacchettoServiceController {
     @Autowired
     private PacchettoRepository pacchettoRepository;
     @Autowired
@@ -29,10 +28,10 @@ public class PacchettoService {
     @Autowired
     private ProdottoRepository prodottoRepository;
 
-    public PacchettoService(PacchettoRepository pacchettoRepository,
-                            ProdottoBaseRepository prodottoBaseRepository,
-                            ProdottoTrasformatoRepository prodottoTrasformatoRepository,
-                            ProdottoRepository prodottoRepository) {
+    public PacchettoServiceController(PacchettoRepository pacchettoRepository,
+                                      ProdottoBaseRepository prodottoBaseRepository,
+                                      ProdottoTrasformatoRepository prodottoTrasformatoRepository,
+                                      ProdottoRepository prodottoRepository) {
         this.pacchettoRepository = pacchettoRepository;
         this.prodottoBaseRepository = prodottoBaseRepository; //TODO togliere quando si rimuove InitSampleData
         this.prodottoTrasformatoRepository = prodottoTrasformatoRepository;
@@ -56,12 +55,6 @@ public class PacchettoService {
         samplePacchetto.setPrezzo(1.0);
         pacchettoRepository.save(samplePacchetto);
     }
-
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getDashboard() {
-        return ResponseEntity.ok("Benvenuto nella dashboard del Distributore");
-    }
-
 
     @RequestMapping({"/pacchetti"})
     public ResponseEntity<Object> getPacchetto() {

@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services;
+package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoBaseRepository;
@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/produttore")
-public class ProdottoBaseService {
+public class ProdottoBaseServiceController {
     @Autowired
     private ProdottoBaseRepository prodottoBaseRepository;
 
-    public ProdottoBaseService(ProdottoBaseRepository prodottoBaseRepository) {
+    public ProdottoBaseServiceController(ProdottoBaseRepository prodottoBaseRepository) {
         this.prodottoBaseRepository = prodottoBaseRepository;
     }
 
@@ -35,18 +35,13 @@ public class ProdottoBaseService {
         prodottoBaseRepository.save(pomodoro);
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getDashboard() {
-        return ResponseEntity.ok("Benvenuto nella dashboard del Produttore");
-    }
-
     @RequestMapping({"/prodottibase"})
-    public ResponseEntity<Object> getProducts() {
+    public ResponseEntity<Object> getProdotti() {
         return new ResponseEntity<>(this.prodottoBaseRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping({"/prodottibase/{id}"})
-    public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
+    public ResponseEntity<Object> getProdotto(@PathVariable("id") int id) {
         if (!this.prodottoBaseRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -55,19 +50,19 @@ public class ProdottoBaseService {
     }
 
     @PostMapping({"/prodottibase/aggiungi"})
-    public ResponseEntity<Object> addProduct(@RequestBody ProdottoBase prodotto) {
+    public ResponseEntity<Object> aggiungiProdotto(@RequestBody ProdottoBase prodotto) {
         if (!this.prodottoBaseRepository.existsByNomeAndCertificazioniAndMetodiDiColtivazioneAndPrezzo(
                 prodotto.getNome(), prodotto.getCertificazioni(),
                 prodotto.getMetodiDiColtivazione(), prodotto.getPrezzo())) {
             this.prodottoBaseRepository.save(prodotto);
-            return new ResponseEntity<>("Product Created", HttpStatus.CREATED);
+            return new ResponseEntity<>("Prodotto Creato", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>("Product Already Exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Prodotto già esistente", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping({"prodottibase/aggiungiconparametri"})
-    public ResponseEntity<Object> addProductWithParam(@RequestParam("nome") String nome,
+    public ResponseEntity<Object> aggiungiProdottoConParametri(@RequestParam("nome") String nome,
                                                       @RequestParam("prezzo") double prezzo,
                                                       @RequestParam("metodiDiColtivazione") String metodiDiColtivazione,
                                                       @RequestParam("certificazioni") String certificazioni) {
@@ -86,7 +81,7 @@ public class ProdottoBaseService {
     }
 
     @DeleteMapping({"/prodottibase/elimina/{id}"})
-    public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
+    public ResponseEntity<Object> eiminaProdotto(@PathVariable("id") int id) {
         this.prodottoBaseRepository.deleteById(id);
         return new ResponseEntity<>("Product " + id + " Deleted", HttpStatus.OK);
     }
@@ -95,12 +90,12 @@ public class ProdottoBaseService {
             value = {"/prodottibase/aggiorna"},
             method = {RequestMethod.PUT}
     )
-    public ResponseEntity<Object> updateProduct(@RequestBody ProdottoBase prodottoBase) {
+    public ResponseEntity<Object> aggiornaProdotto(@RequestBody ProdottoBase prodottoBase) {
         if (this.prodottoBaseRepository.existsById(prodottoBase.getId())) {
             this.prodottoBaseRepository.save(prodottoBase);
-            return new ResponseEntity<>("Product " + prodottoBase.getId() + " Updated", HttpStatus.OK);
+            return new ResponseEntity<>("Prodotto " + prodottoBase.getId() + " Aggiornato", HttpStatus.OK);
         } else {
-            return ResponseEntity.status(404).body("Prodotto " + prodottoBase.getId() + " Not Found");
+            return ResponseEntity.status(404).body("Prodotto " + prodottoBase.getId() + " Non Trovato");
         }
     }
 }

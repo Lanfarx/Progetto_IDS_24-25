@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services;
+package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
@@ -11,18 +11,17 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/trasformatore")
-public class ProdottoTrasformatoService {
+public class ProdottoTrasformatoServiceController {
 
     @Autowired
     private final ProdottoTrasformatoRepository prodottoTrasformatoRepository;
     @Autowired
     private final ProdottoBaseRepository prodottoBaseRepository;
-    public ProdottoTrasformatoService (ProdottoTrasformatoRepository prodottoTrasformatoRepository,
-                                       ProdottoBaseRepository prodottoBaseRepository) {
+    public ProdottoTrasformatoServiceController(ProdottoTrasformatoRepository prodottoTrasformatoRepository,
+                                                ProdottoBaseRepository prodottoBaseRepository) {
         this.prodottoBaseRepository = prodottoBaseRepository;
         this.prodottoTrasformatoRepository = prodottoTrasformatoRepository;
     }
@@ -48,18 +47,13 @@ public class ProdottoTrasformatoService {
 
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getDashboard() {
-        return ResponseEntity.ok("Benvenuto nella dashboard del Trasformatore");
-    }
-
     @RequestMapping({"/prodottitrasformati"})
-    public ResponseEntity<Object> getProducts() {
+    public ResponseEntity<Object> getProdotti() {
         return new ResponseEntity<>(this.prodottoTrasformatoRepository.findAll(), HttpStatus.OK);
     }
 
     @RequestMapping({"/prodottitrasformati/{id}"})
-    public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
+    public ResponseEntity<Object> getProdotto(@PathVariable("id") int id) {
         if (!this.prodottoTrasformatoRepository.existsById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -68,17 +62,17 @@ public class ProdottoTrasformatoService {
     }
 
     @PostMapping({"/prodottitrasformati/aggiungi"})
-    public ResponseEntity<Object> addProduct(@RequestBody ProdottoTrasformato prodotto) {
+    public ResponseEntity<Object> aggiungiProdotto(@RequestBody ProdottoTrasformato prodotto) {
         if (!this.prodottoTrasformatoRepository.existsById(prodotto.getId())) {
             this.prodottoTrasformatoRepository.save(prodotto);
-            return new ResponseEntity<>("Product Created", HttpStatus.CREATED);
+            return new ResponseEntity<>("Prodotto Creato", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>("Product Already Exists", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("Prodotto già esistente", HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping({"prodottitrasformati/aggiungiconparametri"})
-    public ResponseEntity<Object> addProductWithParam(@RequestParam("nome") String nome,
+    public ResponseEntity<Object> aggiungiProdottoConParametri(@RequestParam("nome") String nome,
                                                       @RequestParam("prezzo") double prezzo,
                                                       @RequestParam("certificazioni") String certificazioni,
                                                       @RequestParam("prodottoBase") int IDprodottoBase,
@@ -102,7 +96,7 @@ public class ProdottoTrasformatoService {
     }
 
     @RequestMapping({"/prodottitrasformati/elimina/{id}"})
-    public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
+    public ResponseEntity<Object> eliminaProdotto(@PathVariable("id") int id) {
         this.prodottoTrasformatoRepository.deleteById(id);
         return new ResponseEntity<>("Product " + id + " Deleted", HttpStatus.OK);
     }
@@ -111,12 +105,12 @@ public class ProdottoTrasformatoService {
             value = {"/prodottitrasformati/aggiorna"},
             method = {RequestMethod.PUT}
     )
-    public ResponseEntity<Object> updateProduct(@RequestBody ProdottoTrasformato prodottoTrasformato) {
+    public ResponseEntity<Object> aggiornaProdotto(@RequestBody ProdottoTrasformato prodottoTrasformato) {
         if (this.prodottoTrasformatoRepository.existsById(prodottoTrasformato.getId())) {
             this.prodottoTrasformatoRepository.save(prodottoTrasformato);
-            return new ResponseEntity<>("Product " + prodottoTrasformato.getId() + " Updated", HttpStatus.OK);
+            return new ResponseEntity<>("Prodotto " + prodottoTrasformato.getId() + " Aggiornato", HttpStatus.OK);
         } else {
-            return ResponseEntity.status(404).body("Prodotto " + prodottoTrasformato.getId() + " Not Found");
+            return ResponseEntity.status(404).body("Prodotto " + prodottoTrasformato.getId() + " Non Trovato");
         }
     }
 }
