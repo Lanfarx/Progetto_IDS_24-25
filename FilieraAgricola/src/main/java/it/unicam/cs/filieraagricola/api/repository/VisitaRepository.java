@@ -1,12 +1,26 @@
 package it.unicam.cs.filieraagricola.api.repository;
 
-import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.Visita;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
+import java.util.Optional;
 
 public interface VisitaRepository extends JpaRepository<Visita, Integer> {
     boolean existsByTitoloAndDataAndDescrizioneAndLuogo(String titolo, LocalDate data, String descrizione, String luogo);
+
+    @Query("SELECT v FROM Visita v WHERE TYPE(v) = Evento")
+    List<Visita> findAllEventi();
+
+    @Query("SELECT v FROM Visita v WHERE TYPE(v) <> Visita")
+    List<Visita> findAllVisite();
+
+    @Query("SELECT v FROM Visita v WHERE TYPE(v) = Visita AND v.id = :id")
+    Optional<Visita> findVisitaById(@Param("id") int id);
+
+    @Query("SELECT v FROM Visita v WHERE TYPE(v) = Evento AND v.id = :id")
+    Optional<Visita> findEventoById(@Param("id") int id);
 }

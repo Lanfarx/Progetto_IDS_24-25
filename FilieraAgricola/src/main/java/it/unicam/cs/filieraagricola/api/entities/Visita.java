@@ -6,8 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // Strategia di ereditarietà nel database
-public class Visita {
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "tipo_visita", discriminatorType = DiscriminatorType.STRING)
+public class Visita implements Attivita{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
