@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@DiscriminatorValue("EVENTO")
+@DiscriminatorValue("Evento")
 public class Evento extends Visita {
 
     // Lista di invitati (utenti con ruoli specifici)

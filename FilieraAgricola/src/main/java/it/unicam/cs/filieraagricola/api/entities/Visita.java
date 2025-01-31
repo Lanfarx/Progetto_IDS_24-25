@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_visita", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorColumn(name = "tipo_attivita", discriminatorType = DiscriminatorType.STRING)
 public class Visita implements Attivita{
 
     @Id

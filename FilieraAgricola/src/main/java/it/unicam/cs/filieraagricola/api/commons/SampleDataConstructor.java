@@ -1,0 +1,82 @@
+package it.unicam.cs.filieraagricola.api.commons;
+
+import it.unicam.cs.filieraagricola.api.entities.*;
+import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
+import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
+import it.unicam.cs.filieraagricola.api.repository.UserRepository;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import java.time.LocalDate;
+
+@Component
+public class SampleDataConstructor {
+
+    @Autowired
+    AttivitaRepository attivitaRepository;
+    @Autowired
+    UserRepository userRepository;
+
+    @PostConstruct
+    public void initSampleData(){
+        initSampleUsers();
+        initSampleAttivita();
+    }
+
+    private void initSampleUsers(){
+        Users admin = new Users();
+        admin.setUsername("admin");
+        admin.setPassword("admin");
+        admin.getRoles().add(UserRole.GESTORE_DELLA_PIATTAFORMA);
+        userRepository.save(admin);
+
+        Users operatore = new Users();
+        operatore.setUsername("operatore");
+        operatore.setPassword("operatore");
+        operatore.getRoles().add(UserRole.PRODUTTORE);
+        operatore.getRoles().add(UserRole.TRASFORMATORE);
+        operatore.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
+        userRepository.save(operatore);
+
+        Users animatore = new Users();
+        animatore.setUsername("animatore");
+        animatore.setPassword("animatore");
+        animatore.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
+        userRepository.save(animatore);
+    }
+
+    private void initSampleAttivita(){
+        Visita visita = new Visita();
+        visita.setTitolo("ProvaVisita");
+        visita.setDescrizione("questa è una visita");
+        visita.setLuogo("Genzano");
+        visita.setData(LocalDate.parse("2025-01-27"));
+
+        Users user1 = new Users();
+        user1.setUsername("prenotato");
+        user1.setPassword("prenotato");
+        user1.getRoles().add(UserRole.ACQUIRENTE);
+        userRepository.save(user1);
+        visita.getPrenotazioni().add(user1);
+
+        attivitaRepository.save(visita);
+
+        Evento evento = new Evento();
+        evento.setTitolo("Baudo");
+        evento.setDescrizione("questo è un evento");
+        evento.setLuogo("Civitanova");
+        evento.setData(LocalDate.parse("2025-06-26"));;
+
+        Users user2 = new Users();
+        user2.setUsername("invitato");
+        user2.setPassword("invitato");
+        userRepository.save(user2);
+
+        evento.getPrenotazioni().add(user1);
+        evento.getInvitati().add(user2);
+
+        attivitaRepository.save(evento);
+    }
+
+}
