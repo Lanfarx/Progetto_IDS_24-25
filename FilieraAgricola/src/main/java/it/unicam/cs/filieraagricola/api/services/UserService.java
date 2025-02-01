@@ -13,7 +13,9 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,23 +26,19 @@ public class UserService implements UserDetailsService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
-        Users admin = new Users();
-        admin.setUsername("admin");
-        admin.setPassword("admin");
-        admin.getRoles().add(UserRole.GESTORE_DELLA_PIATTAFORMA);
-        userRepository.save(admin);
 
-        Users operatore = new Users();
-        operatore.setUsername("operatore");
-        operatore.setPassword("operatore");
-        operatore.getRoles().add(UserRole.PRODUTTORE);
-        operatore.getRoles().add(UserRole.TRASFORMATORE);
-        operatore.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
-        userRepository.save(operatore);
     }
 
     public Optional<Users> findByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public boolean existsUser(int id) {
+        return userRepository.existsById(id);
+    }
+
+    public Optional<Users> getUserById(int id) {
+        return userRepository.findById(id);
     }
 
     @Override
@@ -62,13 +60,46 @@ public class UserService implements UserDetailsService {
 
     public void registerUser(String username, String password) {
         if (userRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new RuntimeException("Username già esistente");
         }
         Users newUser = new Users();
         newUser.setUsername(username);
         newUser.setPassword(password);
         newUser.getRoles().add(UserRole.ACQUIRENTE);
         userRepository.save(newUser);
+    }
+
+    public boolean isOperatore(Users user) {
+        return user.getRoles().contains(UserRole.PRODUTTORE) ||
+                user.getRoles().contains(UserRole.TRASFORMATORE) ||
+                user.getRoles().contains(UserRole.DISTRIBUTORE_DI_TIPICITA);
+    }
+
+    public Set<Users> getOperatoriByIds(Set<Integer> idInvitati) {
+        Set<Users> operatori = new HashSet<>();
+        for (Integer id : idInvitati) {
+            Optional<Users> user = userRepository.findById(id);
+            if (user.isPresent() && isOperatore(user.get())) {
+                operatori.add(user.get());
+            }
+        }
+        return operatori;
+    }
+
+    public void processaInvitati(Set<Integer> idInvitati, Set<Users> operatori, Set<Integer> nonOperatori) {
+        for (Integer id : idInvitati) {
+            Optional<Users> userOpt = userRepository.findById(id);
+            if (userOpt.isPresent()) {
+                Users user = userOpt.get();
+                if (isOperatore(user)) {
+                    operatori.add(user);
+                } else {
+                    nonOperatori.add(id);
+                }
+            } else {
+                nonOperatori.add(id);
+            }
+        }
     }
 }
 
