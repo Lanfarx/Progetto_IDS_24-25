@@ -42,7 +42,7 @@ public class AttivitaController {
 
     @GetMapping({"/{id}"})
     public ResponseEntity<Object> getAttivita(@PathVariable("id") int id) {
-        if (attivitaService.existsVisita(id)) {
+        if (attivitaService.existsAttivita(id)) {
             return new ResponseEntity<>(attivitaService.getVisitaOEventoById(id), HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -59,6 +59,18 @@ public class AttivitaController {
         return new ResponseEntity<>("Visita creata", HttpStatus.CREATED);
     }
 
+    private Set<Users> saveAndGetOperatori(Evento evento) {
+        Set<Users> invitati = evento.getInvitati();
+        Set<Integer> idInvitati = new HashSet<>();
+        for (Users invitato : invitati) {
+            idInvitati.add(invitato.getId());
+        }
+        Set<Users> operatori = userService.getOperatoriByIds(idInvitati);
+        evento.setInvitati(operatori);
+        attivitaService.saveEvento(evento);
+        return operatori;
+    }
+
     @PostMapping("/eventi/aggiungi")
     public ResponseEntity<Object> aggiungiEvento(@RequestBody Evento evento) {
         if (attivitaService.existsVisitaByParams(evento.getTitolo(), evento.getData(), evento.getDescrizione(), evento.getLuogo())) {
@@ -68,17 +80,6 @@ public class AttivitaController {
         return new ResponseEntity<>("Evento creato con " + operatori.size() + " invitati", HttpStatus.CREATED);
     }
 
-    private Set<Users> saveAndGetOperatori(Evento evento) {
-        Set<Users> invitati = evento.getInvitati();
-        Set<Integer> idInvitati = new HashSet<>();
-        for (Users invitato : invitati) {
-            idInvitati.add(invitato.getId());
-        }
-        Set<Users> operatori =  userService.getOperatoriByIds(idInvitati);
-        evento.setInvitati(operatori);
-        attivitaService.saveEvento(evento);
-        return operatori;
-    }
 
     @PostMapping("/aggiungiconparametri")
     public ResponseEntity<Object> aggiungiVisitaOEventoConParametri(
@@ -103,7 +104,7 @@ public class AttivitaController {
 
             String responseMessage = "Evento creato";
             if (!nonOperatori.isEmpty()) {
-                responseMessage += ". Tuttavia, gli utenti con ID " + nonOperatori + " non sono stati aggiunti perché non hanno i ruoli richiesti.";
+                responseMessage += ". Tuttavia, gli utenti con ID " + nonOperatori + " non sono stati aggiunti perché non sono operatori (Produttore, Trasformatore, Distributore).";
             }
             visita.setTitolo(titolo);
             visita.setDescrizione(descrizione);
@@ -123,7 +124,7 @@ public class AttivitaController {
     }
 
     @DeleteMapping("/elimina/{id}")
-    public ResponseEntity<Object> eliminaVisitaOEvento(@PathVariable int id) {
+    public ResponseEntity<Object> eliminaAttivita(@PathVariable int id) {
         attivitaService.deleteVisita(id);
         return new ResponseEntity<>("Attivita eliminata con successo", HttpStatus.OK);
     }
@@ -148,30 +149,56 @@ public class AttivitaController {
         }
     }
 
-    @PostMapping("/evento/{id}/invitato")
+    @GetMapping("/{id}/prenotazioni")
+    public ResponseEntity<Object> getPrenotazioniById(@PathVariable int id) {
+        if (attivitaService.existsAttivita(id)) {
+            Visita visita = attivitaService.getVisitaOEventoById(id).get();
+            Set<Users> prenotati = visita.getPrenotazioni();
+            return new ResponseEntity<>(prenotati, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @GetMapping("/eventi/{id}/invitati")
+    public ResponseEntity<Object> getInvitatiById(@PathVariable int id) {
+        if (attivitaService.existsEvento(id)) {
+            Evento evento = (Evento) attivitaService.getEventoById(id).get();
+            Set<Users> invitati = evento.getInvitati();
+            return new ResponseEntity<>(invitati, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @PostMapping("/eventi/{id}/invitato")
     public ResponseEntity<Object> aggiungiInvitato(@PathVariable int id, @RequestParam int userId) {
         if (attivitaService.existsEvento(id)) {
             if (userService.existsUser(userId)) {
                 Evento evento = (Evento) attivitaService.getEventoById(id).get();
                 Users user = userService.getUserById(userId).get();
-                if (userService.isOperatore(user)) {
-                    attivitaService.addInvitatoToEvento(evento, user);
-                    return new ResponseEntity<>("Operatore " + userId + " Invitato all'Evento " + id, HttpStatus.CREATED);
-                } else return new ResponseEntity<>("Utente " + userId + " Non è un Operatore (Produttore, Trasformatore, Distributore)", HttpStatus.BAD_REQUEST);
+                if (!evento.getInvitati().contains(user)) {
+                    if (userService.isOperatore(user)) {
+                        attivitaService.addInvitatoToEvento(evento, user);
+                        return new ResponseEntity<>("Operatore " + userId + " Invitato all'Evento " + id, HttpStatus.CREATED);
+                    } else
+                        return new ResponseEntity<>("Utente " + userId + " Non è un Operatore (Produttore, Trasformatore, Distributore)", HttpStatus.BAD_REQUEST);
+                } else
+                    return new ResponseEntity<>("Utente " + userId + " è stato già invitato", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("Utente " + userId + " Non Trovato", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>("Evento " + id + " Non Trovato", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/evento/{id}/eliminainvitato")
+    @DeleteMapping("/eventi/{id}/eliminainvitato")
     public ResponseEntity<Object> eliminaInvitato(@PathVariable int id, @RequestParam int userId) {
         if (attivitaService.existsEvento(id)) {
             if (userService.existsUser(userId)) {
                 Evento evento = (Evento) attivitaService.getEventoById(id).get();
                 Users user = userService.getUserById(userId).get();
-                if (userService.isOperatore(user)) {
+                if (evento.getInvitati().contains(user)) {
                     attivitaService.removeInvitatoFromEvento(evento, user);
-                    return new ResponseEntity<>("Operatore " + userId + " Eliminato dall'Evento " + id, HttpStatus.CREATED);
-                } else return new ResponseEntity<>("Utente " + userId + " Non è un Operatore (Produttore, Trasformatore, Distributore)", HttpStatus.BAD_REQUEST);
+                    return new ResponseEntity<>("Operatore " + userId + " eliminato con successo", HttpStatus.OK);
+                } else return new ResponseEntity<>("Utente " + userId + " Non Invitato", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("Utente " + userId + " Non Trovato", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>("Evento " + id + " Non Trovato", HttpStatus.BAD_REQUEST);
     }

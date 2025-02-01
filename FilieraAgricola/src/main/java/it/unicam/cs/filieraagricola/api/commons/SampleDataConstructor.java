@@ -71,6 +71,7 @@ public class SampleDataConstructor {
         Users user2 = new Users();
         user2.setUsername("invitato");
         user2.setPassword("invitato");
+        user1.getRoles().add(UserRole.PRODUTTORE);
         userRepository.save(user2);
 
         evento.getPrenotazioni().add(user1);

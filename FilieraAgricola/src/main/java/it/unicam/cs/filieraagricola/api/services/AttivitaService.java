@@ -37,6 +37,10 @@ public class AttivitaService {
         return attivitaRepository.findById(id);
     }
 
+    public boolean existsAttivita(int id){
+        return attivitaRepository.existsById(id);
+    }
+
     public boolean existsVisitaByParams(String titolo, LocalDate data, String descrizione, String luogo) {
         return attivitaRepository.existsByTitoloAndDataAndDescrizioneAndLuogo(titolo, data, descrizione, luogo);
     }
@@ -77,9 +81,12 @@ public class AttivitaService {
 
     public boolean aggiungiPrenotazione(Visita visita, Users user) {
         if (existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
-            visita.getPrenotazioni().add(user);
-            attivitaRepository.save(visita);
-            return true;
+            if(visita.getData().isAfter(LocalDate.now())) {
+                visita.getPrenotazioni().add(user);
+                attivitaRepository.save(visita);
+                return true;
+            }
+            else return false;
         }
         return false;
     }
