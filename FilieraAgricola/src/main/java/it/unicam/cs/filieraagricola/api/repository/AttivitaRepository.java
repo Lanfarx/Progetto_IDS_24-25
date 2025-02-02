@@ -1,6 +1,6 @@
 package it.unicam.cs.filieraagricola.api.repository;
 
-import it.unicam.cs.filieraagricola.api.entities.Visita;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -18,10 +18,10 @@ public interface AttivitaRepository extends JpaRepository<Visita, Integer> {
     @Query("SELECT v FROM Visita v WHERE TYPE(v) = Visita")
     List<Visita> findAllVisite();
 
-    @Query("SELECT COUNT(v) = 1 FROM Visita v WHERE TYPE(v) = Visita AND v.id = :id")
+    @Query("SELECT COUNT(v) = 1 FROM Visita v WHERE v.id = :id")
     boolean existsVisitaById(@Param("id") int id);
 
-    @Query("SELECT v FROM Visita v WHERE TYPE(v) = Evento AND v.id = :id")
+    @Query("SELECT v FROM Evento v WHERE v.id = :id")
     Optional<Visita> findEventoById(@Param("id") int id);
 
     @Query("SELECT COUNT(v) = 1 FROM Visita v WHERE TYPE(v) = Evento AND v.id = :id")

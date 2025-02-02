@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services;
+package it.unicam.cs.filieraagricola.api.services.gestore;
 
 import it.unicam.cs.filieraagricola.api.entities.Categoria;
 import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;

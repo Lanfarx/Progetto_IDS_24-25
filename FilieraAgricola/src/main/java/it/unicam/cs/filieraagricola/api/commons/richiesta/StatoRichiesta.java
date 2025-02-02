@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.commons;
+package it.unicam.cs.filieraagricola.api.commons.richiesta;
 
 public enum StatoRichiesta {
     ACCETTATA,

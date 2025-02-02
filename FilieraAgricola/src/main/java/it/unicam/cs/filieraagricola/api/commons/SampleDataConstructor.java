@@ -1,9 +1,10 @@
 package it.unicam.cs.filieraagricola.api.commons;
 
 import it.unicam.cs.filieraagricola.api.entities.*;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
 import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;
-import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
