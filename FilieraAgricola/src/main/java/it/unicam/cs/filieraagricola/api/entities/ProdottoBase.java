@@ -5,8 +5,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED) // Tabelle separate con join
+@DiscriminatorValue("BASE")
 public class ProdottoBase extends Prodotto {
+
+    //TODO aggiungere variabile produttore
 
     private String metodiDiColtivazione;
 
@@ -17,9 +19,4 @@ public class ProdottoBase extends Prodotto {
     public void setMetodiDiColtivazione(String metodiDiColtivazione) {
         this.metodiDiColtivazione = metodiDiColtivazione;
     }
-
-
-    public ProdottoBase() {
-    }
-
 }

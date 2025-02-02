@@ -6,14 +6,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Pacchetto {
+public class Pacchetto extends Elemento{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    private String nome;
-    private String descrizione;
-    private double prezzo;
+    private String descrizione; //TODO vedere se toglierla
 
     @ManyToMany
     @JoinTable(
@@ -23,29 +18,11 @@ public class Pacchetto {
     )
     private Set<Prodotto> prodottiSet = new HashSet<Prodotto>();
 
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public String getNome() {
-        return nome;
-    }
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
     public String getDescrizione() {
         return descrizione;
     }
     public void setDescrizione(String descrizione) {
         this.descrizione = descrizione;
-    }
-    public double getPrezzo() {
-        return prezzo;
-    }
-    public void setPrezzo(double prezzo) {
-        this.prezzo = prezzo;
     }
     public Set<Prodotto> getProdottiSet() {
         return prodottiSet;
@@ -55,6 +32,27 @@ public class Pacchetto {
     }
     public void addProdotto(Prodotto prodotto) {
         prodottiSet.add(prodotto);
+    }
+    public void removeProdotto(Prodotto prodotto) { prodottiSet.remove(prodotto); }
+
+
+    public boolean disponibile(){ return getQuantita()>0; }
+
+    @Override
+    public int getQuantita() {
+        int quantita = Integer.MAX_VALUE;
+        for (Prodotto prodotto : prodottiSet) {
+            if(prodotto.getQuantita() < quantita) {
+                quantita = prodotto.getQuantita();
+            }
+        }
+        return quantita;
+    }
+
+    public void removeQuantita(int quantita){
+        for (Prodotto prodotto : prodottiSet) {
+            prodotto.removeQuantita(quantita);
+        }
     }
 
 }

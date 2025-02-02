@@ -9,5 +9,5 @@ import java.util.List;
 import java.util.Set;
 
 public interface PacchettoRepository extends JpaRepository<Pacchetto, Integer> {
-    List<Pacchetto> findByNomeAndDescrizioneAndPrezzo(String nome, String descrizione, double prezzo);
+    List<Pacchetto> findByNomeAndDescrizione(String nome, String descrizione);
 }
