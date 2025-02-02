@@ -54,8 +54,8 @@ public class SampleDataConstructor {
         visita.setData(LocalDate.parse("2025-01-27"));
 
         Users user1 = new Users();
-        user1.setUsername("prenotato");
-        user1.setPassword("prenotato");
+        user1.setUsername("acquirente");
+        user1.setPassword("acquirente");
         user1.getRoles().add(UserRole.ACQUIRENTE);
         userRepository.save(user1);
         visita.getPrenotazioni().add(user1);
