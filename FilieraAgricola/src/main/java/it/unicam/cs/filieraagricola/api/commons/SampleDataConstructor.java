@@ -2,6 +2,7 @@ package it.unicam.cs.filieraagricola.api.commons;
 
 import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
+import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class SampleDataConstructor {
@@ -17,11 +19,14 @@ public class SampleDataConstructor {
     AttivitaRepository attivitaRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    private CategoriaRepository categoriaRepository;
 
     @PostConstruct
     public void initSampleData(){
         initSampleUsers();
         initSampleAttivita();
+        initSampleCategorie();
     }
 
     private void initSampleUsers(){
@@ -80,4 +85,16 @@ public class SampleDataConstructor {
         attivitaRepository.save(evento);
     }
 
+    private void initSampleCategorie() {
+        List<String> categorie = List.of("Vini", "Formaggi",
+                "Salumi", "Olio d'oliva", "Miele", "Pacchetto");
+
+        for (String nome : categorie) {
+            if (categoriaRepository.findByNome(nome).isEmpty()) {
+                Categoria categoria = new Categoria();
+                categoria.setNome(nome);
+                categoriaRepository.save(categoria);
+            }
+        }
+    }
 }
