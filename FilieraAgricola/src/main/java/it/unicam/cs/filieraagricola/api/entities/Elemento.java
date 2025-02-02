@@ -5,7 +5,6 @@ import jakarta.persistence.*;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-
 public abstract class Elemento {
 
     @Id

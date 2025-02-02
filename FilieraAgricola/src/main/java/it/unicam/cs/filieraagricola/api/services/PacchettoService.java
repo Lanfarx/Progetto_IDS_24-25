@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.controller;
+package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.Prodotto;
@@ -8,7 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/PacchettoService.java
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -20,54 +19,11 @@ public class PacchettoService {
     PacchettoRepository pacchettoRepository;
     ProdottoRepository prodottoRepository;
     public PacchettoService(PacchettoRepository pacchettoRepository, ProdottoRepository prodottoRepository) {
-=======
-import java.util.*;
-
-@RestController
-@RequestMapping("/distributore")
-public class PacchettoServiceController {
-    @Autowired
-    private PacchettoRepository pacchettoRepository;
-    @Autowired
-    private ProdottoBaseRepository prodottoBaseRepository;
-    @Autowired
-    private ProdottoTrasformatoRepository prodottoTrasformatoRepository;
-    @Autowired
-    private ProdottoRepository prodottoRepository;
-
-    public PacchettoServiceController(PacchettoRepository pacchettoRepository,
-                                      ProdottoBaseRepository prodottoBaseRepository,
-                                      ProdottoTrasformatoRepository prodottoTrasformatoRepository,
-                                      ProdottoRepository prodottoRepository) {
->>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/PacchettoServiceController.java
         this.pacchettoRepository = pacchettoRepository;
         this.prodottoRepository = prodottoRepository;
     }
 
-<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/PacchettoService.java
     public ResponseEntity<Object> getPacchetti() {
-=======
-    @PostConstruct
-    public void initSampleData() {
-        ProdottoBase pomodoro = new ProdottoBase();
-        pomodoro.setNome("Pomodoro");
-        prodottoBaseRepository.save(pomodoro);
-        ProdottoTrasformato polpa = new ProdottoTrasformato();
-        polpa.setNome("Polpa");
-        polpa.setProdottoBase(pomodoro);
-        prodottoTrasformatoRepository.save(polpa);
-        Pacchetto samplePacchetto = new Pacchetto();
-        samplePacchetto.setNome("Pacchetto");
-        samplePacchetto.setDescrizione("Sono un pacchetto di esempio, controlla se tutti i valori sono corretti!o");
-        samplePacchetto.addProdotto(pomodoro);
-        samplePacchetto.addProdotto(polpa);
-        samplePacchetto.setPrezzo(1.0);
-        pacchettoRepository.save(samplePacchetto);
-    }
-
-    @RequestMapping({"/pacchetti"})
-    public ResponseEntity<Object> getPacchetto() {
->>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/PacchettoServiceController.java
         return new ResponseEntity<>(this.pacchettoRepository.findAll(), HttpStatus.OK);
     }
 
@@ -189,4 +145,3 @@ public class PacchettoServiceController {
     }
 
 }
-
