@@ -8,7 +8,7 @@ import java.util.Set;
 @Entity
 public class Pacchetto extends Elemento{
 
-    private String descrizione;
+    private String descrizione; //TODO vedere se toglierla
 
     @ManyToMany
     @JoinTable(
@@ -32,6 +32,27 @@ public class Pacchetto extends Elemento{
     }
     public void addProdotto(Prodotto prodotto) {
         prodottiSet.add(prodotto);
+    }
+    public void removeProdotto(Prodotto prodotto) { prodottiSet.remove(prodotto); }
+
+
+    public boolean disponibile(){ return getQuantita()>0; }
+
+    @Override
+    public int getQuantita() {
+        int quantita = Integer.MAX_VALUE;
+        for (Prodotto prodotto : prodottiSet) {
+            if(prodotto.getQuantita() < quantita) {
+                quantita = prodotto.getQuantita();
+            }
+        }
+        return quantita;
+    }
+
+    public void removeQuantita(int quantita){
+        for (Prodotto prodotto : prodottiSet) {
+            prodotto.removeQuantita(quantita);
+        }
     }
 
 }

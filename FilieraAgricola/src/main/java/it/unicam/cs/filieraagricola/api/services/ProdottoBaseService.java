@@ -1,106 +1,78 @@
 package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
-import it.unicam.cs.filieraagricola.api.repository.ProdottoBaseRepository;
-import jakarta.annotation.PostConstruct;
+import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.stereotype.Service;
 
-@RestController
-@RequestMapping("/produttore")
+import java.util.Optional;
+
+@Service
 public class ProdottoBaseService {
     @Autowired
-    private ProdottoBaseRepository prodottoBaseRepository;
+    private final ProdottoRepository prodottoRepository;
+    @Autowired
+    private ContenutoService contenutoService;
 
-    public ProdottoBaseService(ProdottoBaseRepository prodottoBaseRepository) {
-        this.prodottoBaseRepository = prodottoBaseRepository;
+    public ProdottoBaseService(ProdottoRepository prodottoRepository) {
+        this.prodottoRepository = prodottoRepository;
     }
 
-    @PostConstruct
-    public void initSampleData() {
-        ProdottoBase miele = new ProdottoBase();
-        miele.setNome("Miele");
-        miele.setCertificazioni("Allevato in Italia");
-        miele.setMetodiDiColtivazione("Raccolto senza maltrattare api");
-        miele.setPrezzo(10.0);
-        prodottoBaseRepository.save(miele);
 
-        ProdottoBase pomodoro = new ProdottoBase();
-        pomodoro.setNome("Pomodoro");
-        pomodoro.setCertificazioni("Coltivato in Italia");
-        pomodoro.setMetodiDiColtivazione("Coltivato usando acqua depurata");
-        pomodoro.setPrezzo(5.0);
-        prodottoBaseRepository.save(pomodoro);
+    public ResponseEntity<Object> aggiungiProdottoBase(String nome, String metodiColtivazione,
+                                                              String certificazioni, String descrizione, double prezzo) {
+        if(prodottoRepository.existsByCaratteristicheBase(nome, metodiColtivazione, certificazioni)){
+            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+        }
+        creaBase(nome, metodiColtivazione, certificazioni, descrizione, prezzo);
+        return new ResponseEntity<>("Prodotto Base creato!", HttpStatus.OK);
     }
 
-    @GetMapping("/dashboard")
-    public ResponseEntity<String> getDashboard() {
-        return ResponseEntity.ok("Benvenuto nella dashboard del Produttore");
+    public ResponseEntity<Object> aggiungiProdottoBase(ProdottoBase prodottoBase) {
+        if(prodottoRepository.existsById(prodottoBase.getId()) || contenutoService.getContenutoByParam(prodottoBase) != null) {
+            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+        }
+        prodottoRepository.save(prodottoBase);
+        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
+        return new ResponseEntity<>("Prodotto Base creato!", HttpStatus.OK);
     }
 
-    @RequestMapping({"/prodottibase"})
-    public ResponseEntity<Object> getProducts() {
-        return new ResponseEntity<>(this.prodottoBaseRepository.findAll(), HttpStatus.OK);
-    }
-
-    @RequestMapping({"/prodottibase/{id}"})
-    public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
-        if (!this.prodottoBaseRepository.existsById(id)) {
+    public ResponseEntity<Object> getProdottoBase(int id) {
+        if (!this.prodottoRepository.existsProdottoBaseById(id)) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(this.prodottoBaseRepository.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(this.prodottoRepository.findById(id), HttpStatus.OK);
         }
     }
 
-    @PostMapping({"/prodottibase/aggiungi"})
-    public ResponseEntity<Object> addProduct(@RequestBody ProdottoBase prodotto) {
-        if (!this.prodottoBaseRepository.existsByNomeAndCertificazioniAndMetodiDiColtivazioneAndPrezzo(
-                prodotto.getNome(), prodotto.getCertificazioni(),
-                prodotto.getMetodiDiColtivazione(), prodotto.getPrezzo())) {
-            this.prodottoBaseRepository.save(prodotto);
-            return new ResponseEntity<>("Product Created", HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>("Product Already Exists", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> getProdottiBase() {
+        return new ResponseEntity<>(this.prodottoRepository.findAllProdottiBase(), HttpStatus.OK);
     }
 
-    @PostMapping({"prodottibase/aggiungiconparametri"})
-    public ResponseEntity<Object> addProductWithParam(@RequestParam("nome") String nome,
-                                                      @RequestParam("prezzo") double prezzo,
-                                                      @RequestParam("metodiDiColtivazione") String metodiDiColtivazione,
-                                                      @RequestParam("certificazioni") String certificazioni) {
-        if (!this.prodottoBaseRepository.existsByNomeAndCertificazioniAndMetodiDiColtivazioneAndPrezzo(
-                nome, certificazioni, metodiDiColtivazione, prezzo)) {
-            ProdottoBase prodotto = new ProdottoBase();
-            prodotto.setNome(nome);
-            prodotto.setMetodiDiColtivazione(metodiDiColtivazione);
-            prodotto.setCertificazioni(certificazioni);
-            prodotto.setPrezzo(prezzo);
-            this.prodottoBaseRepository.save(prodotto);
-            return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
-        } else {
-            return new ResponseEntity<>("Il prodotto già esiste", HttpStatus.BAD_REQUEST);
-        }
+    public ResponseEntity<Object> deleteProdottoBase(int id) {
+        this.prodottoRepository.deleteById(id);
+        return new ResponseEntity<>("Product with id: " + id + " Deleted", HttpStatus.OK);
     }
 
-    @DeleteMapping({"/prodottibase/elimina/{id}"})
-    public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
-        this.prodottoBaseRepository.deleteById(id);
-        return new ResponseEntity<>("Product " + id + " Deleted", HttpStatus.OK);
-    }
-
-    @RequestMapping(
-            value = {"/prodottibase/aggiorna"},
-            method = {RequestMethod.PUT}
-    )
-    public ResponseEntity<Object> updateProduct(@RequestBody ProdottoBase prodottoBase) {
-        if (this.prodottoBaseRepository.existsById(prodottoBase.getId())) {
-            this.prodottoBaseRepository.save(prodottoBase);
+    public ResponseEntity<Object> aggiornaProdottoBase(ProdottoBase prodottoBase) {
+        if (this.prodottoRepository.existsProdottoBaseById(prodottoBase.getId())) {
+            this.prodottoRepository.save(prodottoBase);
             return new ResponseEntity<>("Product " + prodottoBase.getId() + " Updated", HttpStatus.OK);
         } else {
             return ResponseEntity.status(404).body("Prodotto " + prodottoBase.getId() + " Not Found");
         }
+    }
+
+    public void creaBase(String nome, String metodiColtivazione, String certificazioni, String descrizone, double prezzo) {
+        ProdottoBase prodottoBase = new ProdottoBase();
+        prodottoBase.setNome(nome);
+        prodottoBase.setMetodiDiColtivazione(metodiColtivazione);
+        prodottoBase.setCertificazioni(certificazioni);
+        prodottoBase.setDescrizione(descrizone);
+        prodottoBase.setPrezzo(prezzo);
+        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
+        prodottoRepository.save(prodottoBase);
     }
 }
