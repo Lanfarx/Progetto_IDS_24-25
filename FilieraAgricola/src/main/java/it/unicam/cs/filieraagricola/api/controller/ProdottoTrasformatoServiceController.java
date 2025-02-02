@@ -2,51 +2,45 @@ package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
-import it.unicam.cs.filieraagricola.api.repository.ProdottoBaseRepository;
-import it.unicam.cs.filieraagricola.api.repository.ProdottoTrasformatoRepository;
-import jakarta.annotation.PostConstruct;
+import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.stereotype.Service;
 import java.util.Optional;
 
+<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/ProdottoTrasformatoService.java
+@Service
+public class ProdottoTrasformatoService {
+=======
 @RestController
 @RequestMapping("/trasformatore")
 public class ProdottoTrasformatoServiceController {
 
+>>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/ProdottoTrasformatoServiceController.java
     @Autowired
-    private final ProdottoTrasformatoRepository prodottoTrasformatoRepository;
+    private final ProdottoRepository prodottoRepository;
     @Autowired
+<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/ProdottoTrasformatoService.java
+    private ContenutoService contenutoService;
+
+    public ProdottoTrasformatoService(ProdottoRepository prodottoRepository) {
+        this.prodottoRepository = prodottoRepository;
+=======
     private final ProdottoBaseRepository prodottoBaseRepository;
     public ProdottoTrasformatoServiceController(ProdottoTrasformatoRepository prodottoTrasformatoRepository,
                                                 ProdottoBaseRepository prodottoBaseRepository) {
         this.prodottoBaseRepository = prodottoBaseRepository;
         this.prodottoTrasformatoRepository = prodottoTrasformatoRepository;
+>>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/ProdottoTrasformatoServiceController.java
     }
 
-    @PostConstruct
-    public void initSampleData() {
-        //Prodotto trasformato derivante da quello sopra
-        ProdottoBase prodottoBase = new ProdottoBase();
-        prodottoBase.setNome("Pummador");
-        prodottoBase.setPrezzo(30);
-        prodottoBase.setCertificazioni("AA");
-        prodottoBase.setMetodiDiColtivazione("dsa");
-        prodottoBaseRepository.save(prodottoBase);
-        ProdottoTrasformato passataPomodoro = new ProdottoTrasformato();
-        passataPomodoro.setNome("Passata Pomodoro");
-        passataPomodoro.setCertificazioni("DOP");
-        passataPomodoro.setPrezzo(30);
-        ProdottoBase pomodoro = prodottoBaseRepository.getReferenceById(3);
-        passataPomodoro.setProdottoBase(pomodoro);
-        passataPomodoro.setProcessoTrasformazione("Schiacciato da pressa");
-        prodottoTrasformatoRepository.save(passataPomodoro);
-        System.out.println("Prodotto trasformato creato: " + passataPomodoro);
 
-    }
 
+<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/ProdottoTrasformatoService.java
+    public ResponseEntity<Object> getProdottoTrasformato(int id) {
+        if (!this.prodottoRepository.existsProdottoTrasformatoById(id)) {
+=======
     @RequestMapping({"/prodottitrasformati"})
     public ResponseEntity<Object> getProdotti() {
         return new ResponseEntity<>(this.prodottoTrasformatoRepository.findAll(), HttpStatus.OK);
@@ -55,12 +49,28 @@ public class ProdottoTrasformatoServiceController {
     @RequestMapping({"/prodottitrasformati/{id}"})
     public ResponseEntity<Object> getProdotto(@PathVariable("id") int id) {
         if (!this.prodottoTrasformatoRepository.existsById(id)) {
+>>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/ProdottoTrasformatoServiceController.java
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
-            return new ResponseEntity<>(this.prodottoTrasformatoRepository.findById(id), HttpStatus.OK);
+            return new ResponseEntity<>(this.prodottoRepository.findById(id), HttpStatus.OK);
         }
     }
 
+<<<<<<< HEAD:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/services/ProdottoTrasformatoService.java
+    public ResponseEntity<Object> getProdottiTrasformati() {
+        return new ResponseEntity<>(this.prodottoRepository.findAllProdottiTrasformati(), HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> deleteProdottoTrasformato(int id) {
+        this.prodottoRepository.deleteById(id);
+        return new ResponseEntity<>("Product with id: " + id + " Deleted", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+        if (this.prodottoRepository.existsProdottoTrasformatoById(prodottoTrasformato.getId())) {
+            this.prodottoRepository.save(prodottoTrasformato);
+            return new ResponseEntity<>("Product " + prodottoTrasformato.getId() + " Updated", HttpStatus.OK);
+=======
     @PostMapping({"/prodottitrasformati/aggiungi"})
     public ResponseEntity<Object> aggiungiProdotto(@RequestBody ProdottoTrasformato prodotto) {
         if (!this.prodottoTrasformatoRepository.existsById(prodotto.getId())) {
@@ -109,8 +119,51 @@ public class ProdottoTrasformatoServiceController {
         if (this.prodottoTrasformatoRepository.existsById(prodottoTrasformato.getId())) {
             this.prodottoTrasformatoRepository.save(prodottoTrasformato);
             return new ResponseEntity<>("Prodotto " + prodottoTrasformato.getId() + " Aggiornato", HttpStatus.OK);
+>>>>>>> ba47a2edbe86bce5cfd774dfb1a050ef55a48362:FilieraAgricola/src/main/java/it/unicam/cs/filieraagricola/api/controller/ProdottoTrasformatoServiceController.java
         } else {
             return ResponseEntity.status(404).body("Prodotto " + prodottoTrasformato.getId() + " Non Trovato");
         }
+    }
+
+    public ResponseEntity<Object> aggiungiProdottoTrasformato(String nome, String processo,
+                                                            String certificazioni, int prodottoBaseID,
+                                                              String descrizione, double prezzo) {
+
+        Optional<ProdottoBase> prodottoBaseOpt = prodottoRepository.findProdottoBaseById(prodottoBaseID);
+        ProdottoBase prodottoBase;
+        if(prodottoBaseOpt.isPresent()) {
+            prodottoBase = prodottoBaseOpt.get();
+        } else {
+            return new ResponseEntity<>("ProdottoBase non trovato!", HttpStatus.BAD_REQUEST);
+        }
+        if(prodottoRepository.existsByCaratteristicheTrasformato(nome, processo, certificazioni, prodottoBase)){
+            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+        }
+        creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo);
+        return new ResponseEntity<>("Prodotto Trasformato creato!", HttpStatus.OK);
+    }
+
+    public ResponseEntity<Object> aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+        if(prodottoRepository.existsById(prodottoTrasformato.getId())) {
+            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+        }
+        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
+        prodottoRepository.save(prodottoTrasformato);
+        return new ResponseEntity<>("Prodotto Trasformato creato!", HttpStatus.OK);
+    }
+
+
+    public void creaTrasformato(String nome, String processo, String certificazioni, int prodottoBaseID,
+                                String descrizione, double prezzo) {
+        ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
+        ProdottoBase prodottoBase = prodottoRepository.findProdottoBaseById(prodottoBaseID).get(); //Il controllo per esistenza viene già effettuato in esisteProdottoTrasformato
+        prodottoTrasformato.setNome(nome);
+        prodottoTrasformato.setProcessoTrasformazione(processo);
+        prodottoTrasformato.setCertificazioni(certificazioni);
+        prodottoTrasformato.setProdottoBase(prodottoBase);
+        prodottoTrasformato.setDescrizione(descrizione);
+        prodottoTrasformato.setPrezzo(prezzo);
+        prodottoRepository.save(prodottoTrasformato);
+        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
     }
 }
