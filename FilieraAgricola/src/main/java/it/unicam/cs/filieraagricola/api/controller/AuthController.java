@@ -21,7 +21,7 @@ public class AuthController {
     public ResponseEntity<String> register(@RequestParam String username,
                                            @RequestParam String password) {
         userService.registerUser(username, password); // Registra l'utente
-        return ResponseEntity.ok("User successfully registered");
+        return ResponseEntity.ok("Utente registrato correttamente");
     }
 
     @PostMapping("/login")
@@ -30,15 +30,15 @@ public class AuthController {
         // Recupera l'utente dal database
         Optional<Users> user = userService.findByUsername(username);
         if (user.isEmpty()) {
-            return ResponseEntity.status(401).body("Invalid username");
+            return ResponseEntity.status(401).body("Username non valido");
         }
 
         // Verifica la password
         if (!password.equals(user.get().getPassword())) {
-            return ResponseEntity.status(401).body("Invalid password");
+            return ResponseEntity.status(401).body("Password non valida");
         }
 
-        return ResponseEntity.ok("Login successful for user: " + username + " with roles: " + user.get().getRoles());
+        return ResponseEntity.ok("Login effettuato per l'utente: " + username + " con i ruoli: " + user.get().getRoles());
     }
 }
 
