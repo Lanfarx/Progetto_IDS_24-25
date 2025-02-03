@@ -7,7 +7,6 @@ import jakarta.persistence.*;
 @DiscriminatorValue("RUOLO")
 public class RichiestaRuolo extends Richiesta {
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
     private UserRole ruoloRichiesto;
 
     public UserRole getRuoloRichiesto() { return ruoloRichiesto; }
