@@ -1,8 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.Categoria;
-import it.unicam.cs.filieraagricola.api.entities.Visita;
-import it.unicam.cs.filieraagricola.api.services.CategoriaService;
+import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

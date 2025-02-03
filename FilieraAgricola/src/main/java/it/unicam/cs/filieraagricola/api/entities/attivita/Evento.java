@@ -1,5 +1,6 @@
-package it.unicam.cs.filieraagricola.api.entities;
+package it.unicam.cs.filieraagricola.api.entities.attivita;
 
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import jakarta.persistence.*;
 
 import java.util.HashSet;

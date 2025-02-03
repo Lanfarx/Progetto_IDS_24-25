@@ -1,8 +1,8 @@
-package it.unicam.cs.filieraagricola.api.services;
+package it.unicam.cs.filieraagricola.api.services.gestore;
 
-import it.unicam.cs.filieraagricola.api.entities.Evento;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
-import it.unicam.cs.filieraagricola.api.entities.Visita;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
