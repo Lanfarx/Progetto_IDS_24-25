@@ -1,15 +1,24 @@
 package it.unicam.cs.filieraagricola.api.services.gestore;
 
+import it.unicam.cs.filieraagricola.api.commons.UserRole;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
+import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
+import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
+import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
 
 @Service
 public class AttivitaService {
@@ -21,7 +30,7 @@ public class AttivitaService {
         this.attivitaRepository = attivitaRepository;
     }
 
-    public List<Visita> getAllAttivita(){
+    public List<Visita> getAllAttivita() {
         return attivitaRepository.findAll();
     }
 
@@ -37,7 +46,11 @@ public class AttivitaService {
         return attivitaRepository.findById(id);
     }
 
-    public boolean existsAttivita(int id){
+    public List<Visita> getAttivitaByOrganizzatore(Users organizzatore) {
+        return attivitaRepository.findByOrganizzatore(organizzatore);
+    }
+
+    public boolean existsAttivita(int id) {
         return attivitaRepository.existsById(id);
     }
 
@@ -53,11 +66,13 @@ public class AttivitaService {
         return attivitaRepository.existsEventoById(id);
     }
 
-    public void saveVisita(Visita visita) {
+    public void saveVisita(Visita visita, Users organizzatore) {
+        visita.setOrganizzatore(organizzatore);
         attivitaRepository.save(visita);
     }
 
-    public void saveEvento(Evento evento) {
+    public void saveEvento(Evento evento, Users organizzatore) {
+        evento.setOrganizzatore(organizzatore);
         attivitaRepository.save(evento);
     }
 
@@ -81,12 +96,11 @@ public class AttivitaService {
 
     public boolean aggiungiPrenotazione(Visita visita, Users user) {
         if (existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
-            if(visita.getData().isAfter(LocalDate.now())) {
+            if (visita.getData().isAfter(LocalDate.now())) {
                 visita.getPrenotazioni().add(user);
                 attivitaRepository.save(visita);
                 return true;
-            }
-            else return false;
+            } else return false;
         }
         return false;
     }

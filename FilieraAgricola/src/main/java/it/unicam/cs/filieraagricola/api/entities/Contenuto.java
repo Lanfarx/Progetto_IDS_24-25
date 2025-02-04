@@ -1,16 +1,17 @@
 package it.unicam.cs.filieraagricola.api.entities;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import jakarta.persistence.*;
 
+
+//TODO togliere variabili prezzo, nome e descrizioni già presenti in Elemento
 @Entity
 public class Contenuto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
-    private String nome;
-    private String descrizione;
-    private double prezzo;
-    private boolean verificato;
+    @Enumerated(EnumType.STRING)
+    private StatoRichiesta verificato;
 
 
     @OneToOne
@@ -21,21 +22,23 @@ public class Contenuto {
 
     public void setElemento(Elemento elemento) { this.elemento = elemento; }
 
-    public boolean isVerificato() { return verificato; }
+    public boolean isVerificato() { return verificato==StatoRichiesta.ACCETTATA; }
 
-    public void setVerificato(boolean verificato) { this.verificato = verificato; }
+    public StatoRichiesta getVerificato() { return verificato; }
 
-    public double getPrezzo() { return prezzo; }
+    public void setVerificato(StatoRichiesta verificato) { this.verificato = verificato; }
 
-    public void setPrezzo(double prezzo) { this.prezzo = prezzo; }
+    public double getPrezzo() { return elemento.getPrezzo(); }
 
-    public String getDescrizione() { return descrizione; }
+    public void setPrezzo(double prezzo) { this.elemento.setPrezzo(prezzo); }
 
-    public void setDescrizione(String descrizione) { this.descrizione = descrizione; }
+    public String getDescrizione() { return elemento.getDescrizione(); }
 
-    public String getNome() { return nome; }
+    public void setDescrizione(String descrizione) { this.elemento.setDescrizione(descrizione); }
 
-    public void setNome(String nome) { this.nome = nome; }
+    public String getNome() { return elemento.getNome(); }
+
+    public void setNome(String nome) { this.elemento.setNome(nome); }
 
     public void setId(int id) { this.id = id; }
 

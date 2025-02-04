@@ -15,13 +15,16 @@ public class Visita implements Attivita{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    @ManyToOne
+    @JoinColumn(name = "organizzatore_id", nullable = false)
+    private Users organizzatore;
+
     private String titolo;
 
     private String descrizione;
 
     private LocalDate data;
 
-    // Relazione con Users per le prenotazioni
     @ManyToMany
     @JoinTable(
             name = "visita_prenotazioni",
@@ -38,6 +41,14 @@ public class Visita implements Attivita{
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public Users getOrganizzatore() {
+        return organizzatore;
+    }
+
+    public void setOrganizzatore(Users organizzatore) {
+        this.organizzatore = organizzatore;
     }
 
     public String getTitolo() {

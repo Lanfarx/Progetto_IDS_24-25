@@ -1,8 +1,6 @@
 package it.unicam.cs.filieraagricola.api.controller;
 
-import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
-import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
 import it.unicam.cs.filieraagricola.api.services.ProdottoTrasformatoService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,17 +42,26 @@ public class ProdottoTrasformatoController {
 
     @RequestMapping({"/prodottitrasformati"})
     public ResponseEntity<Object> getProducts() {
-        return prodottoTrasformatoService.getProdottiTrasformati();
+        if(!prodottoTrasformatoService.getProdottiTrasformati().isEmpty()){
+            return new ResponseEntity<>(prodottoTrasformatoService.getProdottiTrasformati(), HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Nessun prodotto trasformato esistente",HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping({"/prodottitrasformati/{id}"})
     public ResponseEntity<Object> getProduct(@PathVariable("id") int id) {
-        return prodottoTrasformatoService.getProdottoTrasformato(id);
+        if(prodottoTrasformatoService.getProdottoTrasformato(id) != null ){
+            return new ResponseEntity<>(prodottoTrasformatoService.getProdottoTrasformato(id), HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Prodotto trasformato non esistente", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping({"/prodottitrasformati/aggiungi"})
     public ResponseEntity<Object> addProduct(@RequestBody ProdottoTrasformato prodotto) {
-        return prodottoTrasformatoService.aggiungiProdottoTrasformato(prodotto);
+        if(prodottoTrasformatoService.aggiungiProdottoTrasformato(prodotto)){
+            return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Prodotto trasformato esistente", HttpStatus.CONFLICT);
     }
 
     @PostMapping({"prodottitrasformati/aggiungiconparametri"})
@@ -65,17 +72,16 @@ public class ProdottoTrasformatoController {
                                                       @RequestParam("descrizione") String descrizione,
                                                       @RequestParam("prezzo") double prezzo)
     {
-        return prodottoTrasformatoService.aggiungiProdottoTrasformato(nome, processoTrasformazione,
-                                                                    certificazioni, IDprodottoBase,
-                                                                    descrizione, prezzo);
-        //TODO creaContenuto()
-        //TODO CREARE CONTENUTO IN MANIERA AUTOMATICA AGGIUNGENDO PARAM PREZZO
-        //TODO AGGIUNGERE UNA SERVICE O UNA REPOSITORY PER CONTENUTO
+        if(prodottoTrasformatoService.aggiungiProdottoTrasformato(nome, processoTrasformazione, certificazioni, IDprodottoBase, descrizione, prezzo)){
+            return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Prodotto trasformato esistente", HttpStatus.CONFLICT);
     }
 
     @RequestMapping({"/prodottitrasformati/elimina/{id}"})
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
-        return prodottoTrasformatoService.deleteProdottoTrasformato(id);
+        prodottoTrasformatoService.deleteProdottoTrasformato(id);
+        return new ResponseEntity<>("Prodotto trasformato eliminato", HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -83,6 +89,9 @@ public class ProdottoTrasformatoController {
             method = {RequestMethod.PUT}
     )
     public ResponseEntity<Object> updateProduct(@RequestBody ProdottoTrasformato prodottoTrasformato) {
-        return prodottoTrasformatoService.aggiornaProdottoTrasformato(prodottoTrasformato);
+        if(prodottoTrasformatoService.aggiornaProdottoTrasformato(prodottoTrasformato)){
+            return new ResponseEntity<>("Prodotto trasformato aggiornato", HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Prodotto non trovato", HttpStatus.NOT_FOUND);
     }
 }

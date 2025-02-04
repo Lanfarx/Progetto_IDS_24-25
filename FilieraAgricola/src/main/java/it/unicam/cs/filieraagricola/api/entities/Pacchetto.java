@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.Cascade;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +11,7 @@ public class Pacchetto extends Elemento{
 
     private String descrizione; //TODO vedere se toglierla
 
-    @ManyToMany
+    @ManyToMany (cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "Rpacchetto", // Nome della tabella di associazione
             joinColumns = @JoinColumn(name = "pacchetto_id"), // Chiave esterna per il Pacchetto

@@ -2,10 +2,13 @@ package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -23,10 +26,12 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private RichiestaRepository richiestaRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RichiestaRepository richiestaRepository) {
         this.userRepository = userRepository;
-
+        this.richiestaRepository = richiestaRepository;
     }
 
     public Optional<Users> findByUsername(String username) {
@@ -41,9 +46,16 @@ public class UserService implements UserDetailsService {
         return userRepository.findById(id);
     }
 
+    public void save(Users user) {
+        userRepository.save(user);
+    }
+
+    public void delete(Users user) {
+        userRepository.delete(user);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // Recuperiamo l'utente dal database
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
@@ -68,6 +80,14 @@ public class UserService implements UserDetailsService {
         newUser.getRoles().add(UserRole.ACQUIRENTE);
         userRepository.save(newUser);
     }
+
+
+    public Users getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String username = authentication.getName();
+        return userRepository.findByUsername(username).get();
+    }
+
 
     public boolean isOperatore(Users user) {
         return user.getRoles().contains(UserRole.PRODUTTORE) ||
