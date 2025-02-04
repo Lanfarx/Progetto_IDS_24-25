@@ -1,18 +1,24 @@
 package it.unicam.cs.filieraagricola.api.services.gestore;
 
+import it.unicam.cs.filieraagricola.api.commons.UserRole;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
+import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
+import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
+import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.services.UserService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
+
+import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
 
 @Service
 public class AttivitaService {
@@ -106,15 +112,5 @@ public class AttivitaService {
             return true;
         }
         return false;
-    }
-
-    public void eliminaAllPrenotazione(Users user) {
-        List<Visita> visitePrenotate = attivitaRepository.findAllByPrenotazioniContains(user);
-
-        for (Visita visita : visitePrenotate) {
-            visita.getPrenotazioni().remove(user);
-        }
-
-        attivitaRepository.saveAll(visitePrenotate);
     }
 }

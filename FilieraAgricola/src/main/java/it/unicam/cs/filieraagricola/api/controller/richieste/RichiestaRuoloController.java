@@ -5,12 +5,10 @@ import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.services.UserService;
-import it.unicam.cs.filieraagricola.api.services.gestore.RichiestaRuoloService;
+import it.unicam.cs.filieraagricola.api.services.gestore.richieste.RichiestaRuoloService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

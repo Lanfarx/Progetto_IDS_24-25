@@ -2,12 +2,8 @@ package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
-import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
-import it.unicam.cs.filieraagricola.api.services.gestore.AttivitaService;
-import it.unicam.cs.filieraagricola.api.services.gestore.RichiestaEliminazioneService;
-import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
