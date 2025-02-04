@@ -20,8 +20,8 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll() // Consenti l'accesso alle API di autenticazione
                         .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/richieste-ruoli/richiesta").authenticated() // Chiunque autenticato può fare richiesta di ruolo
-                        .requestMatchers("/richieste-ruoli/attesa", "/richieste-ruoli/processa-richiesta","/categorie/**")
+                        .requestMatchers("/richieste/richiesta/**").authenticated() // Chiunque autenticato può fare richiesta di ruolo
+                        .requestMatchers("/richieste/attesa/**", "/richieste/processa/**","/categorie/**")
                             .hasRole("GESTORE_DELLA_PIATTAFORMA") // Solo i gestori possono processare richieste
                         .requestMatchers("/produttore/**").hasRole("PRODUTTORE")// Consenti l'accesso alla console H2
                         .requestMatchers("/trasformatore/**").hasRole("TRASFORMATORE")// Consenti l'accesso alla console H2
