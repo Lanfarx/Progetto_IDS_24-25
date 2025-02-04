@@ -24,9 +24,7 @@ public class RichiestaEliminazioneController {
 
     @PostMapping("/richiesta/eliminazione")
     public ResponseEntity<String> aggiungiRichiestaEliminazione(@RequestParam(required = false) String motivazione) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Users user = userService.findByUsername(username).get();
+        Users user = userService.getCurrentUser();
 
         if (!richiestaEliminazioneService.existsSameRichiesta(user)) {
             richiestaEliminazioneService.aggiungiRichiesta(user.getId(), motivazione);

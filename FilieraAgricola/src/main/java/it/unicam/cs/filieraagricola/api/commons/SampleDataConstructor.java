@@ -18,9 +18,9 @@ import java.util.Set;
 public class SampleDataConstructor {
 
     @Autowired
-    AttivitaRepository attivitaRepository;
+    private AttivitaRepository attivitaRepository;
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
@@ -29,6 +29,8 @@ public class SampleDataConstructor {
     ContenutoService contenutoService;
     @Autowired
     PacchettoRepository pacchettoRepository;
+
+
 
     @PostConstruct
     public void initSampleData(){
@@ -61,8 +63,22 @@ public class SampleDataConstructor {
     }
 
     private void initSampleAttivita(){
+        Users organizzatore1 = new Users();
+        organizzatore1.setUsername("organizzatore1");
+        organizzatore1.setPassword("organizzatore1");
+        organizzatore1.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
+
+        Users organizzatore2 = new Users();
+        organizzatore2.setUsername("organizzatore2");
+        organizzatore2.setPassword("organizzatore2");
+        organizzatore2.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
+
+        userRepository.save(organizzatore1);
+        userRepository.save(organizzatore2);
+
         Visita visita = new Visita();
         visita.setTitolo("ProvaVisita");
+        visita.setOrganizzatore(organizzatore1);
         visita.setDescrizione("questa è una visita");
         visita.setLuogo("Genzano");
         visita.setData(LocalDate.parse("2025-01-27"));
@@ -78,6 +94,7 @@ public class SampleDataConstructor {
 
         Evento evento = new Evento();
         evento.setTitolo("Baudo");
+        evento.setOrganizzatore(organizzatore2);
         evento.setDescrizione("questo è un evento");
         evento.setLuogo("Civitanova");
         evento.setData(LocalDate.parse("2025-06-26"));;

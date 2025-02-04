@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -40,6 +41,17 @@ public class AttivitaController {
         return new ResponseEntity<>(attivitaService.getAllEventi(), HttpStatus.OK);
     }
 
+    @GetMapping("/mie-attivita")
+    public ResponseEntity<Object> getMieAttivita() {
+        Users organizzatore = userService.getCurrentUser();
+        if (organizzatore == null) {
+            return new ResponseEntity<>("Utente non trovato", HttpStatus.UNAUTHORIZED);
+        }
+
+        List<Visita> mieAttivita = attivitaService.getAttivitaByOrganizzatore(organizzatore);
+        return new ResponseEntity<>(mieAttivita, HttpStatus.OK);
+    }
+
     @GetMapping({"/{id}"})
     public ResponseEntity<Object> getAttivita(@PathVariable("id") int id) {
         if (attivitaService.existsAttivita(id)) {
@@ -54,8 +66,8 @@ public class AttivitaController {
         if (attivitaService.existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
             return new ResponseEntity<>("La visita già esiste", HttpStatus.BAD_REQUEST);
         }
-
-        attivitaService.saveVisita(visita);
+        Users organizzatore = userService.getCurrentUser();
+        attivitaService.saveVisita(visita, organizzatore);
         return new ResponseEntity<>("Visita creata", HttpStatus.CREATED);
     }
 
@@ -67,7 +79,8 @@ public class AttivitaController {
         }
         Set<Users> operatori = userService.getOperatoriByIds(idInvitati);
         evento.setInvitati(operatori);
-        attivitaService.saveEvento(evento);
+        Users organizzatore = userService.getCurrentUser();
+        attivitaService.saveEvento(evento, organizzatore);
         return operatori;
     }
 
@@ -80,7 +93,6 @@ public class AttivitaController {
         return new ResponseEntity<>("Evento creato con " + operatori.size() + " invitati", HttpStatus.CREATED);
     }
 
-
     @PostMapping("/aggiungiconparametri")
     public ResponseEntity<Object> aggiungiVisitaOEventoConParametri(
             @RequestParam String titolo,
@@ -92,6 +104,7 @@ public class AttivitaController {
         if (attivitaService.existsVisitaByParams(titolo, data, descrizione, luogo)) {
             return new ResponseEntity<>("L'Attivita già esiste", HttpStatus.BAD_REQUEST);
         }
+        Users organizzatore = userService.getCurrentUser();
         Visita visita;
         if (idInvitati != null && !idInvitati.isEmpty()) {
             visita = new Evento();
@@ -110,7 +123,7 @@ public class AttivitaController {
             visita.setDescrizione(descrizione);
             visita.setLuogo(luogo);
             visita.setData(data);
-            attivitaService.saveVisita(visita);
+            attivitaService.saveVisita(visita, organizzatore);
             return new ResponseEntity<>(responseMessage, HttpStatus.CREATED);
         } else {
             visita = new Visita();
@@ -118,7 +131,7 @@ public class AttivitaController {
             visita.setDescrizione(descrizione);
             visita.setLuogo(luogo);
             visita.setData(data);
-            attivitaService.saveVisita(visita);
+            attivitaService.saveVisita(visita, organizzatore);
             return new ResponseEntity<>("Visita creata", HttpStatus.CREATED);
         }
     }
@@ -132,7 +145,8 @@ public class AttivitaController {
     @PutMapping("/visite/aggiorna")
     public ResponseEntity<Object> aggiornaVisita(@RequestBody Visita visitaAggiornata) {
         if (attivitaService.existsVisita(visitaAggiornata.getId())) {
-            attivitaService.saveVisita(visitaAggiornata);
+            Users organizzatore = userService.getCurrentUser();
+            attivitaService.saveVisita(visitaAggiornata, organizzatore);
             return new ResponseEntity<>("Visita " + visitaAggiornata.getId() + " Aggiornata", HttpStatus.OK);
         } else {
             return ResponseEntity.status(404).body("Visita " + visitaAggiornata.getId() + " Non Trovata");

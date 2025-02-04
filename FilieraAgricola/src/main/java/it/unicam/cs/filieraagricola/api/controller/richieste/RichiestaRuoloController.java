@@ -24,9 +24,7 @@ public class RichiestaRuoloController {
 
     @PostMapping("/richiesta/ruoli")
     public ResponseEntity<String> aggiungiRichiestaRuolo(@RequestParam UserRole ruolo) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        String username = authentication.getName();
-        Users user = userService.findByUsername(username).get();
+        Users user = userService.getCurrentUser();
         if (!user.getRoles().contains(ruolo)) {
             if (!richiestaRuoloService.existsSameRichiesta(user, ruolo)) {
                 richiestaRuoloService.aggiungiRichiesta(user.getId(), ruolo);

@@ -4,6 +4,7 @@ import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,11 @@ public class AttivitaService {
 
     @Autowired
     private final AttivitaRepository attivitaRepository;
+    private final UserService userService;
 
-    public AttivitaService(AttivitaRepository attivitaRepository) {
+    public AttivitaService(AttivitaRepository attivitaRepository, UserService userService) {
         this.attivitaRepository = attivitaRepository;
+        this.userService = userService;
     }
 
     public List<Visita> getAllAttivita(){
@@ -37,6 +40,10 @@ public class AttivitaService {
         return attivitaRepository.findById(id);
     }
 
+    public List<Visita> getAttivitaByOrganizzatore(Users organizzatore) {
+        return attivitaRepository.findByOrganizzatore(organizzatore);
+    }
+
     public boolean existsAttivita(int id){
         return attivitaRepository.existsById(id);
     }
@@ -53,11 +60,13 @@ public class AttivitaService {
         return attivitaRepository.existsEventoById(id);
     }
 
-    public void saveVisita(Visita visita) {
+    public void saveVisita(Visita visita, Users organizzatore) {
+        visita.setOrganizzatore(organizzatore);
         attivitaRepository.save(visita);
     }
 
-    public void saveEvento(Evento evento) {
+    public void saveEvento(Evento evento, Users organizzatore) {
+        evento.setOrganizzatore(organizzatore);
         attivitaRepository.save(evento);
     }
 
