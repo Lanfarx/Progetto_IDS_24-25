@@ -50,4 +50,6 @@ public interface RichiestaRepository extends JpaRepository<Richiesta, Integer> {
 
     @Query("SELECT r FROM RichiestaEliminazione r")
     List<Richiesta> findAllRichiesteEliminazione();
+
+    void deleteAllByUser(Users user);
 }

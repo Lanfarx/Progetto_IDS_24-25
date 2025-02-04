@@ -5,26 +5,26 @@ import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
 import it.unicam.cs.filieraagricola.api.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class AttivitaService {
 
     @Autowired
     private final AttivitaRepository attivitaRepository;
-    private final UserService userService;
 
-    public AttivitaService(AttivitaRepository attivitaRepository, UserService userService) {
+    public AttivitaService(AttivitaRepository attivitaRepository) {
         this.attivitaRepository = attivitaRepository;
-        this.userService = userService;
     }
 
-    public List<Visita> getAllAttivita(){
+    public List<Visita> getAllAttivita() {
         return attivitaRepository.findAll();
     }
 
@@ -44,7 +44,7 @@ public class AttivitaService {
         return attivitaRepository.findByOrganizzatore(organizzatore);
     }
 
-    public boolean existsAttivita(int id){
+    public boolean existsAttivita(int id) {
         return attivitaRepository.existsById(id);
     }
 
@@ -90,12 +90,11 @@ public class AttivitaService {
 
     public boolean aggiungiPrenotazione(Visita visita, Users user) {
         if (existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
-            if(visita.getData().isAfter(LocalDate.now())) {
+            if (visita.getData().isAfter(LocalDate.now())) {
                 visita.getPrenotazioni().add(user);
                 attivitaRepository.save(visita);
                 return true;
-            }
-            else return false;
+            } else return false;
         }
         return false;
     }
@@ -107,5 +106,15 @@ public class AttivitaService {
             return true;
         }
         return false;
+    }
+
+    public void eliminaAllPrenotazione(Users user) {
+        List<Visita> visitePrenotate = attivitaRepository.findAllByPrenotazioniContains(user);
+
+        for (Visita visita : visitePrenotate) {
+            visita.getPrenotazioni().remove(user);
+        }
+
+        attivitaRepository.saveAll(visitePrenotate);
     }
 }

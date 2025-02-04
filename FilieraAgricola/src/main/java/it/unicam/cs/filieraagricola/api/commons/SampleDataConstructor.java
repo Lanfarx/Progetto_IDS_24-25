@@ -112,6 +112,30 @@ public class SampleDataConstructor {
     }
 
     private void initSampleProdotti(){
+        Users operatore1 = new Users();
+        operatore1.setUsername("operatore1");
+        operatore1.setPassword("operatore1");
+        operatore1.getRoles().add(UserRole.PRODUTTORE);
+
+        Users operatore2 = new Users();
+        operatore2.setUsername("operatore2");
+        operatore2.setPassword("operatore2");
+        operatore2.getRoles().add(UserRole.TRASFORMATORE);
+
+        userRepository.save(operatore1);
+        userRepository.save(operatore2);
+
+        ProdottoBase mela = new ProdottoBase();
+        mela.setNome("Mela");
+        mela.setCertificazioni("Certificazione");
+        mela.setDescrizione("Prodotto di prova");
+        mela.setMetodiDiColtivazione("Coltivato in arabia");
+        mela.setPrezzo(50);
+        mela.setQuantita(50);
+        mela.setOperatore(operatore1);
+        prodottoRepository.save(mela);
+        contenutoService.aggiungiContenutoDaElemento(mela);
+
         Set<Prodotto> prodotti = new HashSet<>(); //Creo un set per darlo al pacchetto
         ProdottoBase prodottoBase = new ProdottoBase();
         prodottoBase.setNome("Pomodoro");
@@ -120,9 +144,11 @@ public class SampleDataConstructor {
         prodottoBase.setMetodiDiColtivazione("Coltivato in italia");
         prodottoBase.setPrezzo(50);
         prodottoBase.setQuantita(50);
+        prodottoBase.setOperatore(operatore1);
         prodottoRepository.save(prodottoBase);
         contenutoService.aggiungiContenutoDaElemento(prodottoBase);
         prodotti.add(prodottoBase);
+
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
         prodottoTrasformato.setNome("Passata di pomodoro");
         prodottoTrasformato.setCertificazioni("Certificazione");
@@ -130,6 +156,7 @@ public class SampleDataConstructor {
         prodottoTrasformato.setProdottoBase(prodottoBase);
         prodottoTrasformato.setProcessoTrasformazione("Sch9iaccciaot");
         prodottoTrasformato.setPrezzo(50);
+        prodottoTrasformato.setOperatore(operatore2);
         prodottoRepository.save(prodottoTrasformato);
         contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
         prodotti.add(prodottoTrasformato);
@@ -137,11 +164,19 @@ public class SampleDataConstructor {
     }
 
     private void initSamplePacchetto(Set<Prodotto> prodottoSet){
+        Users operatore3 = new Users();
+        operatore3.setUsername("operatore3");
+        operatore3.setPassword("operatore3");
+        operatore3.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
+
+        userRepository.save(operatore3);
+
         Pacchetto pacchetto = new Pacchetto();
         pacchetto.setNome("Pacchetto");
         pacchetto.setDescrizione("Pacchetto di prova");
         pacchetto.setPrezzo(40);
         pacchetto.setProdottiSet(prodottoSet);
+        pacchetto.setOperatore(operatore3);
         pacchettoRepository.save(pacchetto);
         contenutoService.aggiungiContenutoDaElemento(pacchetto);
     }

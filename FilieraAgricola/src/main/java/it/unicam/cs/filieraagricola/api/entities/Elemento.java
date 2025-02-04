@@ -14,6 +14,10 @@ public abstract class Elemento {
     private String descrizione;
     private double prezzo;
 
+    @ManyToOne
+    @JoinColumn(name = "operatore_id", nullable = false)
+    private Users operatore;
+
     public String getDescrizione() {
         return descrizione;
     }
@@ -44,4 +48,12 @@ public abstract class Elemento {
     }
 
     public abstract int getQuantita();
+
+    public Users getOperatore() {
+        return operatore;
+    }
+
+    public void setOperatore(Users operatore) {
+        this.operatore = operatore;
+    }
 }

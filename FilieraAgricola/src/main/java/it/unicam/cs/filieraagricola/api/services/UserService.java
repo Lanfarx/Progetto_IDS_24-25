@@ -2,7 +2,12 @@ package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
+import it.unicam.cs.filieraagricola.api.services.gestore.AttivitaService;
+import it.unicam.cs.filieraagricola.api.services.gestore.RichiestaEliminazioneService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -25,9 +30,12 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private final UserRepository userRepository;
+    @Autowired
+    private RichiestaRepository richiestaRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, RichiestaRepository richiestaRepository) {
         this.userRepository = userRepository;
+        this.richiestaRepository = richiestaRepository;
     }
 
     public Optional<Users> findByUsername(String username) {

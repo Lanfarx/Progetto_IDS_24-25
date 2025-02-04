@@ -46,7 +46,7 @@ public class RichiestaEliminazioneController {
             StatoRichiesta statoRichiesta = richiesta.getStato();
             if (statoRichiesta == StatoRichiesta.ATTESA) {
                 richiestaEliminazioneService.processaRichiesta(id, approvato);
-                return new ResponseEntity<>("Richiesta di eliminazione " + id + (approvato ? " accettata e utente eliminato" : " rifiutata"), HttpStatus.OK);
+                return new ResponseEntity<>("Richiesta di eliminazione " + id + (approvato ? " accettata e utente: " + richiesta.getUser().getId() + " eliminato" : " rifiutata"), HttpStatus.OK);
             } else {
                 return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoRichiesta);
             }

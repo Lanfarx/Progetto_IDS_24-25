@@ -21,6 +21,8 @@ public interface AttivitaRepository extends JpaRepository<Visita, Integer> {
 
     List<Visita> findByOrganizzatore(Users organizzatore);
 
+    List<Visita> findAllByPrenotazioniContains (Users user);
+
     @Query("SELECT COUNT(v) = 1 FROM Visita v WHERE v.id = :id")
     boolean existsVisitaById(@Param("id") int id);
 

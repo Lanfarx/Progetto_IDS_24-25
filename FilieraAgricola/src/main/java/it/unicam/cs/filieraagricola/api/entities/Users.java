@@ -2,9 +2,13 @@ package it.unicam.cs.filieraagricola.api.entities;
 
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -23,6 +27,19 @@ public class Users {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING) // Converte l'enum in una stringa
     private Set<UserRole> roles = new HashSet<>();
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Richiesta> richieste;
+
+    @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Elemento> elementiCreati = new ArrayList<>();
+
+    @OneToMany(mappedBy = "organizzatore", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Visita> attivitaOrganizzate = new ArrayList<>();
+
+    @ManyToMany(mappedBy = "prenotazioni", cascade = CascadeType.ALL)
+    private Set<Visita> attivitaPrenotate = new HashSet<>();
+
 
     public Integer getId() {
         return id;
@@ -54,5 +71,37 @@ public class Users {
 
     public void setRoles(Set<UserRole> roles) {
         this.roles = roles;
+    }
+
+    public List<Richiesta> getRichieste() {
+        return richieste;
+    }
+
+    public void setRichieste(List<Richiesta> richieste) {
+        this.richieste = richieste;
+    }
+
+    public List<Visita> getAttivitaOrganizzate() {
+        return attivitaOrganizzate;
+    }
+
+    public void setAttivitaOrganizzate(List<Visita> attivitaOrganizzate) {
+        this.attivitaOrganizzate = attivitaOrganizzate;
+    }
+
+    public Set<Visita> getAttivitaPrenotate() {
+        return attivitaPrenotate;
+    }
+
+    public void setAttivitaPrenotate(Set<Visita> attivitaPrenotate) {
+        this.attivitaPrenotate = attivitaPrenotate;
+    }
+
+    public List<Elemento> getElementiCreati() {
+        return elementiCreati;
+    }
+
+    public void setElementiCreati(List<Elemento> elementiCreati) {
+        this.elementiCreati = elementiCreati;
     }
 }

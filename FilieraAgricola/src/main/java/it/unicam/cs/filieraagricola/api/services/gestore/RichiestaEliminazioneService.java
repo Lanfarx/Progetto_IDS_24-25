@@ -6,6 +6,7 @@ import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,11 +52,10 @@ public class RichiestaEliminazioneService {
             RichiestaEliminazione richiesta = (RichiestaEliminazione) richiestaRepository.findById(richiestaId).get();
             if (approvato) {
                 userService.delete(richiesta.getUser());
-                richiesta.setStato(StatoRichiesta.ACCETTATA);
             } else {
                 richiesta.setStato(StatoRichiesta.RIFIUTATA);
+                richiestaRepository.save(richiesta);
             }
-            richiestaRepository.save(richiesta);
         } else throw new RuntimeException("Richiesta non trovata");
     }
 }
