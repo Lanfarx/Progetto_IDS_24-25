@@ -52,42 +52,61 @@ public class PacchettoController {
 
     @RequestMapping({"/pacchetti"})
     public ResponseEntity<Object> getPacchetto() {
-        return pacchettoService.getPacchetti();
+        if(pacchettoService.getPacchetti().isEmpty()) {
+            return new ResponseEntity<>("Nessun pacchetto trovato", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(pacchettoService.getPacchetti(), HttpStatus.FOUND);
     }
 
     @RequestMapping({"/pacchetti/{id}"})
     public ResponseEntity<Object> GetPacchetto(@PathVariable("id") int id) {
-        return pacchettoService.GetPacchetto(id);
+        if(pacchettoService.getPacchetto(id) == null) {
+            return new ResponseEntity<>("Nessun pacchetto trovato", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(pacchettoService.getPacchetto(id), HttpStatus.FOUND);
     }
 
     @PostMapping({"/pacchetti/aggiungi"})
     public ResponseEntity<Object> aggiungiPacchetto(@RequestBody Pacchetto pacchetto) {
-        return aggiungiPacchetto(pacchetto);
+        if(pacchettoService.aggiungiPacchetto(pacchetto)) {
+            return new ResponseEntity<>("Pacchetto aggiunto", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Pacchetto già esistente", HttpStatus.CONFLICT);
     }
 
     @PostMapping({"/pacchetti/aggiungi/prodotto"})
     public ResponseEntity<Object> aggiungiProdotto(@RequestParam ("idPacchetto") int idPacchetto,
                                                     @RequestParam ("idProdotto") int idProdotto){
-        return pacchettoService.aggiungiProdotto(idPacchetto, idProdotto);
+        if(pacchettoService.aggiungiProdotto(idPacchetto, idProdotto)) {
+            return new ResponseEntity<>("Prodotto aggiunto al pacchetto", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Prodotto già esistente nel pacchetto", HttpStatus.CONFLICT);
     }
 
     @PostMapping({"/pacchetti/aggiungiconparametri"})
     public ResponseEntity<Object> aggiungiPacchettoWithParam(@RequestParam("nome") String nome,
                                                              @RequestParam("descrizione") String descrizione,
                                                              @RequestParam("ProdottiSet") Set<Integer> idProdottiSet){
-        return aggiungiPacchettoWithParam(nome, descrizione, idProdottiSet);
+        if(pacchettoService.aggiungiPacchettoWithParam(nome, descrizione, idProdottiSet)) {
+            return new ResponseEntity<>("Pacchetto aggiunto", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Pacchetto già esistente", HttpStatus.CONFLICT);
     }
 
 
     @RequestMapping({"/pacchetti/elimina/{id}"})
     public ResponseEntity<Object> eliminaPacchetto(@RequestParam("id") int id) {
-        return pacchettoService.eliminaPacchetto(id);
+        pacchettoService.eliminaPacchetto(id);
+        return new ResponseEntity<>("Pacchetto eliminato", HttpStatus.OK);
     }
 
     @RequestMapping({"/pacchetti/elimina/prodotto/{id}"})
     public ResponseEntity<Object> eliminaProdotto(@RequestParam("id") int id,
                                                   @RequestParam("idProdotto") int idProdotto) {
-        return pacchettoService.eliminaProdotto(id, idProdotto);
+        if(pacchettoService.eliminaProdotto(id, idProdotto)){
+            return new ResponseEntity<>("Prodotto eliminato", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Prodotto non trovato", HttpStatus.CONFLICT);
     }
 
     @RequestMapping(
@@ -95,6 +114,9 @@ public class PacchettoController {
             method = {RequestMethod.PUT}
     )
     public ResponseEntity<Object> aggiornaPacchetto(@RequestBody Pacchetto pacchetto) {
-        return pacchettoService.aggiornaPacchetto(pacchetto);
+        if(pacchettoService.aggiornaPacchetto(pacchetto)) {
+            return new ResponseEntity<>("Pacchetto aggiornato", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("Pacchetto non trovato", HttpStatus.CONFLICT);
     }
 }

@@ -12,13 +12,8 @@ import java.util.Optional;
 
 @Repository
 public interface ContenutoRepository extends JpaRepository<Contenuto, Integer> {
-    List<Contenuto> findByNomeAndDescrizioneAndPrezzo (String nome, String descrizione, double prezzo);
-
-    @Query("SELECT c FROM Contenuto c WHERE c.nome = :nome AND c.descrizione = :descrizione AND c.prezzo = :prezzo AND c.elemento = :elemento")
-    Optional<Contenuto> findByParams(
-            @Param("nome") String nome,
-            @Param("descrizione") String descrizione,
-            @Param("prezzo") double prezzo,
-            @Param("elementoID") Elemento elemento
+    @Query("SELECT c FROM Contenuto c WHERE c.elemento = :elemento")
+    Optional<Contenuto> findByElemento(
+            @Param("elemento") Elemento elemento
             );
 }

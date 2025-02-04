@@ -40,17 +40,26 @@ public class ProdottoBaseController {
 
     @RequestMapping({"/prodottibase"})
     public ResponseEntity<Object> getProdottiBase() {
-        return prodottoBaseService.getProdottiBase();
+        if(!prodottoBaseService.getProdottiBase().isEmpty()){
+            return new ResponseEntity<>(prodottoBaseService.getProdottiBase(), HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Non esistono prodotti base", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping({"/prodottibase/{id}"})
     public ResponseEntity<Object> getProdottoBase(@PathVariable("id") int id) {
-        return prodottoBaseService.getProdottoBase(id);
+        if(prodottoBaseService.getProdottoBase(id) != null){
+            return new ResponseEntity<>(prodottoBaseService.getProdottoBase(id), HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Prodotto base non esistente", HttpStatus.NOT_FOUND);
     }
 
     @PostMapping({"/prodottibase/aggiungi"})
     public ResponseEntity<Object> aggiungiProdottoBase(@RequestBody ProdottoBase prodotto) {
-        return prodottoBaseService.aggiungiProdottoBase(prodotto);
+        if(prodottoBaseService.aggiungiProdottoBase(prodotto)){
+            return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);
     }
 
     @PostMapping({"prodottibase/aggiungiconparametri"})
@@ -59,12 +68,16 @@ public class ProdottoBaseController {
                                                       @RequestParam("certificazioni") String certificazioni,
                                                        @RequestParam("descrizione") String descrizione,
                                                        @RequestParam("prezzo") double prezzo) {
-        return prodottoBaseService.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo);
+        if(prodottoBaseService.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo)){
+            return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
+        }
+        return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);
     }
 
     @DeleteMapping({"/prodottibase/elimina/{id}"})
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
-        return  prodottoBaseService.deleteProdottoBase(id);
+        prodottoBaseService.deleteProdottoBase(id);
+        return new ResponseEntity<>("Prodotto eliminato", HttpStatus.OK);
     }
 
     @RequestMapping(
@@ -72,6 +85,9 @@ public class ProdottoBaseController {
             method = {RequestMethod.PUT}
     )
     public ResponseEntity<Object> aggiornaProdottoBase(@RequestBody ProdottoBase prodottoBase) {
-        return prodottoBaseService.aggiungiProdottoBase(prodottoBase);
+        if(prodottoBaseService.aggiornaProdottoBase(prodottoBase)){
+            return new ResponseEntity<>("Prodotto aggiornato", HttpStatus.FOUND);
+        }
+        return new ResponseEntity<>("Prodotto non esistente", HttpStatus.NOT_FOUND);
     }
 }

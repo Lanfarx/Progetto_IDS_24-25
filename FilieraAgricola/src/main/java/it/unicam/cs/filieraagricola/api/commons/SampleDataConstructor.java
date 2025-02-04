@@ -3,15 +3,16 @@ package it.unicam.cs.filieraagricola.api.commons;
 import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
-import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
-import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;
-import it.unicam.cs.filieraagricola.api.repository.UserRepository;
+import it.unicam.cs.filieraagricola.api.repository.*;
+import it.unicam.cs.filieraagricola.api.services.ContenutoService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Component
 public class SampleDataConstructor {
@@ -22,12 +23,19 @@ public class SampleDataConstructor {
     UserRepository userRepository;
     @Autowired
     private CategoriaRepository categoriaRepository;
+    @Autowired
+    ProdottoRepository prodottoRepository;
+    @Autowired
+    ContenutoService contenutoService;
+    @Autowired
+    PacchettoRepository pacchettoRepository;
 
     @PostConstruct
     public void initSampleData(){
         initSampleUsers();
         initSampleAttivita();
         initSampleCategorie();
+        initSampleProdotti(); //Chiama anche il metodo per il pacchetto
     }
 
     private void initSampleUsers(){
@@ -86,6 +94,40 @@ public class SampleDataConstructor {
         attivitaRepository.save(evento);
     }
 
+    private void initSampleProdotti(){
+        Set<Prodotto> prodotti = new HashSet<>(); //Creo un set per darlo al pacchetto
+        ProdottoBase prodottoBase = new ProdottoBase();
+        prodottoBase.setNome("Pomodoro");
+        prodottoBase.setCertificazioni("Certificazione");
+        prodottoBase.setDescrizione("Prodotto di prova");
+        prodottoBase.setMetodiDiColtivazione("Coltivato in italia");
+        prodottoBase.setPrezzo(50);
+        prodottoBase.setQuantita(50);
+        prodottoRepository.save(prodottoBase);
+        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
+        prodotti.add(prodottoBase);
+        ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
+        prodottoTrasformato.setNome("Passata di pomodoro");
+        prodottoTrasformato.setCertificazioni("Certificazione");
+        prodottoTrasformato.setDescrizione("Prodotto di passata");
+        prodottoTrasformato.setProdottoBase(prodottoBase);
+        prodottoTrasformato.setProcessoTrasformazione("Sch9iaccciaot");
+        prodottoTrasformato.setPrezzo(50);
+        prodottoRepository.save(prodottoTrasformato);
+        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
+        prodotti.add(prodottoTrasformato);
+        initSamplePacchetto(prodotti); //chiamata per creare un pacchetto
+    }
+
+    private void initSamplePacchetto(Set<Prodotto> prodottoSet){
+        Pacchetto pacchetto = new Pacchetto();
+        pacchetto.setNome("Pacchetto");
+        pacchetto.setDescrizione("Pacchetto di prova");
+        pacchetto.setPrezzo(40);
+        pacchetto.setProdottiSet(prodottoSet);
+        pacchettoRepository.save(pacchetto);
+        contenutoService.aggiungiContenutoDaElemento(pacchetto);
+    }
     private void initSampleCategorie() {
         List<String> categorie = List.of("Vini", "Formaggi",
                 "Salumi", "Olio d'oliva", "Miele", "Pacchetto");

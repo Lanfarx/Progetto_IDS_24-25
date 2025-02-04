@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 
-//TODO valutare se necessario
+//TODO rendere tutto ResponseEntity
 @RestController
 public class ContenutoController {
     @Autowired

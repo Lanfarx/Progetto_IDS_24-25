@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services;
 
+import it.unicam.cs.filieraagricola.api.entities.Prodotto;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
@@ -7,6 +8,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -20,35 +23,32 @@ public class ProdottoTrasformatoService {
         this.prodottoRepository = prodottoRepository;
     }
 
-
-
-    public ResponseEntity<Object> getProdottoTrasformato(int id) {
+    public ProdottoTrasformato getProdottoTrasformato(int id) {
         if (!this.prodottoRepository.existsProdottoTrasformatoById(id)) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return prodottoRepository.findProdottoTrasformatoById(id).get();
         } else {
-            return new ResponseEntity<>(this.prodottoRepository.findById(id), HttpStatus.OK);
+            return null;
         }
     }
 
-    public ResponseEntity<Object> getProdottiTrasformati() {
-        return new ResponseEntity<>(this.prodottoRepository.findAllProdottiTrasformati(), HttpStatus.OK);
+    public List<ProdottoTrasformato> getProdottiTrasformati() {
+        return prodottoRepository.findAllProdottiTrasformati();
     }
 
-    public ResponseEntity<Object> deleteProdottoTrasformato(int id) {
+    public void deleteProdottoTrasformato(int id) {
         this.prodottoRepository.deleteById(id);
-        return new ResponseEntity<>("Product with id: " + id + " Deleted", HttpStatus.OK);
     }
 
-    public ResponseEntity<Object> aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+    public boolean aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
         if (this.prodottoRepository.existsProdottoTrasformatoById(prodottoTrasformato.getId())) {
             this.prodottoRepository.save(prodottoTrasformato);
-            return new ResponseEntity<>("Product " + prodottoTrasformato.getId() + " Updated", HttpStatus.OK);
+            return true;
         } else {
-            return ResponseEntity.status(404).body("Prodotto " + prodottoTrasformato.getId() + " Not Found");
+            return false;
         }
     }
 
-    public ResponseEntity<Object> aggiungiProdottoTrasformato(String nome, String processo,
+    public boolean aggiungiProdottoTrasformato(String nome, String processo,
                                                               String certificazioni, int prodottoBaseID,
                                                               String descrizione, double prezzo) {
 
@@ -57,22 +57,22 @@ public class ProdottoTrasformatoService {
         if(prodottoBaseOpt.isPresent()) {
             prodottoBase = prodottoBaseOpt.get();
         } else {
-            return new ResponseEntity<>("ProdottoBase non trovato!", HttpStatus.BAD_REQUEST);
+            return false;
         }
         if(prodottoRepository.existsByCaratteristicheTrasformato(nome, processo, certificazioni, prodottoBase)){
-            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+            return false;
         }
         creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo);
-        return new ResponseEntity<>("Prodotto Trasformato creato!", HttpStatus.OK);
+        return true;
     }
 
-    public ResponseEntity<Object> aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+    public boolean aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
         if(prodottoRepository.existsById(prodottoTrasformato.getId())) {
-            return new ResponseEntity<>("Prodotto già esistente!", HttpStatus.CONFLICT);
+            return false;
         }
         contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
         prodottoRepository.save(prodottoTrasformato);
-        return new ResponseEntity<>("Prodotto Trasformato creato!", HttpStatus.OK);
+        return true;
     }
 
 

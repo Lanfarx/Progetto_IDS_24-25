@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.Contenuto;
 import it.unicam.cs.filieraagricola.api.entities.Elemento;
 import it.unicam.cs.filieraagricola.api.repository.ContenutoRepository;
@@ -30,13 +31,12 @@ public class ContenutoService {
     }
 
     public Contenuto getContenutoByParam(Elemento elemento){
-        Optional<Contenuto> contenutoOptional = contenutoRepository.findByParams(elemento.getNome(), elemento.getDescrizione(), elemento.getPrezzo(), elemento);
+        Optional<Contenuto> contenutoOptional = contenutoRepository.findByElemento(elemento);
         return contenutoOptional.orElse(null);
     }
 
     public boolean aggiungiConenuto(Contenuto contenuto) {
-        boolean contenutoEsiste = contenutoAlreadyExists(contenuto.getNome(), contenuto.getDescrizione(),
-                contenuto.getPrezzo(), contenuto.getId());
+        boolean contenutoEsiste = contenutoAlreadyExists(contenuto.getElemento());
         if (contenutoEsiste) {
             return false;
         }
@@ -45,11 +45,11 @@ public class ContenutoService {
     }
 
     public boolean aggiungiContenutoWithParam(String nome, String descrizione, double prezzo, int idElemento){
-        return creaContenuto(nome, descrizione, prezzo, idElemento);
+        return creaContenuto(idElemento);
     }
 
     public boolean aggiungiContenutoDaElemento(Elemento elemento){
-        return creaContenuto(elemento.getNome(), elemento.getDescrizione(), elemento.getPrezzo(), elemento.getId());
+        return creaContenuto(elemento.getId());
     }
 
     public boolean eliminaContenuto(int id) {
@@ -74,46 +74,31 @@ public class ContenutoService {
         if(contenuto.isVerificato()){
             return false;
         }
-        contenuto.setVerificato(true);
+        contenuto.setVerificato(StatoRichiesta.ACCETTATA);
         return true;
     }
 
 
-    private boolean creaContenuto(String nome, String descrizione, double prezzo, int idElemento) {
-        if (contenutoAlreadyExists(nome, descrizione, prezzo, idElemento)) {
-            return false;
-        }
+    private boolean creaContenuto(int idElemento) {
         Optional<Elemento> elementoOpt = elementoRepository.findById(idElemento);
-        Elemento elemento = null;
+        Elemento elemento;
         if (elementoOpt.isPresent()) {
             elemento = elementoOpt.get();
+        } else {
+            return false;
+        }
+        if (contenutoAlreadyExists(elemento)) {
+            return false;
         }
         Contenuto contenuto = new Contenuto();
-        contenuto.setNome(nome);
-        contenuto.setDescrizione(descrizione);
-        contenuto.setPrezzo(prezzo);
         contenuto.setElemento(elemento);
-        contenuto.setVerificato(false);
+        contenuto.setVerificato(StatoRichiesta.ATTESA);
         contenutoRepository.save(contenuto);
         return true;
     }
 
-    private boolean contenutoAlreadyExists(String nome, String descrizione, double prezzo, int idElemento) {
-        List<Contenuto> contenutos = contenutoRepository.findByNomeAndDescrizioneAndPrezzo(
-                nome, descrizione, prezzo);
-        Optional<Elemento> elementoOptional = elementoRepository.findById(idElemento);
-        if(elementoOptional.isEmpty()){
-            throw new InvalidParameterException("Elemento con id: " + idElemento + " non trovato");
-        }
-        Elemento elemento = elementoOptional.get();
-        if (!contenutos.isEmpty()) {
-            for (Contenuto cont : contenutos) {
-                if (cont.getElemento() == elemento) {
-                    return true;
-                }
-            }
-        }
-        return false;
+    private boolean contenutoAlreadyExists(Elemento elemento) {
+        return contenutoRepository.findByElemento(elemento).isPresent();
     }
 
 }
