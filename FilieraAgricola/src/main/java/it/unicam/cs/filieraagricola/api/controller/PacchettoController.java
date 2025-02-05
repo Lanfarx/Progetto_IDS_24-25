@@ -95,7 +95,7 @@ public class PacchettoController {
 
 
     @RequestMapping({"/pacchetti/elimina/{id}"})
-    public ResponseEntity<Object> eliminaPacchetto(@RequestParam("id") int id) {
+    public ResponseEntity<Object> eliminaPacchetto(@PathVariable("id") int id) {
         pacchettoService.eliminaPacchetto(id);
         return new ResponseEntity<>("Pacchetto eliminato", HttpStatus.OK);
     }

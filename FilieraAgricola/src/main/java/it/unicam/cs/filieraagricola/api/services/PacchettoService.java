@@ -89,7 +89,7 @@ public class PacchettoService {
         return true;
     }
 
-    public List<Pacchetto> getPacchettiConProdotto(int idProdotto) {
+    public Set<Pacchetto> getPacchettiConProdotto(int idProdotto) {
        return pacchettoRepository.findPacchettiByProdottoId(idProdotto);
     }
 
@@ -99,6 +99,14 @@ public class PacchettoService {
             return true;
         } else {
             return false;
+        }
+    }
+
+    public void checkAndDelete(Set<Pacchetto> pacchettoList) {
+        for (Pacchetto pacchetto : pacchettoList) {
+            if(pacchetto.getProdottiSet().isEmpty()){
+                eliminaPacchetto(pacchetto.getId());
+            }
         }
     }
 

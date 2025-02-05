@@ -1,23 +1,23 @@
 package it.unicam.cs.filieraagricola.api.services;
 
+import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.Prodotto;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProdottoTrasformatoService {
     @Autowired
     private final ProdottoRepository prodottoRepository;
     @Autowired
-    private ContenutoService contenutoService;
+    private PacchettoService pacchettoService;
 
     public ProdottoTrasformatoService(ProdottoRepository prodottoRepository) {
         this.prodottoRepository = prodottoRepository;
@@ -36,7 +36,10 @@ public class ProdottoTrasformatoService {
     }
 
     public void deleteProdottoTrasformato(int id) {
+
+        Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteById(id);
+        pacchettoService.checkAndDelete(pacchettoSet);
     }
 
     public boolean aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
@@ -70,7 +73,6 @@ public class ProdottoTrasformatoService {
         if(prodottoRepository.existsById(prodottoTrasformato.getId())) {
             return false;
         }
-        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
         prodottoRepository.save(prodottoTrasformato);
         return true;
     }
@@ -87,6 +89,5 @@ public class ProdottoTrasformatoService {
         prodottoTrasformato.setDescrizione(descrizione);
         prodottoTrasformato.setPrezzo(prezzo);
         prodottoRepository.save(prodottoTrasformato);
-        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
     }
 }

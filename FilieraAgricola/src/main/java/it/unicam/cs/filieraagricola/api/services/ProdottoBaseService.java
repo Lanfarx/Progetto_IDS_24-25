@@ -1,15 +1,15 @@
 package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
+import it.unicam.cs.filieraagricola.api.entities.Prodotto;
 import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class ProdottoBaseService {
@@ -17,8 +17,6 @@ public class ProdottoBaseService {
     private final ProdottoRepository prodottoRepository;
     @Autowired
     private PacchettoService pacchettoService;
-    @Autowired
-    private ContenutoService contenutoService;
 
     public ProdottoBaseService(ProdottoRepository prodottoRepository) {
         this.prodottoRepository = prodottoRepository;
@@ -35,11 +33,10 @@ public class ProdottoBaseService {
     }
 
     public boolean aggiungiProdottoBase(ProdottoBase prodottoBase) {
-        if(prodottoRepository.existsById(prodottoBase.getId()) || contenutoService.getContenutoByParam(prodottoBase) != null) {
+        if(prodottoRepository.existsById(prodottoBase.getId())) {
             return false;
         }
         prodottoRepository.save(prodottoBase);
-        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
         return true;
     }
 
@@ -56,13 +53,10 @@ public class ProdottoBaseService {
     }
 
     public void deleteProdottoBase(int id) {
-        /*if(!pacchettoService.getPacchettiConProdotto(id).isEmpty()) {
-            for(Pacchetto pacchetto : pacchettoService.getPacchettiConProdotto(id)) {
-                pacchettoService.eliminaProdotto(pacchetto.getId(), id);
-            }
-        }*/
+        Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteProdottiTrasformatiByProdottoBaseId(id);
         this.prodottoRepository.deleteProdottoBaseById(id);
+        pacchettoService.checkAndDelete(pacchettoSet);
     }
 
     public boolean aggiornaProdottoBase(ProdottoBase prodottoBase) {
@@ -81,7 +75,6 @@ public class ProdottoBaseService {
         prodottoBase.setCertificazioni(certificazioni);
         prodottoBase.setDescrizione(descrizone);
         prodottoBase.setPrezzo(prezzo);
-        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
         prodottoRepository.save(prodottoBase);
     }
 }

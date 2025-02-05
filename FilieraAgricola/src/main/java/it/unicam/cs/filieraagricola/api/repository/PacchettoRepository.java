@@ -15,5 +15,5 @@ public interface PacchettoRepository extends JpaRepository<Pacchetto, Integer> {
 
 
     @Query("SELECT p FROM Pacchetto p JOIN p.prodottiSet pr WHERE pr.id = :prodottoId")
-    List<Pacchetto> findPacchettiByProdottoId(@Param("prodottoId") Integer prodottoId);
+    Set<Pacchetto> findPacchettiByProdottoId(@Param("prodottoId") Integer prodottoId);
 }

@@ -12,7 +12,7 @@ public class ProdottoTrasformato extends Prodotto {
 
     private String processoTrasformazione;
     //Gestito i prodotti in modo che ogni prodotto trasfromato equivale ad uno ed un solo prodotto
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "prodotto_base_id", nullable = false)
     private ProdottoBase prodottoBase;
 

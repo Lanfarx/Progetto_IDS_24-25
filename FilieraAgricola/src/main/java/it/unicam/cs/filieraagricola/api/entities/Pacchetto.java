@@ -11,7 +11,7 @@ public class Pacchetto extends Elemento{
 
     private String descrizione; //TODO vedere se toglierla
 
-    @ManyToMany (cascade = CascadeType.REMOVE)
+    @ManyToMany
     @JoinTable(
             name = "Rpacchetto", // Nome della tabella di associazione
             joinColumns = @JoinColumn(name = "pacchetto_id"), // Chiave esterna per il Pacchetto

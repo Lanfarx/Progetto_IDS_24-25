@@ -4,7 +4,6 @@ import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.repository.*;
-import it.unicam.cs.filieraagricola.api.services.ContenutoService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,8 +24,6 @@ public class SampleDataConstructor {
     private CategoriaRepository categoriaRepository;
     @Autowired
     ProdottoRepository prodottoRepository;
-    @Autowired
-    ContenutoService contenutoService;
     @Autowired
     PacchettoRepository pacchettoRepository;
 
@@ -146,7 +143,6 @@ public class SampleDataConstructor {
         prodottoBase.setQuantita(50);
         prodottoBase.setOperatore(operatore1);
         prodottoRepository.save(prodottoBase);
-        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
         prodotti.add(prodottoBase);
 
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
@@ -158,7 +154,6 @@ public class SampleDataConstructor {
         prodottoTrasformato.setPrezzo(50);
         prodottoTrasformato.setOperatore(operatore2);
         prodottoRepository.save(prodottoTrasformato);
-        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
         prodotti.add(prodottoTrasformato);
         initSamplePacchetto(prodotti); //chiamata per creare un pacchetto
     }
@@ -178,7 +173,6 @@ public class SampleDataConstructor {
         pacchetto.setProdottiSet(prodottoSet);
         pacchetto.setOperatore(operatore3);
         pacchettoRepository.save(pacchetto);
-        contenutoService.aggiungiContenutoDaElemento(pacchetto);
     }
     private void initSampleCategorie() {
         List<String> categorie = List.of("Vini", "Formaggi",
