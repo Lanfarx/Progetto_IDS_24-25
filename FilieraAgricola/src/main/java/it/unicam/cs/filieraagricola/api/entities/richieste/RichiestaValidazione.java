@@ -8,7 +8,7 @@ import jakarta.persistence.*;
 public class RichiestaValidazione extends Richiesta {
 
     @OneToOne
-    @JoinColumn(name = "elemento_id", nullable = false)
+    @JoinColumn(name = "elemento_id")
     private Elemento elemento;
 
     public Elemento getElemento() { return elemento; }

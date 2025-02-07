@@ -1,6 +1,6 @@
 package it.unicam.cs.filieraagricola.api.commons.richiesta;
 
-public enum StatoRichiesta {
+public enum StatoContenuto {
     ACCETTATA,
     RIFIUTATA,
     ATTESA

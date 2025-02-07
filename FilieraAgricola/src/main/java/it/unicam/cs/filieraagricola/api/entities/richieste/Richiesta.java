@@ -1,6 +1,6 @@
 package it.unicam.cs.filieraagricola.api.entities.richieste;
 
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import jakarta.persistence.*;
 
@@ -17,7 +17,7 @@ public abstract class Richiesta {
     private Users user;
 
     @Enumerated(EnumType.STRING)
-    private StatoRichiesta stato = StatoRichiesta.ATTESA;
+    private StatoContenuto stato = StatoContenuto.ATTESA;
 
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
@@ -25,6 +25,6 @@ public abstract class Richiesta {
     public Users getUser() { return user; }
     public void setUser(Users user) { this.user = user; }
 
-    public StatoRichiesta getStato() { return stato; }
-    public void setStato(StatoRichiesta stato) { this.stato = stato; }
+    public StatoContenuto getStato() { return stato; }
+    public void setStato(StatoContenuto stato) { this.stato = stato; }
 }

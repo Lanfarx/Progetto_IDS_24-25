@@ -1,7 +1,7 @@
 package it.unicam.cs.filieraagricola.api.entities.elemento;
 
 
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import jakarta.persistence.*;
 
@@ -20,7 +20,8 @@ public abstract class Elemento {
     @JoinColumn(name = "operatore_id", nullable = false)
     private Users operatore;
 
-    private StatoRichiesta statorichiesta;
+    @Enumerated(EnumType.STRING)
+    private StatoContenuto statorichiesta;
 
     public String getDescrizione() {
         return descrizione;
@@ -42,9 +43,9 @@ public abstract class Elemento {
     public void setNome(String nome){
         this.nome = nome;
     }
-    public StatoRichiesta getStatorichiesta(){ return statorichiesta; }
+    public StatoContenuto getStatorichiesta(){ return statorichiesta; }
 
-    public void setStatorichiesta(StatoRichiesta statorichiesta){ this.statorichiesta = statorichiesta; }
+    public void setStatorichiesta(StatoContenuto statorichiesta){ this.statorichiesta = statorichiesta; }
 
     public abstract int getQuantita();
 

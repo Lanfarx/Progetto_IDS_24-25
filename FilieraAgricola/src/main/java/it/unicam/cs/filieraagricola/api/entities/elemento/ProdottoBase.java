@@ -1,6 +1,5 @@
 package it.unicam.cs.filieraagricola.api.entities.elemento;
 
-import jakarta.persistence.Entity;
 import jakarta.persistence.*;
 
 @Entity

@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.services.gestore.richieste;
 
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.TipoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaValidazione;
@@ -16,7 +17,7 @@ import java.util.Optional;
 import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
 
 @Service
-public class RichiestaValidazioneService implements RichiestaService<RichiestaValidazione> {
+public class RichiestaValidazioneService extends AbstractRichiestaService<RichiestaValidazione> {
 
     @Autowired
     private RichiestaRepository richiestaRepository;
@@ -30,7 +31,7 @@ public class RichiestaValidazioneService implements RichiestaService<RichiestaVa
     @Override
     public void aggiungiRichiesta(Integer userId, Object valore) {
         Users user = userService.getUserById(userId).get();
-        richiestaRepository.save(creaRichiesta("VALIDAZIONE", user, valore));
+        richiestaRepository.save(creaRichiesta(TipoRichiesta.VALIDAZIONE, user, valore));
     }
 
     @Override
@@ -50,7 +51,11 @@ public class RichiestaValidazioneService implements RichiestaService<RichiestaVa
 
     @Override
     public List<RichiestaValidazione> getRichiesteInAttesa() {
-        return richiestaRepository.findRichiestaValidazioneByStato(StatoRichiesta.ATTESA);
+        return richiestaRepository.findRichiestaValidazioneByStato(StatoContenuto.ATTESA);
+    }
+
+    public List<RichiestaValidazione> getMieRichiesteValidazione(Users currentUser){
+        return richiestaRepository.findRichiesteValidazioneByUser(currentUser);
     }
 
     @Override
@@ -59,7 +64,7 @@ public class RichiestaValidazioneService implements RichiestaService<RichiestaVa
             RichiestaValidazione richiesta = (RichiestaValidazione) richiestaRepository.findById(richiestaId).get();
             Elemento elemento = richiesta.getElemento();
 
-            richiesta.setStato(approvato ? StatoRichiesta.ACCETTATA : StatoRichiesta.RIFIUTATA);
+            richiesta.setStato(approvato ? StatoContenuto.ACCETTATA : StatoContenuto.RIFIUTATA);
             elemento.setStatorichiesta(richiesta.getStato());
 
             elementoRepository.save(elemento);

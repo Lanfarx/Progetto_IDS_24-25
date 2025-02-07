@@ -48,6 +48,6 @@ public class CategoriaController {
                 categoriaService.saveCategoria(categoriaAggiornata);
                 return new ResponseEntity<>("Categoria: " + categoriaAggiornata.getNome() + " aggiornata con successo", HttpStatus.OK);
             } return new ResponseEntity<>("Categoria con nome: " + categoriaAggiornata.getNome() +" già esistente", HttpStatus.CONFLICT);
-        } return new ResponseEntity<>("Categoria: " + categoriaAggiornata.getNome() + " non trovata", HttpStatus.BAD_REQUEST);
+        } return new ResponseEntity<>("Categoria non trovata", HttpStatus.BAD_REQUEST);
     }
 }

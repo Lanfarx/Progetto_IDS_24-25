@@ -38,6 +38,10 @@ public class UserService implements UserDetailsService {
         return userRepository.findByUsername(username);
     }
 
+    public boolean existsUserByUsername(String username) {
+        return userRepository.existsByUsername(username);
+    }
+
     public boolean existsUser(int id) {
         return userRepository.existsById(id);
     }
@@ -120,6 +124,26 @@ public class UserService implements UserDetailsService {
                 nonOperatori.add(id);
             }
         }
+    }
+
+    public void aggiungiRuolo(Integer userId, UserRole role) {
+        if(userRepository.existsById(userId)) {
+            Users user = userRepository.findById(userId).get();
+            if(!user.getRoles().contains(role)) {
+                user.getRoles().add(role );
+                userRepository.save(user);
+            } else throw new RuntimeException("Utente già possessore del ruolo");
+        } else throw new RuntimeException("Utente non esiste");
+    }
+
+    public void rimuoviRuolo(Integer userId, UserRole role) {
+        if(userRepository.existsById(userId)) {
+            Users user = userRepository.findById(userId).get();
+            if(user.getRoles().contains(role)) {
+                user.getRoles().remove(role);
+                userRepository.save(user);
+            }  else throw new RuntimeException("Utente non possessore del ruolo");
+        } else throw new RuntimeException("Utente non esiste");
     }
 }
 

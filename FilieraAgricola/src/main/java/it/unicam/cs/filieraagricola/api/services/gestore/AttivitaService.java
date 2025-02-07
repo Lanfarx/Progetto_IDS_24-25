@@ -15,11 +15,7 @@ import java.util.Optional;
 public class AttivitaService {
 
     @Autowired
-    private final AttivitaRepository attivitaRepository;
-
-    public AttivitaService(AttivitaRepository attivitaRepository) {
-        this.attivitaRepository = attivitaRepository;
-    }
+    private AttivitaRepository attivitaRepository;
 
     public List<Visita> getAllAttivita() {
         return attivitaRepository.findAll();

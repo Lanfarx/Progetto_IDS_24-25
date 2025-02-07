@@ -11,8 +11,6 @@ import java.util.Set;
 @DiscriminatorColumn(name = "tipo_prodotto", discriminatorType = DiscriminatorType.STRING)
 public abstract class Prodotto extends Elemento{
 
-
-    //TODO aggiungere variabile produttore Produttore produttoreOriginale
     private String certificazioni;
     private int quantita;
 

@@ -1,5 +1,7 @@
 package it.unicam.cs.filieraagricola.api.entities.elemento;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -10,7 +12,7 @@ public class Pacchetto extends Elemento{
 
     private String descrizione; //TODO vedere se toglierla
 
-    @ManyToMany
+    @ManyToMany @JsonManagedReference
     @JoinTable(
             name = "Rpacchetto", // Nome della tabella di associazione
             joinColumns = @JoinColumn(name = "pacchetto_id"), // Chiave esterna per il Pacchetto

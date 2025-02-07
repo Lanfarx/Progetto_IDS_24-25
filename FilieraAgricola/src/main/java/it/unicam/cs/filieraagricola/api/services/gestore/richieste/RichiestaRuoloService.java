@@ -1,7 +1,8 @@
 package it.unicam.cs.filieraagricola.api.services.gestore.richieste;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.TipoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
@@ -15,7 +16,7 @@ import java.util.Optional;
 import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
 
 @Service
-    public class RichiestaRuoloService implements RichiestaService<RichiestaRuolo> {
+    public class RichiestaRuoloService extends AbstractRichiestaService<RichiestaRuolo> {
 
         @Autowired
         private RichiestaRepository richiestaRepository;
@@ -26,7 +27,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         @Override
         public void aggiungiRichiesta(Integer userId, Object ruoloRichiesto) {
             Users user = userService.getUserById(userId).get();
-            richiestaRepository.save(creaRichiesta("RUOLO", user, ruoloRichiesto));
+            richiestaRepository.save(creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
         }
 
         @Override
@@ -46,7 +47,11 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
 
         @Override
         public List<RichiestaRuolo> getRichiesteInAttesa() {
-            return richiestaRepository.findRichiestaRuoloByStato(StatoRichiesta.ATTESA);
+            return richiestaRepository.findRichiestaRuoloByStato(StatoContenuto.ATTESA);
+        }
+
+        public List<RichiestaRuolo> getMieRichiesteRuolo(Users currentUser){
+        return richiestaRepository.findRichiesteRuoloByUser(currentUser);
         }
 
         @Override
@@ -54,12 +59,10 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
             if (richiestaRepository.existsRichiestaRuoloById(richiestaId)) {
                 RichiestaRuolo richiesta = (RichiestaRuolo) richiestaRepository.findById(richiestaId).get();
                 if (approvato) {
-                    Users user = richiesta.getUser();
-                    user.getRoles().add(richiesta.getRuoloRichiesto());
-                    userService.save(user);
-                    richiesta.setStato(StatoRichiesta.ACCETTATA);
+                    userService.aggiungiRuolo(richiesta.getUser().getId(), richiesta.getRuoloRichiesto());
+                    richiesta.setStato(StatoContenuto.ACCETTATA);
                 } else {
-                    richiesta.setStato(StatoRichiesta.RIFIUTATA);
+                    richiesta.setStato(StatoContenuto.RIFIUTATA);
                 }
                 richiestaRepository.save(richiesta);
             } else throw new RuntimeException("Richiesta non trovata");
