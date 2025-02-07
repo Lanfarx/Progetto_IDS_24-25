@@ -19,7 +19,7 @@ public class RichiestaEliminazioneController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/richiesta/eliminazione")
+    @PostMapping("/autenticato/richiesta-eliminazione")
     public ResponseEntity<String> aggiungiRichiestaEliminazione(@RequestParam(required = false) String motivazione) {
         Users user = userService.getCurrentUser();
 

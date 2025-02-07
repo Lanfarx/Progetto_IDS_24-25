@@ -1,8 +1,7 @@
 
 package it.unicam.cs.filieraagricola.api.repository;
 
-import it.unicam.cs.filieraagricola.api.entities.Pacchetto;
-import it.unicam.cs.filieraagricola.api.entities.Prodotto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

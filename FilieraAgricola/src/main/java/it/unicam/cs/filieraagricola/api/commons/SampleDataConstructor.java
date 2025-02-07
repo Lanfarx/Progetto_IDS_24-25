@@ -3,6 +3,10 @@ package it.unicam.cs.filieraagricola.api.commons;
 import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.repository.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,6 +61,12 @@ public class SampleDataConstructor {
         animatore.setPassword("animatore");
         animatore.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
         userRepository.save(animatore);
+
+        Users curatore = new Users();
+        curatore.setUsername("curatore");
+        curatore.setPassword("curatore");
+        curatore.getRoles().add(UserRole.CURATORE);
+        userRepository.save(curatore);
     }
 
     private void initSampleAttivita(){
@@ -131,9 +141,8 @@ public class SampleDataConstructor {
         mela.setQuantita(50);
         mela.setOperatore(operatore1);
         prodottoRepository.save(mela);
-        contenutoService.aggiungiContenutoDaElemento(mela);
 
-        Set<Prodotto> prodotti = new HashSet<>(); //Creo un set per darlo al pacchetto
+        Set<Prodotto> prodotti = new HashSet<>();
         ProdottoBase prodottoBase = new ProdottoBase();
         prodottoBase.setNome("Pomodoro");
         prodottoBase.setCertificazioni("Certificazione");
@@ -155,7 +164,7 @@ public class SampleDataConstructor {
         prodottoTrasformato.setOperatore(operatore2);
         prodottoRepository.save(prodottoTrasformato);
         prodotti.add(prodottoTrasformato);
-        initSamplePacchetto(prodotti); //chiamata per creare un pacchetto
+        initSamplePacchetto(prodotti);
     }
 
     private void initSamplePacchetto(Set<Prodotto> prodottoSet){

@@ -2,7 +2,7 @@ package it.unicam.cs.filieraagricola.api.repository;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
-import it.unicam.cs.filieraagricola.api.entities.Elemento;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
@@ -50,6 +50,10 @@ public interface RichiestaRepository extends JpaRepository<Richiesta, Integer> {
     @Query("SELECT CASE WHEN COUNT(r) = 1 THEN TRUE ELSE FALSE END " +
             "FROM RichiestaValidazione r WHERE r.user = :user AND r.elemento = :valore")
     boolean existsRichiestaValidazioneByUserAndElemento(Users user, Elemento valore);
+
+    @Query("SELECT CASE WHEN COUNT(r) = 1 THEN TRUE ELSE FALSE END " +
+            "FROM RichiestaValidazione r WHERE r.id = :id")
+    boolean existsRichiestaValidazioneById(Integer id);
 
     List<RichiestaValidazione> findRichiestaValidazioneByStato(StatoRichiesta statoRichiesta);
 

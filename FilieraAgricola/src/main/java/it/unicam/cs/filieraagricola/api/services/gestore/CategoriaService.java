@@ -17,7 +17,7 @@ public class CategoriaService {
         return categoriaRepository.findAll();
     }
 
-    public Optional<Categoria> getCategoriaById(String nomeCategoria) {
+    public Optional<Categoria> getCategoriaByNome(String nomeCategoria) {
         return categoriaRepository.findByNome(nomeCategoria);
     }
 
@@ -42,7 +42,7 @@ public class CategoriaService {
         categoriaRepository.save(categoria);
     }
 
-    public void eliminaCategoria(Integer id) {
-        categoriaRepository.deleteById(id);
+    public void eliminaCategoria(String nome) {
+        categoriaRepository.deleteByNome(nome);
     }
 }

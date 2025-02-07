@@ -20,7 +20,7 @@ public class RichiestaRuoloController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/richiesta/ruoli")
+    @PostMapping("/autenticato/richiesta-ruolo")
     public ResponseEntity<String> aggiungiRichiestaRuolo(@RequestParam UserRole ruolo) {
         Users user = userService.getCurrentUser();
         if (!user.getRoles().contains(ruolo)) {
@@ -32,12 +32,12 @@ public class RichiestaRuoloController {
     }
 
     @GetMapping("/attesa/ruoli")
-    public ResponseEntity<Object> getRichiesteInAttesa() {
+    public ResponseEntity<Object> getRichiesteRuoloInAttesa() {
         return new ResponseEntity<>(richiestaRuoloService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
     @PutMapping("/processa/ruoli")
-    public ResponseEntity<Object> processaRichiesta(@RequestParam Integer id, @RequestParam boolean approvato) {
+    public ResponseEntity<Object> processaRichiestaRuolo(@RequestParam Integer id, @RequestParam boolean approvato) {
         if(richiestaRuoloService.existsRichiesta(id))
         {
             RichiestaRuolo richiesta = richiestaRuoloService.getRichiesta(id).get();

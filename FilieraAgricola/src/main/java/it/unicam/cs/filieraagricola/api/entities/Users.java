@@ -1,8 +1,10 @@
 package it.unicam.cs.filieraagricola.api.entities;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import jakarta.persistence.*;
 
@@ -25,21 +27,24 @@ public class Users {
     private String password;
 
     @ElementCollection(fetch = FetchType.EAGER)
-    @Enumerated(EnumType.STRING) // Converte l'enum in una stringa
+    @Enumerated(EnumType.STRING)
     private Set<UserRole> roles = new HashSet<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Richiesta> richieste;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Elemento> elementiCreati = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "organizzatore", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Visita> attivitaOrganizzate = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "prenotazioni", cascade = CascadeType.ALL)
     private Set<Visita> attivitaPrenotate = new HashSet<>();
-
 
     public Integer getId() {
         return id;
