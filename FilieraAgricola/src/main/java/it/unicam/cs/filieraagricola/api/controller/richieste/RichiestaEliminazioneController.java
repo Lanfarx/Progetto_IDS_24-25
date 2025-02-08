@@ -1,6 +1,6 @@
 package it.unicam.cs.filieraagricola.api.controller.richieste;
 
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
 import it.unicam.cs.filieraagricola.api.services.UserService;
@@ -19,7 +19,7 @@ public class RichiestaEliminazioneController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/richiesta/eliminazione")
+    @PostMapping("/autenticato/richiesta-eliminazione")
     public ResponseEntity<String> aggiungiRichiestaEliminazione(@RequestParam(required = false) String motivazione) {
         Users user = userService.getCurrentUser();
 
@@ -31,21 +31,21 @@ public class RichiestaEliminazioneController {
         }
     }
 
-    @GetMapping("/attesa/eliminazione")
+    @GetMapping("/eliminazione/attesa")
     public ResponseEntity<Object> getRichiesteEliminazioneInAttesa() {
         return new ResponseEntity<>(richiestaEliminazioneService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
-    @PutMapping("/processa/eliminazione")
+    @PutMapping("/eliminazione/processa")
     public ResponseEntity<Object> processaRichiestaEliminazione(@RequestParam Integer id, @RequestParam boolean approvato) {
         if (richiestaEliminazioneService.existsRichiesta(id)) {
             RichiestaEliminazione richiesta = richiestaEliminazioneService.getRichiesta(id).get();
-            StatoRichiesta statoRichiesta = richiesta.getStato();
-            if (statoRichiesta == StatoRichiesta.ATTESA) {
+            StatoContenuto statoContenuto = richiesta.getStato();
+            if (statoContenuto == StatoContenuto.ATTESA) {
                 richiestaEliminazioneService.processaRichiesta(id, approvato);
                 return new ResponseEntity<>("Richiesta di eliminazione " + id + (approvato ? " accettata e utente: " + richiesta.getUser().getId() + " eliminato" : " rifiutata"), HttpStatus.OK);
             } else {
-                return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoRichiesta);
+                return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoContenuto);
             }
         } else {
             return ResponseEntity.status(404).body("Richiesta " + id + " non trovata");

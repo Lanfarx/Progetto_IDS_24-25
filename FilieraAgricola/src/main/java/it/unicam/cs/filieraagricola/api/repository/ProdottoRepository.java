@@ -1,9 +1,9 @@
 
 package it.unicam.cs.filieraagricola.api.repository;
 
-import it.unicam.cs.filieraagricola.api.entities.Prodotto;
-import it.unicam.cs.filieraagricola.api.entities.ProdottoBase;
-import it.unicam.cs.filieraagricola.api.entities.ProdottoTrasformato;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;

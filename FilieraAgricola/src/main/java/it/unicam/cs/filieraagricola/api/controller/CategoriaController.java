@@ -2,6 +2,7 @@ package it.unicam.cs.filieraagricola.api.controller;
 
 import it.unicam.cs.filieraagricola.api.entities.Categoria;
 import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,10 +31,14 @@ public class CategoriaController {
         }
     }
 
-    @DeleteMapping("/{id}/elimina")
-    public ResponseEntity<String> eliminaCategoria(@PathVariable Integer id) {
-        categoriaService.eliminaCategoria(id);
-        return new ResponseEntity<>("Categoria eliminata con successo.", HttpStatus.OK);
+    @DeleteMapping("/elimina")
+    public ResponseEntity<String> eliminaCategoria(@RequestParam String nome) {
+        if (categoriaService.getCategoriaByNome(nome).isPresent()) {
+            categoriaService.eliminaCategoria(nome);
+            return new ResponseEntity<>("Categoria: " + nome + " eliminata con successo.", HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>("Categoria con nome: " + nome + " non esistente", HttpStatus.CONFLICT);
+        }
     }
 
     @PutMapping("/aggiorna")

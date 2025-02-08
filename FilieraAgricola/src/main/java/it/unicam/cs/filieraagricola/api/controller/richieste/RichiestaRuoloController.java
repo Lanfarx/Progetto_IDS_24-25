@@ -1,7 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller.richieste;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.services.UserService;
@@ -20,7 +20,7 @@ public class RichiestaRuoloController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/richiesta/ruoli")
+    @PostMapping("/autenticato/richiesta-ruolo")
     public ResponseEntity<String> aggiungiRichiestaRuolo(@RequestParam UserRole ruolo) {
         Users user = userService.getCurrentUser();
         if (!user.getRoles().contains(ruolo)) {
@@ -31,21 +31,21 @@ public class RichiestaRuoloController {
         } else return new ResponseEntity<>("L'utente: " + user.getId() + " già ha il ruolo di: " + ruolo, HttpStatus.CONFLICT);
     }
 
-    @GetMapping("/attesa/ruoli")
-    public ResponseEntity<Object> getRichiesteInAttesa() {
+    @GetMapping("/ruoli/attesa")
+    public ResponseEntity<Object> getRichiesteRuoloInAttesa() {
         return new ResponseEntity<>(richiestaRuoloService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
-    @PutMapping("/processa/ruoli")
-    public ResponseEntity<Object> processaRichiesta(@RequestParam Integer id, @RequestParam boolean approvato) {
+    @PutMapping("/ruoli/processa")
+    public ResponseEntity<Object> processaRichiestaRuolo(@RequestParam Integer id, @RequestParam boolean approvato) {
         if(richiestaRuoloService.existsRichiesta(id))
         {
             RichiestaRuolo richiesta = richiestaRuoloService.getRichiesta(id).get();
-            StatoRichiesta statoRichiesta = richiesta.getStato();
-            if(statoRichiesta == StatoRichiesta.ATTESA){
+            StatoContenuto statoContenuto = richiesta.getStato();
+            if(statoContenuto == StatoContenuto.ATTESA){
                 richiestaRuoloService.processaRichiesta(id, approvato);
                 return new ResponseEntity<>("Richiesta: " + id + (approvato ? " accettata" : " rifiutata"), HttpStatus.OK);
-            } else return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoRichiesta);
+            } else return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoContenuto);
         } else {
             return ResponseEntity.status(404).body("Richiesta " + id + " Non Trovata");
         }

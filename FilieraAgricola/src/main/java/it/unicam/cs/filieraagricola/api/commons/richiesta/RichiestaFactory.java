@@ -1,41 +1,42 @@
 package it.unicam.cs.filieraagricola.api.commons.richiesta;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
-import it.unicam.cs.filieraagricola.api.entities.Elemento;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaValidazione;
 
 public class RichiestaFactory {
-    public static Richiesta creaRichiesta(String tipo, Users user, Object valore) {
+    public static Richiesta creaRichiesta(TipoRichiesta tipo, Users user, Object valore) {
         switch (tipo) {
-            case "RUOLO":
+            case RUOLO:
                 if (valore instanceof UserRole) {
                     RichiestaRuolo richiestaRuolo = new RichiestaRuolo();
                     richiestaRuolo.setUser(user);
                     richiestaRuolo.setRuoloRichiesto((UserRole) valore);
-                    richiestaRuolo.setStato(StatoRichiesta.ATTESA);
+                    richiestaRuolo.setStato(StatoContenuto.ATTESA);
                     return richiestaRuolo;
                 } else {
                     throw new IllegalArgumentException("Valore non valido per la richiesta di tipo RUOLO");
                 }
-            case "ELIMINAZIONE":
+            case ELIMINAZIONE:
                 if (valore instanceof String) {
                     RichiestaEliminazione richiestaEliminazione = new RichiestaEliminazione();
                     richiestaEliminazione.setUser(user);
                     richiestaEliminazione.setMotivazione((String) valore);
-                    richiestaEliminazione.setStato(StatoRichiesta.ATTESA);
+                    richiestaEliminazione.setStato(StatoContenuto.ATTESA);
                     return richiestaEliminazione;
                 } else {
                     throw new IllegalArgumentException("Valore non valido per la richiesta di tipo ELIMINAZIONE");
                 }
-            case "VALIDAZIONE":
+            case VALIDAZIONE:
                 if (valore instanceof Elemento) {
                     RichiestaValidazione richiestaValidazione = new RichiestaValidazione();
                     richiestaValidazione.setUser(user);
-                    richiestaValidazione.setRichiestaDaValidare((Elemento) valore);
-                    richiestaValidazione.setStato(StatoRichiesta.ATTESA);
+                    richiestaValidazione.setElemento((Elemento) valore);
+                    richiestaValidazione.setStato(StatoContenuto.ATTESA);
                     return richiestaValidazione;
                 } else {
                     throw new IllegalArgumentException("Valore non valido per la richiesta di tipo VALIDAZIONE");

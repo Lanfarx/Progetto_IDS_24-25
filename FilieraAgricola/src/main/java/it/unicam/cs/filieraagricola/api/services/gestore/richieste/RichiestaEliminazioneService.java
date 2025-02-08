@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.services.gestore.richieste;
 
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.commons.richiesta.TipoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
 import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
@@ -14,7 +15,7 @@ import java.util.Optional;
 import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
 
 @Service
-    public class RichiestaEliminazioneService implements RichiestaService<RichiestaEliminazione> {
+    public class RichiestaEliminazioneService extends AbstractRichiestaService<RichiestaEliminazione> {
 
         @Autowired
         private RichiestaRepository richiestaRepository;
@@ -25,7 +26,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         @Override
         public void aggiungiRichiesta(Integer userId, Object motivazione) {
             Users user = userService.getUserById(userId).get();
-            richiestaRepository.save(creaRichiesta("ELIMINAZIONE", user, motivazione));
+            richiestaRepository.save(creaRichiesta(TipoRichiesta.ELIMINAZIONE, user, motivazione));
         }
 
         @Override
@@ -45,7 +46,11 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
 
         @Override
         public List<RichiestaEliminazione> getRichiesteInAttesa() {
-            return richiestaRepository.findRichiestaEliminazioneByStato(StatoRichiesta.ATTESA);
+            return richiestaRepository.findRichiestaEliminazioneByStato(StatoContenuto.ATTESA);
+        }
+
+        public List<RichiestaEliminazione> getMieRichiesteEliminazione(Users currentUser){
+            return richiestaRepository.findRichiesteEliminazioneByUser(currentUser);
         }
 
         @Override
@@ -55,7 +60,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
                 if (approvato) {
                     userService.delete(richiesta.getUser());
                 } else {
-                    richiesta.setStato(StatoRichiesta.RIFIUTATA);
+                    richiesta.setStato(StatoContenuto.RIFIUTATA);
                     richiestaRepository.save(richiesta);
                 }
             } else throw new RuntimeException("Richiesta non trovata");

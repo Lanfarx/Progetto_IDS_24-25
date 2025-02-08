@@ -3,8 +3,11 @@ package it.unicam.cs.filieraagricola.api.commons;
 import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.repository.*;
-import it.unicam.cs.filieraagricola.api.services.ContenutoService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -25,8 +28,6 @@ public class SampleDataConstructor {
     private CategoriaRepository categoriaRepository;
     @Autowired
     ProdottoRepository prodottoRepository;
-    @Autowired
-    ContenutoService contenutoService;
     @Autowired
     PacchettoRepository pacchettoRepository;
 
@@ -60,6 +61,12 @@ public class SampleDataConstructor {
         animatore.setPassword("animatore");
         animatore.getRoles().add(UserRole.ANIMATORE_DELLA_FILIERA);
         userRepository.save(animatore);
+
+        Users curatore = new Users();
+        curatore.setUsername("curatore");
+        curatore.setPassword("curatore");
+        curatore.getRoles().add(UserRole.CURATORE);
+        userRepository.save(curatore);
     }
 
     private void initSampleAttivita(){
@@ -134,9 +141,8 @@ public class SampleDataConstructor {
         mela.setQuantita(50);
         mela.setOperatore(operatore1);
         prodottoRepository.save(mela);
-        contenutoService.aggiungiContenutoDaElemento(mela);
 
-        Set<Prodotto> prodotti = new HashSet<>(); //Creo un set per darlo al pacchetto
+        Set<Prodotto> prodotti = new HashSet<>();
         ProdottoBase prodottoBase = new ProdottoBase();
         prodottoBase.setNome("Pomodoro");
         prodottoBase.setCertificazioni("Certificazione");
@@ -146,7 +152,6 @@ public class SampleDataConstructor {
         prodottoBase.setQuantita(50);
         prodottoBase.setOperatore(operatore1);
         prodottoRepository.save(prodottoBase);
-        contenutoService.aggiungiContenutoDaElemento(prodottoBase);
         prodotti.add(prodottoBase);
 
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
@@ -158,9 +163,8 @@ public class SampleDataConstructor {
         prodottoTrasformato.setPrezzo(50);
         prodottoTrasformato.setOperatore(operatore2);
         prodottoRepository.save(prodottoTrasformato);
-        contenutoService.aggiungiContenutoDaElemento(prodottoTrasformato);
         prodotti.add(prodottoTrasformato);
-        initSamplePacchetto(prodotti); //chiamata per creare un pacchetto
+        initSamplePacchetto(prodotti);
     }
 
     private void initSamplePacchetto(Set<Prodotto> prodottoSet){
@@ -178,7 +182,6 @@ public class SampleDataConstructor {
         pacchetto.setProdottiSet(prodottoSet);
         pacchetto.setOperatore(operatore3);
         pacchettoRepository.save(pacchetto);
-        contenutoService.aggiungiContenutoDaElemento(pacchetto);
     }
     private void initSampleCategorie() {
         List<String> categorie = List.of("Vini", "Formaggi",

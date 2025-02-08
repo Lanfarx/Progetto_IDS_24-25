@@ -18,23 +18,20 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll() // Consenti l'accesso alle API di autenticazione
-                        .requestMatchers("/h2-console/**").permitAll()
-                        .requestMatchers("/richieste/richiesta/**").authenticated() // Chiunque autenticato può fare richiesta di ruolo
-                        .requestMatchers("/richieste/attesa/**", "/richieste/processa/**","/categorie/**")
-                            .hasRole("GESTORE_DELLA_PIATTAFORMA") // Solo i gestori possono processare richieste
-                        .requestMatchers("/produttore/**").hasRole("PRODUTTORE")// Consenti l'accesso alla console H2
-                        .requestMatchers("/trasformatore/**").hasRole("TRASFORMATORE")// Consenti l'accesso alla console H2
-                        .requestMatchers("/distributore/**").hasRole("DISTRIBUTORE_DI_TIPICITA")// Consenti l'accesso alla console H2
-                        .requestMatchers("/curatore/**").hasRole("CURATORE")// Consenti l'accesso alla console H2
-                        .requestMatchers("/animatore/**").hasRole("ANIMATORE_DELLA_FILIERA")// Consenti l'accesso alla console H2
-                        .requestMatchers("/acquirente/**").hasRole("ACQUIRENTE")// Consenti l'accesso alla console H2
-                        .requestMatchers("/gestore/**").hasRole("GESTORE_DELLA_PIATTAFORMA")// Consenti l'accesso alla console H2
-                        .anyRequest().authenticated() // Proteggi tutti gli altri endpoint
+                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/h2-console/**").hasRole("GESTORE_DELLA_PIATTAFORMA")
+                        .requestMatchers("/richieste/autenticato/**").authenticated()
+                        .requestMatchers("/richieste/ruoli/**", "/richieste/eliminazione/**","/categorie/**", "/gestisci/**")
+                        .hasRole("GESTORE_DELLA_PIATTAFORMA")
+                        .requestMatchers("/richieste/operatore/**").hasAnyRole("PRODUTTORE","TRASFORMATORE","DISTRIBUTORE_DI_TIPICITA")
+                        .requestMatchers("/richieste/validazione/**").hasRole("CURATORE")
+                        .requestMatchers("/attivita/**").hasRole("ANIMATORE_DELLA_FILIERA")
+                        .requestMatchers("/acquirente/**").hasRole("ACQUIRENTE")
+                        .anyRequest().authenticated()
                 )
-                .csrf(AbstractHttpConfigurer::disable) // Disabilita globalmente il CSRF
+                .csrf(AbstractHttpConfigurer::disable)
                 .headers(headers -> headers
-                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin) // Consenti frame dalla stessa origine per la console H2
+                                .frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin)
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .httpBasic(Customizer.withDefaults());

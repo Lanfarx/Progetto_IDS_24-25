@@ -2,7 +2,9 @@ package it.unicam.cs.filieraagricola.api.repository;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -32,5 +34,5 @@ public interface AttivitaRepository extends JpaRepository<Visita, Integer> {
     @Query("SELECT COUNT(v) = 1 FROM Visita v WHERE TYPE(v) = Evento AND v.id = :id")
     boolean existsEventoById(@Param("id") int id);
 
-
+    boolean existsByTitoloAndDataAndLuogo(String titolo, LocalDate data, String luogo);
 }

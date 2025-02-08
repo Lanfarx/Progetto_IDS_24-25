@@ -1,16 +1,9 @@
 package it.unicam.cs.filieraagricola.api.services.gestore;
 
-import it.unicam.cs.filieraagricola.api.commons.UserRole;
-import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoRichiesta;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
-import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
-import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
-import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.repository.AttivitaRepository;
-import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
-import it.unicam.cs.filieraagricola.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,17 +11,11 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
-import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
-
 @Service
 public class AttivitaService {
 
     @Autowired
-    private final AttivitaRepository attivitaRepository;
-
-    public AttivitaService(AttivitaRepository attivitaRepository) {
-        this.attivitaRepository = attivitaRepository;
-    }
+    private AttivitaRepository attivitaRepository;
 
     public List<Visita> getAllAttivita() {
         return attivitaRepository.findAll();
@@ -54,8 +41,8 @@ public class AttivitaService {
         return attivitaRepository.existsById(id);
     }
 
-    public boolean existsVisitaByParams(String titolo, LocalDate data, String descrizione, String luogo) {
-        return attivitaRepository.existsByTitoloAndDataAndDescrizioneAndLuogo(titolo, data, descrizione, luogo);
+    public boolean existsByParams(String titolo, LocalDate data, String luogo) {
+        return attivitaRepository.existsByTitoloAndDataAndLuogo(titolo, data, luogo);
     }
 
     public boolean existsVisita(int id) {
@@ -95,7 +82,7 @@ public class AttivitaService {
     }
 
     public boolean aggiungiPrenotazione(Visita visita, Users user) {
-        if (existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
+        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione())) {
             if (visita.getData().isAfter(LocalDate.now())) {
                 visita.getPrenotazioni().add(user);
                 attivitaRepository.save(visita);
@@ -106,7 +93,7 @@ public class AttivitaService {
     }
 
     public boolean eliminaPrenotazione(Visita visita, Users user) {
-        if (existsVisitaByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione(), visita.getLuogo())) {
+        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione())) {
             visita.getPrenotazioni().remove(user);
             attivitaRepository.save(visita);
             return true;
