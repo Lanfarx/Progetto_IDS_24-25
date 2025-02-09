@@ -1,11 +1,19 @@
 package it.unicam.cs.filieraagricola.api.controller;
 
+import it.unicam.cs.filieraagricola.api.services.carrello.PaymentManager;
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.carrello.Carrello;
+import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.carrello.CarrelloService;
 import it.unicam.cs.filieraagricola.api.services.carrello.OrdineService;
+import it.unicam.cs.filieraagricola.api.services.elemento.ElementoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,31 +24,60 @@ public class CarrelloController {
 
     @Autowired
     private CarrelloService carrelloService;
-
+    @Autowired
+    private ElementoService elementoService;
     @Autowired
     private OrdineService ordineService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private PaymentManager paymentManager;
 
-    @PostMapping("/aggiungi}")
-    public ResponseEntity<String> aggiungiElementoAlCarrello(@RequestParam int userId, @RequestParam int id, @RequestParam int quantita) {
-        carrelloService.aggiungiAlCarrello(userId, itemId, quantity);
-        return ResponseEntity.ok("Item added to cart");
+    @PostMapping("/aggiungi")
+    public ResponseEntity<String> aggiungiElementoAlCarrello(@RequestParam int id, @RequestParam int quantita) {
+        if(elementoService.existsElemento(id)){
+            Elemento elemento = (Elemento) elementoService.getElemento(id).get();
+            if(quantita >= 1) {
+                if (elementoService.checkDisponibilita(elemento, quantita)) {
+                    Users currentUser = userService.getCurrentUser();
+                    carrelloService.aggiungiAlCarrello(currentUser, elemento, quantita);
+                    return new ResponseEntity<>("Elemento aggiunto al carrello", HttpStatus.OK);
+                } else return new ResponseEntity<>("Elemento non disponibile in quantità sufficiente", HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>("Inserire almeno quantita da aggiungere pari a 1", HttpStatus.OK);
+        } else return new ResponseEntity<>("Elemento non esiste", HttpStatus.BAD_REQUEST);
     }
 
     @PostMapping("/rimuovi")
-    public ResponseEntity<String> rimuoviElementoDalCarrello(@RequestParam Long userId, @PathVariable Long itemId) {
-        carrelloService.removeItemFromCart(userId, itemId);
-        return ResponseEntity.ok("Item removed from cart");
+    public ResponseEntity<String> rimuoviElementoDalCarrello(@RequestParam int id, @RequestParam int quantita) {
+        if(elementoService.existsElemento(id)){
+            Elemento elemento = (Elemento) elementoService.getElemento(id).get();
+            Users currentUser = userService.getCurrentUser();
+            Carrello carrello = carrelloService.getCarrello(currentUser.getId());
+            if(quantita >= 1) {
+                if (carrelloService.contieneElemento(carrello, elemento)) {
+                    carrelloService.rimuoviDalCarrello(currentUser, elemento, quantita);
+                    return new ResponseEntity<>("Elemento rimosso dal carrello", HttpStatus.OK);
+                } else return new ResponseEntity<>("Elemento non presente nel carrello", HttpStatus.BAD_REQUEST);
+            } else return new ResponseEntity<>("Inserire almeno quantita da rimuovere pari a 1", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>("Elemento non esiste", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/view")
-    public ResponseEntity<Carrello> viewCart(@RequestParam Long userId) {
-        Carrello cart = carrelloService.getCart(userId);
-        return ResponseEntity.ok(cart);
+    @GetMapping
+    public ResponseEntity<Carrello> getCarrello() {
+        Users currentUser = userService.getCurrentUser();
+        Carrello carrello = carrelloService.getCarrello(currentUser.getId());
+        return new ResponseEntity<>(carrello, HttpStatus.OK);
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Order> checkout(@RequestParam Long userId) {
-        Order order = orderManagerService.createOrderFromCart(userId);
-        return ResponseEntity.ok(order);
+    public ResponseEntity<Object> checkout(@RequestParam String cartaDiCredito) {
+        Users currentUser = userService.getCurrentUser();
+        Carrello carrello = carrelloService.getCarrello(currentUser.getId());
+        if(!carrello.getElementi().isEmpty()){
+            if(paymentManager.verificaPagamento(cartaDiCredito)){
+                Ordine ordine = ordineService.creaOrdine(carrello);
+                return new ResponseEntity<>(ordine,HttpStatus.OK);
+            } else return new ResponseEntity<>("Pagamento non valido, l'ordine non può essere completato", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>("Impossibile fare il checkout con un carrello vuoto",HttpStatus.BAD_REQUEST);
     }
 }

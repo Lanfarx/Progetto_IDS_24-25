@@ -48,6 +48,8 @@ public abstract class Elemento {
     public void setStatorichiesta(StatoContenuto statorichiesta){ this.statorichiesta = statorichiesta; }
 
     public abstract int getQuantita();
+    public abstract void removeQuantita(int quantita);
+    public abstract void aggiungiQuantita(int quantita);
 
     public Users getOperatore() {
         return operatore;

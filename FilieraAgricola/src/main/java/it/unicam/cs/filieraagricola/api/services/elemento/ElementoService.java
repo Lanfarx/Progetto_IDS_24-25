@@ -29,4 +29,10 @@ public class ElementoService<T extends Elemento> {
     public void eliminaElemento(int id) {
         elementoRepository.deleteById(id);
     }
+
+    public boolean checkDisponibilita(Elemento elemento, int quantita) {
+        if(existsElemento(elemento.getId())) {
+            return elemento.getQuantita()>=quantita;
+        } else throw new IllegalArgumentException("Elemento non esistente");
+    }
 }

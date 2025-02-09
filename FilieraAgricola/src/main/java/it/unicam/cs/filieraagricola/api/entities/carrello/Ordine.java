@@ -15,7 +15,7 @@ public class Ordine {
     @ManyToOne
     private Users user;
 
-    @OneToMany
+    @Transient
     private List<ElementoCarrello> elementi;
 
     private double prezzoTotale;

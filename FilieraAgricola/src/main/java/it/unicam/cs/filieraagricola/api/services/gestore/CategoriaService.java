@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services.elemento;
+package it.unicam.cs.filieraagricola.api.services.gestore;
 
 import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;
@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Service
 public class CategoriaService {
+
     @Autowired
     private CategoriaRepository categoriaRepository;
 

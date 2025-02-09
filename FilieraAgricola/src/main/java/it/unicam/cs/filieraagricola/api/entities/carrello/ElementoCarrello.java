@@ -3,8 +3,15 @@ package it.unicam.cs.filieraagricola.api.entities.carrello;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import jakarta.persistence.*;
 
+@Entity
 public class ElementoCarrello {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
+
+    @ManyToOne
+    @JoinColumn(name = "elemento_id")
     private Elemento elemento;
 
     private int quantita;
@@ -15,6 +22,18 @@ public class ElementoCarrello {
         this.elemento = elemento;
         this.quantita = quantita;
         this.prezzoTotale = elemento.getPrezzo() * quantita;
+    }
+
+    public ElementoCarrello() {
+
+    }
+
+    public int getId(){
+        return id;
+    }
+
+    private void setId(int id){
+        this.id = id;
     }
 
     public Elemento getElemento() {
@@ -40,5 +59,10 @@ public class ElementoCarrello {
 
     public void setPrezzoTotale(double prezzoTotale) {
         this.prezzoTotale = prezzoTotale;
+    }
+
+    public void rimuoviQuantita(int quantita) {
+        this.quantita -= quantita;
+        this.prezzoTotale = elemento.getPrezzo() * quantita;
     }
 }

@@ -34,7 +34,7 @@ public abstract class Prodotto extends Elemento{
     @Override
     public int getQuantita() { return quantita; }
     public void setQuantita(int quantita) { this.quantita = quantita; }
-    public void addQuantita(int quantita) { this.quantita = this.quantita + quantita; }
+    @Override
+    public void aggiungiQuantita(int quantita) { this.quantita += this.quantita + quantita; }
     public void removeQuantita(int quantita) { this.quantita = Math.min(this.quantita - quantita, 0); }
-
 }

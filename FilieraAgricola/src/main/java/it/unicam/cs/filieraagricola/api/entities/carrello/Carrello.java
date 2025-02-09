@@ -15,7 +15,7 @@ public class Carrello {
     @ManyToOne
     private Users user;
 
-    @Transient
+    @OneToMany
     private List<ElementoCarrello> elementi;
 
     private double prezzoTotale;

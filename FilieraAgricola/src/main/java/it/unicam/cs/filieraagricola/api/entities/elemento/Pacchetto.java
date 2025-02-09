@@ -51,9 +51,17 @@ public class Pacchetto extends Elemento{
         return quantita;
     }
 
+    @Override
     public void removeQuantita(int quantita){
         for (Prodotto prodotto : prodottiSet) {
             prodotto.removeQuantita(quantita);
+        }
+    }
+
+    @Override
+    public void aggiungiQuantita(int quantita) {
+        for (Prodotto prodotto : prodottiSet) {
+            prodotto.aggiungiQuantita(quantita);
         }
     }
 

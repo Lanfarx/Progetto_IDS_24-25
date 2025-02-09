@@ -109,4 +109,8 @@ public class AttivitaService {
     public boolean checkData(LocalDate data) {
         return data.isAfter(LocalDate.now());
     }
+
+    public List<Visita> getAllPrenotazioni(Users user) {
+        return attivitaRepository.findAllByPrenotazioniContains(user);
+    }
 }

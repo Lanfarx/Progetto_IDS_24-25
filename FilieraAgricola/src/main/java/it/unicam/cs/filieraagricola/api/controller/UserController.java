@@ -31,11 +31,11 @@ public class UserController {
     @Autowired
     private ProdottoService<Prodotto> prodottoService;
     @Autowired
-    private  PacchettoService pacchettoService;
+    private PacchettoService pacchettoService;
     @Autowired
-    private  ProdottoBaseService prodottoBaseService;
+    private ProdottoBaseService prodottoBaseService;
     @Autowired
-    private  ProdottoTrasformatoService prodottoTrasformatoService;
+    private ProdottoTrasformatoService prodottoTrasformatoService;
     @Autowired
     private RichiestaEliminazioneService richiestaEliminazioneService;
     @Autowired
@@ -50,8 +50,8 @@ public class UserController {
     @PutMapping("/me")
     public ResponseEntity<String> modificaCredenziali(@RequestParam String username, @RequestParam String password) {
         Users user = userService.getCurrentUser();
-        if(!user.getUsername().equals(username) && !user.getPassword().equals(password)) {
-            if(!userService.existsUserByUsername(username)){
+        if (!user.getUsername().equals(username) && !user.getPassword().equals(password)) {
+            if (!userService.existsUserByUsername(username)) {
                 userService.modificaCredenziali(user, username, password);
                 return new ResponseEntity<>("Utente aggiornato con username: " + username + " e password: " + password, HttpStatus.OK);
             } else return new ResponseEntity<>("Username: " + username + " già presente", HttpStatus.BAD_REQUEST);
@@ -73,30 +73,37 @@ public class UserController {
         return new ResponseEntity<>(attivitaService.getAllEventi(), HttpStatus.OK);
     }
 
+    @GetMapping("/attivita/prenotazione")
+    public ResponseEntity<Object> getPrenotazioni() {
+        return new ResponseEntity<>(attivitaService.getAllPrenotazioni(userService.getCurrentUser()), HttpStatus.OK);
+    }
+
     @PostMapping("/attivita/prenotazione")
     public ResponseEntity<String> prenotazione(@RequestParam Integer id) {
         Users currentUser = userService.getCurrentUser();
-        if(attivitaService.existsAttivita(id)) {
+        if (attivitaService.existsAttivita(id)) {
             Visita visita = attivitaService.getVisitaOEventoById(id).get();
-            if(attivitaService.controllaPrenotazione(visita, currentUser)){
-                if(attivitaService.checkData(visita.getData())){
+            if (attivitaService.controllaPrenotazione(visita, currentUser)) {
+                if (attivitaService.checkData(visita.getData())) {
                     attivitaService.aggiungiPrenotazione(visita, currentUser);
                     return new ResponseEntity<>("Prenotazione effettuata con successo", HttpStatus.OK);
-                } else return new ResponseEntity<>("È possibile prenotarsi solo ad attività non già precedentemente svolte", HttpStatus.BAD_REQUEST);
+                } else
+                    return new ResponseEntity<>("È possibile prenotarsi solo ad attività non già precedentemente svolte", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("L'utente è gia prenotato a questa attività", HttpStatus.BAD_REQUEST);
-        } else return  new ResponseEntity<>("L'attività non esiste", HttpStatus.BAD_REQUEST);
+        } else return new ResponseEntity<>("L'attività non esiste", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/attivita/prenotazione")
     public ResponseEntity<String> rimuoviPrenotazione(@RequestParam Integer id) {
         Users currentUser = userService.getCurrentUser();
-        if(attivitaService.existsAttivita(id)) {
+        if (attivitaService.existsAttivita(id)) {
             Visita visita = attivitaService.getVisitaOEventoById(id).get();
-            if(!attivitaService.controllaPrenotazione(visita, currentUser)){
-                if(attivitaService.checkData(visita.getData())){
+            if (!attivitaService.controllaPrenotazione(visita, currentUser)) {
+                if (attivitaService.checkData(visita.getData())) {
                     attivitaService.eliminaPrenotazione(visita, currentUser);
                     return new ResponseEntity<>("Prenotazione eliminata con successo", HttpStatus.OK);
-                } else return new ResponseEntity<>("È possibile togliere la prenotazione solo ad attività non già precedentemente svolte", HttpStatus.BAD_REQUEST);
+                } else
+                    return new ResponseEntity<>("È possibile togliere la prenotazione solo ad attività non già precedentemente svolte", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("L'utente non è prenotato a questa attività", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>("L'attività non esiste", HttpStatus.BAD_REQUEST);
     }

@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface AttivitaRepository extends JpaRepository<Visita, Integer> {
-    boolean existsByTitoloAndDataAndDescrizioneAndLuogo(String titolo, LocalDate data, String descrizione, String luogo);
 
     @Query("SELECT v FROM Visita v WHERE TYPE(v) = Evento")
     List<Visita> findAllEventi();

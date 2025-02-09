@@ -20,9 +20,7 @@ public class OrdineService {
     private CarrelloRepository carrelloRepository;
 
     @Transactional
-    public Ordine creaOrdine(int userId){
-        Carrello carrello = carrelloRepository.findByUserId(userId)
-
+    public Ordine creaOrdine(Carrello carrello){
         Ordine ordine = new Ordine();
         ordine.setUser(carrello.getUser());
         ordine.setElementi(new ArrayList<>(carrello.getElementi()));
