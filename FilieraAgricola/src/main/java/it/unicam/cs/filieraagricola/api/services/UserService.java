@@ -2,7 +2,6 @@ package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
-import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -25,14 +24,7 @@ import java.util.stream.Collectors;
 public class UserService implements UserDetailsService {
 
     @Autowired
-    private final UserRepository userRepository;
-    @Autowired
-    private RichiestaRepository richiestaRepository;
-
-    public UserService(UserRepository userRepository, RichiestaRepository richiestaRepository) {
-        this.userRepository = userRepository;
-        this.richiestaRepository = richiestaRepository;
-    }
+    private  UserRepository userRepository;
 
     public Optional<Users> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -144,6 +136,16 @@ public class UserService implements UserDetailsService {
                 userRepository.save(user);
             }  else throw new RuntimeException("Utente non possessore del ruolo");
         } else throw new RuntimeException("Utente non esiste");
+    }
+
+    public boolean verifyPassword(String password , String userPassword) {
+        return password.equals(userPassword);
+    }
+
+    public void modificaCredenziali(Users user, String username, String password) {
+        user.setUsername(username);
+        user.setPassword(password);
+        userRepository.save(user);
     }
 }
 

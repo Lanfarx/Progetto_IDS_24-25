@@ -1,6 +1,6 @@
-package it.unicam.cs.filieraagricola.api.services.gestore;
+package it.unicam.cs.filieraagricola.api.services.elemento;
 
-import it.unicam.cs.filieraagricola.api.entities.Categoria;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.repository.CategoriaRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

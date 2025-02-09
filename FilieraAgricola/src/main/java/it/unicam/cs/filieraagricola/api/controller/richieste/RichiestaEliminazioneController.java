@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/richieste")
+@RequestMapping
 public class RichiestaEliminazioneController {
 
     @Autowired
@@ -25,18 +25,18 @@ public class RichiestaEliminazioneController {
 
         if (!richiestaEliminazioneService.existsSameRichiesta(user, motivazione)) {
             richiestaEliminazioneService.aggiungiRichiesta(user.getId(), motivazione);
-            return new ResponseEntity<>("Richiesta di eliminazione da parte dell'utente: " + user.getId() + " inviata con successo.", HttpStatus.CREATED);
+            return new ResponseEntity<>("Richiesta di eliminazione da parte dell'utente: " + user.getUsername() + " inviata con successo.", HttpStatus.CREATED);
         } else {
-            return new ResponseEntity<>("Richiesta di eliminazione già effettuata da parte dell'utente: " + user.getId(), HttpStatus.CONFLICT);
+            return new ResponseEntity<>("Richiesta di eliminazione già effettuata da parte dell'utente: " + user.getUsername(), HttpStatus.CONFLICT);
         }
     }
 
-    @GetMapping("/eliminazione/attesa")
+    @GetMapping("/richieste/eliminazione/attesa")
     public ResponseEntity<Object> getRichiesteEliminazioneInAttesa() {
         return new ResponseEntity<>(richiestaEliminazioneService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
-    @PutMapping("/eliminazione/processa")
+    @PutMapping("/richieste/eliminazione/processa")
     public ResponseEntity<Object> processaRichiestaEliminazione(@RequestParam Integer id, @RequestParam boolean approvato) {
         if (richiestaEliminazioneService.existsRichiesta(id)) {
             RichiestaEliminazione richiesta = richiestaEliminazioneService.getRichiesta(id).get();

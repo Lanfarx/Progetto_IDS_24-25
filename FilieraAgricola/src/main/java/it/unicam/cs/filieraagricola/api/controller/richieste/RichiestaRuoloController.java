@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/richieste")
+@RequestMapping
 public class RichiestaRuoloController {
 
     @Autowired
@@ -26,17 +26,17 @@ public class RichiestaRuoloController {
         if (!user.getRoles().contains(ruolo)) {
             if (!richiestaRuoloService.existsSameRichiesta(user, ruolo)) {
                 richiestaRuoloService.aggiungiRichiesta(user.getId(), ruolo);
-                return new ResponseEntity<>("Richiesta di ruolo " + ruolo + " da parte dell'utente: " + user.getId() + " inviata con successo.", HttpStatus.CREATED);
-            } else return new ResponseEntity<>("Richiesta da parte di: " + user.getId() + " già effettuata per il ruolo: " + ruolo , HttpStatus.CONFLICT);
-        } else return new ResponseEntity<>("L'utente: " + user.getId() + " già ha il ruolo di: " + ruolo, HttpStatus.CONFLICT);
+                return new ResponseEntity<>("Richiesta di ruolo " + ruolo + " da parte dell'utente: " + user.getUsername() + " inviata con successo.", HttpStatus.CREATED);
+            } else return new ResponseEntity<>("Richiesta da parte di: " + user.getUsername() + " già effettuata per il ruolo: " + ruolo , HttpStatus.CONFLICT);
+        } else return new ResponseEntity<>("L'utente: " + user.getUsername() + " già ha il ruolo di: " + ruolo, HttpStatus.CONFLICT);
     }
 
-    @GetMapping("/ruoli/attesa")
+    @GetMapping("/richieste/ruoli/attesa")
     public ResponseEntity<Object> getRichiesteRuoloInAttesa() {
         return new ResponseEntity<>(richiestaRuoloService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
-    @PutMapping("/ruoli/processa")
+    @PutMapping("/richieste/ruoli/processa")
     public ResponseEntity<Object> processaRichiestaRuolo(@RequestParam Integer id, @RequestParam boolean approvato) {
         if(richiestaRuoloService.existsRichiesta(id))
         {

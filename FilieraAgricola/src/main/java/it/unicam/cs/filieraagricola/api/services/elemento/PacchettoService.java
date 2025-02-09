@@ -4,6 +4,7 @@ import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -12,14 +13,12 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class PacchettoService {
+public class PacchettoService extends ElementoService<Pacchetto> {
 
+    @Autowired
     PacchettoRepository pacchettoRepository;
+    @Autowired
     ProdottoRepository prodottoRepository;
-    public PacchettoService(PacchettoRepository pacchettoRepository, ProdottoRepository prodottoRepository) {
-        this.pacchettoRepository = pacchettoRepository;
-        this.prodottoRepository = prodottoRepository;
-    }
 
     public List<Pacchetto> getPacchetti() {
         return this.pacchettoRepository.findAll();

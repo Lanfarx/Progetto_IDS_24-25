@@ -12,15 +12,7 @@ import java.util.Optional;
 import java.util.Set;
 
 @Service
-public class ProdottoTrasformatoService {
-    @Autowired
-    private final ProdottoRepository prodottoRepository;
-    @Autowired
-    private PacchettoService pacchettoService;
-
-    public ProdottoTrasformatoService(ProdottoRepository prodottoRepository) {
-        this.prodottoRepository = prodottoRepository;
-    }
+public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasformato> {
 
     public ProdottoTrasformato getProdottoTrasformato(int id) {
         if (!this.prodottoRepository.existsProdottoTrasformatoById(id)) {

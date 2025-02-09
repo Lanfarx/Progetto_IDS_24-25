@@ -18,9 +18,6 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
     public class RichiestaEliminazioneService extends AbstractRichiestaService<RichiestaEliminazione> {
 
         @Autowired
-        private RichiestaRepository richiestaRepository;
-
-        @Autowired
         private UserService userService;
 
         @Override

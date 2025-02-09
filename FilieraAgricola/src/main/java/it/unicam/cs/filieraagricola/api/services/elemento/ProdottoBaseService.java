@@ -10,16 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 @Service
-public class ProdottoBaseService {
-    @Autowired
-    private final ProdottoRepository prodottoRepository;
-    @Autowired
-    private PacchettoService pacchettoService;
-
-    public ProdottoBaseService(ProdottoRepository prodottoRepository) {
-        this.prodottoRepository = prodottoRepository;
-    }
-
+public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
 
     public boolean aggiungiProdottoBase(String nome, String metodiColtivazione,
                                                        String certificazioni, String descrizione, double prezzo) {

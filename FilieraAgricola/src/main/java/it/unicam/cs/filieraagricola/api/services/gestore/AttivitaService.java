@@ -82,22 +82,31 @@ public class AttivitaService {
     }
 
     public boolean aggiungiPrenotazione(Visita visita, Users user) {
-        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione())) {
-            if (visita.getData().isAfter(LocalDate.now())) {
-                visita.getPrenotazioni().add(user);
-                attivitaRepository.save(visita);
-                return true;
-            } else return false;
-        }
-        return false;
+        if (checkData(visita.getData())) {
+            visita.getPrenotazioni().add(user);
+            attivitaRepository.save(visita);
+            return true;
+        } else return false;
     }
 
     public boolean eliminaPrenotazione(Visita visita, Users user) {
-        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getDescrizione())) {
+        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getLuogo())) {
             visita.getPrenotazioni().remove(user);
             attivitaRepository.save(visita);
             return true;
         }
         return false;
+    }
+
+    public boolean controllaPrenotazione(Visita visita, Users user) {
+        if (existsByParams(visita.getTitolo(), visita.getData(), visita.getLuogo())) {
+            if (!visita.getPrenotazioni().contains(user)) {
+                return true;
+            } else return false;
+        } else throw new IllegalStateException("L'attività non esiste.");
+    }
+
+    public boolean checkData(LocalDate data) {
+        return data.isAfter(LocalDate.now());
     }
 }

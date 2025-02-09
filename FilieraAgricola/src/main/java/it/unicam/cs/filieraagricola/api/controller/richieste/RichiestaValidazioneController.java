@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import static it.unicam.cs.filieraagricola.api.commons.ResponseEntityUtil.unauthorizedResponse;
 
 @RestController
-@RequestMapping("/richieste")
+@RequestMapping
 public class RichiestaValidazioneController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class RichiestaValidazioneController {
     @Autowired
     private UserService userService;
     @Autowired
-    private ElementoService elementoService;
+    private ElementoService<Elemento> elementoService;
 
     @PostMapping("operatore/richiesta-validazione")
     public ResponseEntity<Object> aggiungiRichiestaValidazione(@RequestParam Integer id) {
@@ -39,12 +39,12 @@ public class RichiestaValidazioneController {
         } else return new ResponseEntity<>("L'elemento: " + id + " non esiste", HttpStatus.NOT_FOUND);
     }
 
-    @GetMapping("/validazione/attesa")
+    @GetMapping("/richieste/validazione/attesa")
     public ResponseEntity<Object> getRichiesteInAttesa() {
         return new ResponseEntity<>(richiestaValidazioneService.getRichiesteInAttesa(), HttpStatus.OK);
     }
 
-    @PutMapping("/validazione/processa")
+    @PutMapping("/richieste/validazione/processa")
     public ResponseEntity<Object> processaRichiestaValidazione(@RequestParam Integer id, @RequestParam boolean approvato) {
         if (richiestaValidazioneService.existsRichiesta(id)) {
             RichiestaValidazione richiesta = richiestaValidazioneService.getRichiesta(id).get();
@@ -52,11 +52,7 @@ public class RichiestaValidazioneController {
             if (statoContenuto == StatoContenuto.ATTESA) {
                 richiestaValidazioneService.processaRichiesta(id, approvato);
                 return new ResponseEntity<>("Richiesta di validazione " + id + (approvato ? " accettata." : " rifiutata."), HttpStatus.OK);
-            } else {
-                return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoContenuto);
-            }
-        } else {
-            return ResponseEntity.status(404).body("Richiesta " + id + " non trovata");
-        }
+            } else return ResponseEntity.status(409).body("Richiesta già processata con esito: " + statoContenuto);
+        } else return ResponseEntity.status(404).body("Richiesta " + id + " non trovata");
     }
 }

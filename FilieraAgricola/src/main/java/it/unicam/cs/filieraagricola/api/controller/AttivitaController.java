@@ -27,21 +27,6 @@ public class AttivitaController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
-    public ResponseEntity<Object> getAllAttivita() {
-        return new ResponseEntity<>(attivitaService.getAllAttivita(), HttpStatus.OK);
-    }
-
-    @GetMapping("/visite")
-    public ResponseEntity<Object> getVisite() {
-        return new ResponseEntity<>(attivitaService.getAllVisite(), HttpStatus.OK);
-    }
-
-    @GetMapping("/eventi")
-    public ResponseEntity<Object> getEventi() {
-        return new ResponseEntity<>(attivitaService.getAllEventi(), HttpStatus.OK);
-    }
-
     @GetMapping("/mie-attivita")
     public ResponseEntity<Object> getMieAttivita() {
         Users organizzatore = userService.getCurrentUser();

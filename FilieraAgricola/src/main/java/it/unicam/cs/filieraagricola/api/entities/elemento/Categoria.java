@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.entities;
+package it.unicam.cs.filieraagricola.api.entities.elemento;
 
 import jakarta.persistence.*;
 

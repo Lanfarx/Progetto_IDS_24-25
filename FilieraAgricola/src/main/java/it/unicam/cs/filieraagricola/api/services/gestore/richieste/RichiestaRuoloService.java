@@ -19,9 +19,6 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
     public class RichiestaRuoloService extends AbstractRichiestaService<RichiestaRuolo> {
 
         @Autowired
-        private RichiestaRepository richiestaRepository;
-
-        @Autowired
         private UserService userService;
 
         @Override
@@ -32,7 +29,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
 
         @Override
         public boolean existsRichiesta(Integer id) {
-            return richiestaRepository.existsById(id);
+            return richiestaRepository.existsRichiestaRuoloById(id);
         }
 
         @Override

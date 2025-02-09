@@ -9,20 +9,24 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-public class ElementoService {
+public class ElementoService<T extends Elemento> {
 
     @Autowired
-    private ElementoRepository elementoRepository;
+    protected ElementoRepository elementoRepository;
 
-    public List<Elemento> getElementi() {
-        return elementoRepository.findAll();
+    public List<T> getElementi() {
+        return (List<T>) elementoRepository.findAll();
     }
 
-    public Optional<Elemento> getElemento(int id) {
-        return elementoRepository.findById(id);
+    public Optional<T> getElemento(int id) {
+        return (Optional<T>) elementoRepository.findById(id);
     }
 
     public boolean existsElemento(int id) {
         return elementoRepository.existsById(id);
+    }
+
+    public void eliminaElemento(int id) {
+        elementoRepository.deleteById(id);
     }
 }
