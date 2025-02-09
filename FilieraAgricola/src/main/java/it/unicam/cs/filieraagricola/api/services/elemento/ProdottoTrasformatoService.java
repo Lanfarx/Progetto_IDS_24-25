@@ -1,9 +1,12 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
+import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +16,11 @@ import java.util.Set;
 
 @Service
 public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasformato> {
+    @Autowired
+    private UserService userService;
 
     public ProdottoTrasformato getProdottoTrasformato(int id) {
-        if (!this.prodottoRepository.existsProdottoTrasformatoById(id)) {
+        if (this.prodottoRepository.existsProdottoTrasformatoById(id)) {
             return prodottoRepository.findProdottoTrasformatoById(id).get();
         } else {
             return null;
@@ -23,11 +28,10 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
     }
 
     public List<ProdottoTrasformato> getProdottiTrasformati() {
-        return prodottoRepository.findAllProdottiTrasformati();
+        return prodottoRepository.findProdottiTrasformatiByOperatore(userService.getCurrentUser());
     }
 
     public void deleteProdottoTrasformato(int id) {
-
         Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteById(id);
         pacchettoService.checkAndDelete(pacchettoSet);
@@ -43,9 +47,8 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
     }
 
     public boolean aggiungiProdottoTrasformato(String nome, String processo,
-                                                              String certificazioni, int prodottoBaseID,
-                                                              String descrizione, double prezzo) {
-
+                                               String certificazioni, int prodottoBaseID,
+                                               String descrizione, double prezzo, Categoria categoria) {
         Optional<ProdottoBase> prodottoBaseOpt = prodottoRepository.findProdottoBaseById(prodottoBaseID);
         ProdottoBase prodottoBase;
         if(prodottoBaseOpt.isPresent()) {
@@ -56,7 +59,7 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         if(prodottoRepository.existsByCaratteristicheTrasformato(nome, processo, certificazioni, prodottoBase)){
             return false;
         }
-        creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo);
+        creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo, categoria);
         return true;
     }
 
@@ -64,13 +67,14 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         if(prodottoRepository.existsById(prodottoTrasformato.getId())) {
             return false;
         }
+        prodottoTrasformato.setOperatore(userService.getCurrentUser());
         prodottoRepository.save(prodottoTrasformato);
         return true;
     }
 
 
     public void creaTrasformato(String nome, String processo, String certificazioni, int prodottoBaseID,
-                                String descrizione, double prezzo) {
+                                String descrizione, double prezzo, Categoria categoria) {
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
         ProdottoBase prodottoBase = prodottoRepository.findProdottoBaseById(prodottoBaseID).get(); //Il controllo per esistenza viene già effettuato in esisteProdottoTrasformato
         prodottoTrasformato.setNome(nome);
@@ -79,6 +83,8 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         prodottoTrasformato.setProdottoBase(prodottoBase);
         prodottoTrasformato.setDescrizione(descrizione);
         prodottoTrasformato.setPrezzo(prezzo);
+        prodottoTrasformato.setOperatore(userService.getCurrentUser());
+        prodottoTrasformato.setCategoria(categoria);
         prodottoRepository.save(prodottoTrasformato);
     }
 }

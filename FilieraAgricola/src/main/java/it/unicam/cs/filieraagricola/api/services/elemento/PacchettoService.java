@@ -4,6 +4,8 @@ import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
+import it.unicam.cs.filieraagricola.api.services.UserService;
+import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,14 +21,17 @@ public class PacchettoService extends ElementoService<Pacchetto> {
     PacchettoRepository pacchettoRepository;
     @Autowired
     ProdottoRepository prodottoRepository;
+    @Autowired
+    CategoriaService categoriaService;
+    @Autowired
+    UserService userService;
 
     public List<Pacchetto> getPacchetti() {
-        return this.pacchettoRepository.findAll();
+        return this.pacchettoRepository.findByOperatore(userService.getCurrentUser());
     }
 
-
     public Pacchetto getPacchetto(int id) {
-        if (!this.pacchettoRepository.existsById(id)) {
+        if (this.pacchettoRepository.existsById(id)) {
             return pacchettoRepository.findById(id).get();
         } else {
             return null;
@@ -37,6 +42,8 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         boolean BAD_REQUEST = getObjectResponseEntity(pacchetto.getNome(),
                 pacchetto.getDescrizione(), pacchetto.getProdottiSet());
         if(!BAD_REQUEST) return false;
+        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchetto.setOperatore(userService.getCurrentUser());
         pacchettoRepository.save(pacchetto);
         return true;
     }
@@ -51,6 +58,7 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         if(!response) { //In caso di errore, lo mando subito
             return false;
         }
+        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
         pacchettoRepository.save(pacchetto);
         return true;
     }
@@ -64,6 +72,7 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         if (!BAD_REQUEST) return false;
 
         Pacchetto pacchetto = new Pacchetto();
+        pacchetto.setOperatore(userService.getCurrentUser());
         pacchetto.setNome(nome);
         pacchetto.setDescrizione(descrizione);
         pacchetto.setProdottiSet(prodottoSet);

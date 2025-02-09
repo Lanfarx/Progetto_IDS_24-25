@@ -1,6 +1,8 @@
 
 package it.unicam.cs.filieraagricola.api.repository;
 
+import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
@@ -14,6 +16,10 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
+
+    List<ProdottoBase> findProdottiBaseByOperatore(Users operatore);
+    List<ProdottoTrasformato> findProdottiTrasformatiByOperatore(Users operatore);
+
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END " +
             "FROM ProdottoBase p WHERE p.id = :id")

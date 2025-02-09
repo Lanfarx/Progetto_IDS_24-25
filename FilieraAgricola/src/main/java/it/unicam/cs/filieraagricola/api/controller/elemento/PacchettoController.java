@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.elemento.PacchettoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -10,33 +11,17 @@ import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
 @RestController
-@RequestMapping("/distributore")
+@RequestMapping("/operatore/distributore")
 public class PacchettoController {
     @Autowired
     private PacchettoService pacchettoService;
+    @Autowired
+    private UserService userService;
 
     public PacchettoController(PacchettoService pacchettoService) {
         this.pacchettoService = pacchettoService;
     }
 
-    /*@PostConstruct
-    public void initSampleData() {
-        ProdottoBase pomodoro = new ProdottoBase();
-        pomodoro.setNome("Pomodoro");
-        prodottoBaseRepository.save(pomodoro);
-        ProdottoTrasformato polpa = new ProdottoTrasformato();
-        polpa.setNome("Polpa");
-        polpa.setProdottoBase(pomodoro);
-        prodottoTrasformatoRepository.save(polpa);
-        Pacchetto samplePacchetto = new Pacchetto();
-        samplePacchetto.setNome("Pacchetto");
-        samplePacchetto.setDescrizione("Sono un pacchetto di esempio, controlla se tutti i valori sono corretti!o");
-        samplePacchetto.addProdotto(pomodoro);
-        samplePacchetto.addProdotto(polpa);
-        samplePacchetto.setPrezzo(1.0);
-        pacchettoRepository.save(samplePacchetto);
-        contenutoController.aggiungiContenutoWithParam("paila", "sos", 2, 1);
-    }*/
 
     @GetMapping("/dashboard")
     public ResponseEntity<String> getDashboard() {
@@ -45,7 +30,7 @@ public class PacchettoController {
 
 
     @RequestMapping({"/pacchetti"})
-    public ResponseEntity<Object> getPacchetto() {
+    public ResponseEntity<Object> getPacchetti() {
         if(pacchettoService.getPacchetti().isEmpty()) {
             return new ResponseEntity<>("Nessun pacchetto trovato", HttpStatus.NOT_FOUND);
         }
@@ -57,7 +42,11 @@ public class PacchettoController {
         if(pacchettoService.getPacchetto(id) == null) {
             return new ResponseEntity<>("Nessun pacchetto trovato", HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(pacchettoService.getPacchetto(id), HttpStatus.FOUND);
+        if(pacchettoService.getPacchetto(id).getOperatore() == userService.getCurrentUser()) {
+            return new ResponseEntity<>(pacchettoService.getPacchetto(id), HttpStatus.FOUND);
+        } else {
+            return new ResponseEntity<>("Non sei autorizzato a vedere questo pacchetto", HttpStatus.UNAUTHORIZED);
+        }
     }
 
     @PostMapping({"/pacchetti/aggiungi"})
@@ -90,13 +79,20 @@ public class PacchettoController {
 
     @RequestMapping({"/pacchetti/elimina/{id}"})
     public ResponseEntity<Object> eliminaPacchetto(@PathVariable("id") int id) {
+        if(pacchettoService.getPacchetto(id).getOperatore() != userService.getCurrentUser()) {
+            return new ResponseEntity<>("Non sei autorizzato", HttpStatus.UNAUTHORIZED);
+        }
         pacchettoService.eliminaPacchetto(id);
         return new ResponseEntity<>("Pacchetto eliminato", HttpStatus.OK);
     }
 
-    @RequestMapping({"/pacchetti/elimina/prodotto/{id}"})
-    public ResponseEntity<Object> eliminaProdotto(@RequestParam("id") int id,
+    @RequestMapping({"/pacchetti/elimina/prodotto/"})
+    public ResponseEntity<Object> eliminaProdotto(@RequestParam("idPacchetto") int id,
                                                   @RequestParam("idProdotto") int idProdotto) {
+
+        if(pacchettoService.getPacchetto(id).getOperatore() != userService.getCurrentUser()) {
+            return new ResponseEntity<>("Non sei autorizzato", HttpStatus.UNAUTHORIZED);
+        }
         if(pacchettoService.eliminaProdotto(id, idProdotto)){
             return new ResponseEntity<>("Prodotto eliminato", HttpStatus.OK);
         }
@@ -108,6 +104,10 @@ public class PacchettoController {
             method = {RequestMethod.PUT}
     )
     public ResponseEntity<Object> aggiornaPacchetto(@RequestBody Pacchetto pacchetto) {
+
+        if(pacchetto.getOperatore() != userService.getCurrentUser()) {
+            return new ResponseEntity<>("Non sei autorizzato", HttpStatus.UNAUTHORIZED);
+        }
         if(pacchettoService.aggiornaPacchetto(pacchetto)) {
             return new ResponseEntity<>("Pacchetto aggiornato", HttpStatus.OK);
         }

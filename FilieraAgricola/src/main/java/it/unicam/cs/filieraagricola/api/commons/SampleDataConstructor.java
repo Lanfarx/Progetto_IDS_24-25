@@ -5,6 +5,7 @@ import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.repository.*;
+import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,6 +28,8 @@ public class SampleDataConstructor {
     ProdottoRepository prodottoRepository;
     @Autowired
     PacchettoRepository pacchettoRepository;
+    @Autowired
+    private CategoriaService categoriaService;
 
 
 
@@ -137,6 +140,7 @@ public class SampleDataConstructor {
         mela.setPrezzo(50);
         mela.setQuantita(50);
         mela.setOperatore(operatore1);
+        mela.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
         prodottoRepository.save(mela);
 
         Set<Prodotto> prodotti = new HashSet<>();
@@ -145,6 +149,7 @@ public class SampleDataConstructor {
         prodottoBase.setCertificazioni("Certificazione");
         prodottoBase.setDescrizione("Prodotto di prova");
         prodottoBase.setMetodiDiColtivazione("Coltivato in italia");
+        prodottoBase.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
         prodottoBase.setPrezzo(50);
         prodottoBase.setQuantita(50);
         prodottoBase.setOperatore(operatore1);
@@ -157,6 +162,7 @@ public class SampleDataConstructor {
         prodottoTrasformato.setDescrizione("Prodotto di passata");
         prodottoTrasformato.setProdottoBase(prodottoBase);
         prodottoTrasformato.setProcessoTrasformazione("Sch9iaccciaot");
+        prodottoTrasformato.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
         prodottoTrasformato.setPrezzo(50);
         prodottoTrasformato.setOperatore(operatore2);
         prodottoRepository.save(prodottoTrasformato);
@@ -182,7 +188,7 @@ public class SampleDataConstructor {
     }
     private void initSampleCategorie() {
         List<String> categorie = List.of("Vini", "Formaggi",
-                "Salumi", "Olio d'oliva", "Miele", "Pacchetto");
+                "Salumi", "Olio d'oliva", "Miele", "Pacchetto", "Frutta");
 
         for (String nome : categorie) {
             if (categoriaRepository.findByNome(nome).isEmpty()) {

@@ -1,35 +1,25 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
+import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
+import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.elemento.ProdottoBaseService;
+import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/produttore")
+@RequestMapping("/operatore/produttore")
 public class ProdottoBaseController {
     @Autowired
     private ProdottoBaseService prodottoBaseService;
-
-
-  /*  @PostConstruct
-    public void initSampleData() {
-        ProdottoBase miele = new ProdottoBase();
-        miele.setNome("Miele");
-        miele.setCertificazioni("Allevato in Italia");
-        miele.setMetodiDiColtivazione("Raccolto senza maltrattare api");
-        miele.setPrezzo(10.0);
-        prodottoBaseRepository.save(miele);
-
-        ProdottoBase pomodoro = new ProdottoBase();
-        pomodoro.setNome("Pomodoro");
-        pomodoro.setCertificazioni("Coltivato in Italia");
-        pomodoro.setMetodiDiColtivazione("Coltivato usando acqua depurata");
-        pomodoro.setPrezzo(5.0);
-        prodottoBaseRepository.save(pomodoro);
-    }*/
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CategoriaService categoriaService;
 
     @GetMapping("/dashboard")
     public ResponseEntity<String> getDashboard() {
@@ -47,7 +37,11 @@ public class ProdottoBaseController {
     @RequestMapping({"/prodottibase/{id}"})
     public ResponseEntity<Object> getProdottoBase(@PathVariable("id") int id) {
         if(prodottoBaseService.getProdottoBase(id) != null){
-            return new ResponseEntity<>(prodottoBaseService.getProdottoBase(id), HttpStatus.FOUND);
+            if(prodottoBaseService.getProdottoBase(id).getOperatore() == userService.getCurrentUser()) {
+                return new ResponseEntity<>(prodottoBaseService.getProdottoBase(id), HttpStatus.FOUND);
+            } else {
+                return new ResponseEntity<>("Non sei autorizzato a vedere questo Prodotto", HttpStatus.UNAUTHORIZED);
+            }
         }
         return new ResponseEntity<>("Prodotto base non esistente", HttpStatus.NOT_FOUND);
     }
@@ -65,8 +59,14 @@ public class ProdottoBaseController {
                                                       @RequestParam("metodiDiColtivazione") String metodiDiColtivazione,
                                                       @RequestParam("certificazioni") String certificazioni,
                                                        @RequestParam("descrizione") String descrizione,
-                                                       @RequestParam("prezzo") double prezzo) {
-        if(prodottoBaseService.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo)){
+                                                       @RequestParam("prezzo") double prezzo,
+                                                       @RequestParam("categoria") String categoria) {
+
+        if(!categoriaService.existsSameCategoria(categoria)){
+            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + categoriaService.getAllCategorie(), HttpStatus.NOT_FOUND);
+        }
+        Categoria cat = categoriaService.getCategoriaByNome(categoria).get();
+        if(prodottoBaseService.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo, cat)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);
@@ -74,6 +74,9 @@ public class ProdottoBaseController {
 
     @DeleteMapping({"/prodottibase/elimina/{id}"})
     public ResponseEntity<Object> deleteProduct(@PathVariable("id") int id) {
+        if(prodottoBaseService.getProdottoBase(id).getOperatore() != userService.getCurrentUser()) {
+            return new ResponseEntity<>("Non sei autorizzato", HttpStatus.UNAUTHORIZED);
+        }
         prodottoBaseService.deleteProdottoBase(id);
         return new ResponseEntity<>("Prodotto eliminato", HttpStatus.OK);
     }
@@ -83,6 +86,9 @@ public class ProdottoBaseController {
             method = {RequestMethod.PUT}
     )
     public ResponseEntity<Object> aggiornaProdottoBase(@RequestBody ProdottoBase prodottoBase) {
+        if(prodottoBase.getOperatore() != userService.getCurrentUser()) {
+            return new ResponseEntity<>("Non sei autorizzato", HttpStatus.UNAUTHORIZED);
+        }
         if(prodottoBaseService.aggiornaProdottoBase(prodottoBase)){
             return new ResponseEntity<>("Prodotto aggiornato", HttpStatus.FOUND);
         }

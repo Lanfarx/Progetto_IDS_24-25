@@ -16,12 +16,20 @@ public abstract class Elemento {
     private String descrizione;
     private double prezzo;
 
+
+    @ManyToOne
+    @JoinColumn(name = "categoria_id")
+    private Categoria categoria;
+
     @ManyToOne
     @JoinColumn(name = "operatore_id", nullable = false)
     private Users operatore;
 
     @Enumerated(EnumType.STRING)
     private StatoContenuto statorichiesta;
+
+    public Categoria getCategoria() { return categoria; }
+    public void setCategoria(Categoria categoria){ this.categoria = categoria; }
 
     public String getDescrizione() {
         return descrizione;
@@ -44,17 +52,13 @@ public abstract class Elemento {
         this.nome = nome;
     }
     public StatoContenuto getStatorichiesta(){ return statorichiesta; }
-
-    public void setStatorichiesta(StatoContenuto statorichiesta){ this.statorichiesta = statorichiesta; }
-
-    public abstract int getQuantita();
     public abstract void removeQuantita(int quantita);
     public abstract void aggiungiQuantita(int quantita);
-
+    public void setStatorichiesta(StatoContenuto statorichiesta){ this.statorichiesta = statorichiesta; }
+    public abstract int getQuantita();
     public Users getOperatore() {
         return operatore;
     }
-
     public void setOperatore(Users operatore) {
         this.operatore = operatore;
     }
