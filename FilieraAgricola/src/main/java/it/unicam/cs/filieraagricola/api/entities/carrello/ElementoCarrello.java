@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.entities.carrello;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import jakarta.persistence.*;
 
@@ -18,7 +19,16 @@ public class ElementoCarrello {
 
     private double prezzoTotale;
 
-    public ElementoCarrello(Elemento elemento, int quantita) {
+    @ManyToOne @JsonIgnore
+    @JoinColumn(name = "carrello_id")
+    private Carrello carrello;
+
+    @ManyToOne @JsonIgnore
+    @JoinColumn(name = "ordine_id")
+    private Ordine ordine;
+
+    public ElementoCarrello(Carrello carrello, Elemento elemento, int quantita) {
+        this.carrello = carrello;
         this.elemento = elemento;
         this.quantita = quantita;
         this.prezzoTotale = elemento.getPrezzo() * quantita;
@@ -63,6 +73,22 @@ public class ElementoCarrello {
 
     public void rimuoviQuantita(int quantita) {
         this.quantita -= quantita;
-        this.prezzoTotale = elemento.getPrezzo() * quantita;
+        this.prezzoTotale = elemento.getPrezzo() * this.quantita;
+    }
+
+    public Carrello getCarrello() {
+        return carrello;
+    }
+
+    public void setCarrello(Carrello carrello) {
+        this.carrello = carrello;
+    }
+
+    public Ordine getOrdine() {
+        return ordine;
+    }
+
+    public void setOrdine(Ordine ordine) {
+        this.ordine = ordine;
     }
 }

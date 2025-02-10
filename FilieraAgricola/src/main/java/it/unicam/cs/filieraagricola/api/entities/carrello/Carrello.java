@@ -10,21 +10,21 @@ import java.util.List;
 public class Carrello {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private int id;
 
     @ManyToOne
     private Users user;
 
-    @OneToMany
-    private List<ElementoCarrello> elementi;
+    @OneToMany(mappedBy = "carrello", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ElementoCarrello> elementi = new ArrayList<>();
 
     private double prezzoTotale;
 
-    public Long getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(int id) {
         this.id = id;
     }
 

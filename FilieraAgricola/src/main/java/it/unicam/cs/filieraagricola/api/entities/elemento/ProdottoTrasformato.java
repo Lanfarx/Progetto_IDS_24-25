@@ -7,15 +7,11 @@ import jakarta.persistence.*;
 @DiscriminatorValue("TRASFORMATO")
 public class ProdottoTrasformato extends Prodotto {
 
-    //TODO vedere come gestire collegamento fasi della produzione con i produttori locali
-    //TODO aggiungere variabile trasformatore
-
     private String processoTrasformazione;
     //Gestito i prodotti in modo che ogni prodotto trasfromato equivale ad uno ed un solo prodotto
     @ManyToOne
     @JoinColumn(name = "prodotto_base_id", nullable = false)
     private ProdottoBase prodottoBase;
-
 
     public ProdottoBase getProdottoBase() {
         return this.prodottoBase;

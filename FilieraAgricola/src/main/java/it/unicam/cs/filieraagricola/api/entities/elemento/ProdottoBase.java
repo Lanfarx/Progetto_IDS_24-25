@@ -6,8 +6,6 @@ import jakarta.persistence.*;
 @DiscriminatorValue("BASE")
 public class ProdottoBase extends Prodotto {
 
-    //TODO aggiungere variabile produttore
-
     private String metodiDiColtivazione;
     public String getMetodiDiColtivazione() {
         return metodiDiColtivazione;

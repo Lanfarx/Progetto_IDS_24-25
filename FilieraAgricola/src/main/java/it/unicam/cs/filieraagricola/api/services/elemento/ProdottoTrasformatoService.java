@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
@@ -31,6 +32,10 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         return prodottoRepository.findProdottiTrasformatiByOperatore(userService.getCurrentUser());
     }
 
+    public List<ProdottoTrasformato> getAllProdottiTrasformatiValidi() {
+        return prodottoRepository.findProdottiTrasformatoByStatorichiestaEquals(StatoContenuto.ACCETTATA);
+    }
+
     public void deleteProdottoTrasformato(int id) {
         Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteById(id);
@@ -39,6 +44,8 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
 
     public boolean aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
         if (this.prodottoRepository.existsProdottoTrasformatoById(prodottoTrasformato.getId())) {
+            prodottoTrasformato.setOperatore(userService.getCurrentUser());
+            prodottoTrasformato.setCategoria(getProdottoTrasformato(prodottoTrasformato.getId()).getCategoria());
             this.prodottoRepository.save(prodottoTrasformato);
             return true;
         } else {
@@ -64,9 +71,11 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
     }
 
     public boolean aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
-        if(prodottoRepository.existsById(prodottoTrasformato.getId())) {
+        if(prodottoRepository.existsByCaratteristicheBase(prodottoTrasformato.getNome(), prodottoTrasformato.getProcessoTrasformazione(),prodottoTrasformato.getCertificazioni())) {
             return false;
         }
+        Categoria categoria = categoriaService.getCategoriaByNome(prodottoTrasformato.getCategoria().getNome()).get();
+        prodottoTrasformato.setCategoria(categoria);
         prodottoTrasformato.setOperatore(userService.getCurrentUser());
         prodottoRepository.save(prodottoTrasformato);
         return true;
@@ -86,5 +95,33 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         prodottoTrasformato.setOperatore(userService.getCurrentUser());
         prodottoTrasformato.setCategoria(categoria);
         prodottoRepository.save(prodottoTrasformato);
+    }
+
+    public boolean aggiornaQuantitaProdotto(int id, int quantita) {
+        ProdottoTrasformato prodotto = prodottoRepository.findProdottoTrasformatoById(id).orElse(null);
+        if (prodotto != null) {
+            prodotto.setQuantita(prodotto.getQuantita() + quantita);
+            prodottoRepository.save(prodotto);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean riduciQuantitaProdotto(int id, int quantita) {
+        ProdottoTrasformato prodotto = prodottoRepository.findProdottoTrasformatoById(id).orElse(null);
+        if (prodotto != null) {
+            if (prodotto.getQuantita() >= quantita) {
+                prodotto.setQuantita(prodotto.getQuantita() - quantita);
+                prodottoRepository.save(prodotto);
+            } else {
+                deleteProdottoTrasformato(id);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean existsProdottoTrasformato(int id) {
+        return prodottoRepository.existsProdottoTrasformatoById(id);
     }
 }

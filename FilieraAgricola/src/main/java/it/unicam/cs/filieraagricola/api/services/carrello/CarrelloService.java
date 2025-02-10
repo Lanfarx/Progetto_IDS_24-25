@@ -5,6 +5,7 @@ import it.unicam.cs.filieraagricola.api.entities.carrello.Carrello;
 import it.unicam.cs.filieraagricola.api.entities.carrello.ElementoCarrello;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.repository.CarrelloRepository;
+import it.unicam.cs.filieraagricola.api.repository.ElementoCarrelloRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,22 +15,28 @@ public class CarrelloService {
 
     @Autowired
     private CarrelloRepository carrelloRepository;
+    @Autowired
+    private ElementoCarrelloRepository elementoCarrelloRepository;
 
-    public Carrello getCarrello(int id) {
-        return carrelloRepository.findByUserId(id);
+    public Carrello getCarrello(Users currentUser) {
+        return ottieniCarrello(currentUser);
     }
 
     public void aggiungiAlCarrello(Users currentUser, Elemento elemento, int quantita) {
         Carrello carrello = ottieniCarrello(currentUser);
 
-
         if (contieneElemento(carrello, elemento)) {
-            for (ElementoCarrello cartItem : carrello.getElementi())
-                if (cartItem.getElemento().equals(elemento)) {
-                    cartItem.setQuantita(cartItem.getQuantita() + quantita);
+            for (ElementoCarrello elementoCarrello : carrello.getElementi())
+                if (elementoCarrello.getElemento().equals(elemento)) {
+                    elementoCarrello.setQuantita(elementoCarrello.getQuantita() + quantita);
+                    elementoCarrelloRepository.save(elementoCarrello);
                     break;
                 }
-        } else carrello.getElementi().add(new ElementoCarrello(elemento, quantita));
+        } else {
+            ElementoCarrello nuovoElementoCarrello = new ElementoCarrello(carrello, elemento, quantita);
+            elementoCarrelloRepository.save(nuovoElementoCarrello);
+            carrello.getElementi().add(nuovoElementoCarrello);
+        }
         rimuoviQuantita(elemento, quantita);
         aggiornaPrezzo(carrello);
         carrelloRepository.save(carrello);
@@ -64,7 +71,6 @@ public class CarrelloService {
         return false;
     }
 
-    @Transactional
     public void rimuoviDalCarrello(Users currentUser, Elemento elemento, int quantita) {
         Carrello carrello = carrelloRepository.findByUserId(currentUser.getId());
 
@@ -82,7 +88,6 @@ public class CarrelloService {
                 break;
             }
         }
-
         aggiornaPrezzo(carrello);
         carrelloRepository.save(carrello);
     }

@@ -12,7 +12,7 @@ public class Categoria {
     @Column(nullable = false, unique = true)
     private String nome;
 
-    public Integer getId() {
+    public int getId() {
         return id;
     }
 

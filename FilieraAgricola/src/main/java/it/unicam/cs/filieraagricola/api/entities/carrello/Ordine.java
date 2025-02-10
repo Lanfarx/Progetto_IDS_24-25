@@ -15,7 +15,7 @@ public class Ordine {
     @ManyToOne
     private Users user;
 
-    @Transient
+    @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ElementoCarrello> elementi;
 
     private double prezzoTotale;

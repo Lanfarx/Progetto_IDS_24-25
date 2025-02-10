@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
@@ -28,9 +29,11 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
     }
 
     public boolean aggiungiProdottoBase(ProdottoBase prodottoBase) {
-        if(prodottoRepository.existsById(prodottoBase.getId())) {
+        if(prodottoRepository.existsByCaratteristicheBase(prodottoBase.getNome(), prodottoBase.getMetodiDiColtivazione(), prodottoBase.getCertificazioni())) {
             return false;
         }
+        Categoria categoria = categoriaService.getCategoriaByNome(prodottoBase.getCategoria().getNome()).get();
+        prodottoBase.setCategoria(categoria);
         prodottoBase.setOperatore(userService.getCurrentUser());
         prodottoRepository.save(prodottoBase);
         return true;
@@ -48,6 +51,10 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
         return this.prodottoRepository.findProdottiBaseByOperatore(userService.getCurrentUser());
     }
 
+    public List<ProdottoBase> getAllProdottiBaseValidi() {
+        return this.prodottoRepository.findProdottiBaseByStatorichiestaEquals(StatoContenuto.ATTESA);
+    }
+
     public void deleteProdottoBase(int id) {
         Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteProdottiTrasformatiByProdottoBaseId(id);
@@ -57,6 +64,8 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
 
     public boolean aggiornaProdottoBase(ProdottoBase prodottoBase) {
         if (this.prodottoRepository.existsProdottoBaseById(prodottoBase.getId())) {
+            prodottoBase.setOperatore(userService.getCurrentUser());
+            prodottoBase.setCategoria(getProdottoBase(prodottoBase.getId()).getCategoria());
             this.prodottoRepository.save(prodottoBase);
             return true;
         } else {
@@ -74,5 +83,33 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
         prodottoBase.setOperatore(userService.getCurrentUser());
         prodottoBase.setCategoria(categoria);
         prodottoRepository.save(prodottoBase);
+    }
+
+    public boolean aggiornaQuantitaProdotto(int id, int quantita) {
+        ProdottoBase prodotto = prodottoRepository.findProdottoBaseById(id).orElse(null);
+        if (prodotto != null) {
+            prodotto.setQuantita(prodotto.getQuantita() + quantita);
+            prodottoRepository.save(prodotto);
+            return true;
+        }
+        return false;
+    }
+
+    public boolean riduciQuantitaProdotto(int id, int quantita) {
+        ProdottoBase prodotto = prodottoRepository.findProdottoBaseById(id).orElse(null);
+        if (prodotto != null) {
+            if (prodotto.getQuantita() >= quantita) {
+                prodotto.setQuantita(prodotto.getQuantita() - quantita);
+                prodottoRepository.save(prodotto);
+            } else {
+                deleteProdottoBase(id);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public boolean existsProdottoBase(int id) {
+        return prodottoRepository.existsProdottoBaseById(id);
     }
 }

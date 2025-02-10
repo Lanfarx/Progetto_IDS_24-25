@@ -1,6 +1,7 @@
 
 package it.unicam.cs.filieraagricola.api.repository;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
@@ -18,4 +19,6 @@ public interface PacchettoRepository extends JpaRepository<Pacchetto, Integer> {
 
     @Query("SELECT p FROM Pacchetto p JOIN p.prodottiSet pr WHERE pr.id = :prodottoId")
     Set<Pacchetto> findPacchettiByProdottoId(@Param("prodottoId") Integer prodottoId);
+
+    List<Pacchetto> findByStatorichiestaEquals(StatoContenuto statorichiesta);
 }

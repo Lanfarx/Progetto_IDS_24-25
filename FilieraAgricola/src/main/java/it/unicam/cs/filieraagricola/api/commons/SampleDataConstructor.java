@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.commons;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.*;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
@@ -118,74 +119,6 @@ public class SampleDataConstructor {
         attivitaRepository.save(evento);
     }
 
-    private void initSampleProdotti(){
-        Users operatore1 = new Users();
-        operatore1.setUsername("operatore1");
-        operatore1.setPassword("operatore1");
-        operatore1.getRoles().add(UserRole.PRODUTTORE);
-
-        Users operatore2 = new Users();
-        operatore2.setUsername("operatore2");
-        operatore2.setPassword("operatore2");
-        operatore2.getRoles().add(UserRole.TRASFORMATORE);
-
-        userRepository.save(operatore1);
-        userRepository.save(operatore2);
-
-        ProdottoBase mela = new ProdottoBase();
-        mela.setNome("Mela");
-        mela.setCertificazioni("Certificazione");
-        mela.setDescrizione("Prodotto di prova");
-        mela.setMetodiDiColtivazione("Coltivato in arabia");
-        mela.setPrezzo(50);
-        mela.setQuantita(50);
-        mela.setOperatore(operatore1);
-        mela.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
-        prodottoRepository.save(mela);
-
-        Set<Prodotto> prodotti = new HashSet<>();
-        ProdottoBase prodottoBase = new ProdottoBase();
-        prodottoBase.setNome("Pomodoro");
-        prodottoBase.setCertificazioni("Certificazione");
-        prodottoBase.setDescrizione("Prodotto di prova");
-        prodottoBase.setMetodiDiColtivazione("Coltivato in italia");
-        prodottoBase.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
-        prodottoBase.setPrezzo(50);
-        prodottoBase.setQuantita(50);
-        prodottoBase.setOperatore(operatore1);
-        prodottoRepository.save(prodottoBase);
-        prodotti.add(prodottoBase);
-
-        ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
-        prodottoTrasformato.setNome("Passata di pomodoro");
-        prodottoTrasformato.setCertificazioni("Certificazione");
-        prodottoTrasformato.setDescrizione("Prodotto di passata");
-        prodottoTrasformato.setProdottoBase(prodottoBase);
-        prodottoTrasformato.setProcessoTrasformazione("Sch9iaccciaot");
-        prodottoTrasformato.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
-        prodottoTrasformato.setPrezzo(50);
-        prodottoTrasformato.setOperatore(operatore2);
-        prodottoRepository.save(prodottoTrasformato);
-        prodotti.add(prodottoTrasformato);
-        initSamplePacchetto(prodotti);
-    }
-
-    private void initSamplePacchetto(Set<Prodotto> prodottoSet){
-        Users operatore3 = new Users();
-        operatore3.setUsername("operatore3");
-        operatore3.setPassword("operatore3");
-        operatore3.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
-
-        userRepository.save(operatore3);
-
-        Pacchetto pacchetto = new Pacchetto();
-        pacchetto.setNome("Pacchetto");
-        pacchetto.setDescrizione("Pacchetto di prova");
-        pacchetto.setPrezzo(40);
-        pacchetto.setProdottiSet(prodottoSet);
-        pacchetto.setOperatore(operatore3);
-        pacchettoRepository.save(pacchetto);
-    }
     private void initSampleCategorie() {
         List<String> categorie = List.of("Vini", "Formaggi",
                 "Salumi", "Olio d'oliva", "Miele", "Pacchetto", "Frutta");
@@ -197,5 +130,172 @@ public class SampleDataConstructor {
                 categoriaRepository.save(categoria);
             }
         }
+    }
+
+    private void initSampleProdotti(){
+        Users produttore = new Users();
+        produttore.setUsername("produttore");
+        produttore.setPassword("produttore");
+        produttore.getRoles().add(UserRole.PRODUTTORE);
+
+        Users trasformatore = new Users();
+        trasformatore.setUsername("trasformatore");
+        trasformatore.setPassword("trasformatore");
+        trasformatore.getRoles().add(UserRole.TRASFORMATORE);
+
+        userRepository.save(produttore);
+        userRepository.save(trasformatore);
+
+        ProdottoBase mela = new ProdottoBase();
+        mela.setNome("Mela");
+        mela.setCertificazioni("Certificazione Bio");
+        mela.setDescrizione("Mele fresche e croccanti");
+        mela.setMetodiDiColtivazione("Coltivate in montagna");
+        mela.setPrezzo(30);
+        mela.setQuantita(100);
+        mela.setOperatore(produttore);
+        mela.setStatorichiesta(StatoContenuto.ACCETTATA);
+        mela.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        prodottoRepository.save(mela);
+
+        ProdottoBase pomodoro = new ProdottoBase();
+        pomodoro.setNome("Pomodoro");
+        pomodoro.setCertificazioni("Certificazione DOC");
+        pomodoro.setDescrizione("Pomodori succosi e maturi");
+        pomodoro.setMetodiDiColtivazione("Serra biologica");
+        pomodoro.setPrezzo(50);
+        pomodoro.setQuantita(80);
+        pomodoro.setOperatore(produttore);
+        pomodoro.setStatorichiesta(StatoContenuto.ACCETTATA);
+        pomodoro.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        prodottoRepository.save(pomodoro);
+
+        ProdottoBase latte = new ProdottoBase();
+        latte.setNome("Latte fresco");
+        latte.setCertificazioni("DOP");
+        latte.setDescrizione("Latte di alta qualità da mucche da pascolo");
+        latte.setMetodiDiColtivazione("Allevamento sostenibile");
+        latte.setPrezzo(20);
+        latte.setQuantita(50);
+        latte.setOperatore(produttore);
+        latte.setStatorichiesta(StatoContenuto.ACCETTATA);
+        latte.setCategoria(categoriaService.getCategoriaByNome("Formaggi").get());
+        prodottoRepository.save(latte);
+
+        Set<Prodotto> pacchetto1 = new HashSet<>();
+        pacchetto1.add(mela);
+        pacchetto1.add(pomodoro);
+        pacchetto1.add(latte);
+
+        ProdottoTrasformato passataPomodoro = new ProdottoTrasformato();
+        passataPomodoro.setNome("Passata di pomodoro");
+        passataPomodoro.setCertificazioni("BIO");
+        passataPomodoro.setDescrizione("Passata di pomodoro artigianale");
+        passataPomodoro.setProdottoBase(pomodoro);
+        passataPomodoro.setProcessoTrasformazione("Pomodori schiacciati e cotti lentamente");
+        passataPomodoro.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        passataPomodoro.setPrezzo(70);
+        passataPomodoro.setQuantita(20);
+        passataPomodoro.setOperatore(trasformatore);
+        passataPomodoro.setStatorichiesta(StatoContenuto.ACCETTATA);
+        prodottoRepository.save(passataPomodoro);
+        pacchetto1.add(passataPomodoro);
+
+        ProdottoTrasformato formaggioStagionato = new ProdottoTrasformato();
+        formaggioStagionato.setNome("Formaggio stagionato");
+        formaggioStagionato.setCertificazioni("DOP");
+        formaggioStagionato.setDescrizione("Formaggio stagionato 12 mesi");
+        formaggioStagionato.setProdottoBase(latte);
+        formaggioStagionato.setProcessoTrasformazione("Latte fermentato e lasciato stagionare");
+        formaggioStagionato.setCategoria(categoriaService.getCategoriaByNome("Formaggi").get());
+        formaggioStagionato.setPrezzo(90);
+        formaggioStagionato.setQuantita(15);
+        formaggioStagionato.setOperatore(trasformatore);
+        formaggioStagionato.setStatorichiesta(StatoContenuto.ACCETTATA);
+        prodottoRepository.save(formaggioStagionato);
+        pacchetto1.add(formaggioStagionato);
+
+        ProdottoBase pera = new ProdottoBase();
+        pera.setNome("Pera");
+        pera.setCertificazioni("Certificazione");
+        pera.setDescrizione("Prodotto di prova");
+        pera.setMetodiDiColtivazione("Coltivato in spagna");
+        pera.setPrezzo(45);
+        pera.setQuantita(30);
+        pera.setOperatore(produttore);
+        pera.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        pera.setStatorichiesta(StatoContenuto.ACCETTATA);
+        prodottoRepository.save(pera);
+
+        Set<Prodotto> pacchetto2 = new HashSet<>();
+        pacchetto2.add(pera);
+
+        ProdottoBase arancia = new ProdottoBase();
+        arancia.setNome("Arancia");
+        arancia.setCertificazioni("Certificazione");
+        arancia.setDescrizione("Prodotto di prova");
+        arancia.setMetodiDiColtivazione("Coltivato in sicilia");
+        arancia.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        arancia.setPrezzo(60);
+        arancia.setQuantita(40);
+        arancia.setOperatore(produttore);
+        arancia.setStatorichiesta(StatoContenuto.ACCETTATA);
+        prodottoRepository.save(arancia);
+        pacchetto2.add(arancia);
+
+        ProdottoTrasformato marmellataArancia = new ProdottoTrasformato();
+        marmellataArancia.setNome("Marmellata di arancia");
+        marmellataArancia.setCertificazioni("Certificazione");
+        marmellataArancia.setDescrizione("Prodotto di marmellata");
+        marmellataArancia.setProdottoBase(arancia);
+        marmellataArancia.setProcessoTrasformazione("Marmellizzazione");
+        marmellataArancia.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        marmellataArancia.setPrezzo(75);
+        marmellataArancia.setQuantita(5);
+        marmellataArancia.setOperatore(trasformatore);
+        marmellataArancia.setStatorichiesta(StatoContenuto.ACCETTATA);
+        prodottoRepository.save(marmellataArancia);
+        pacchetto2.add(marmellataArancia);
+
+        initSamplePacchetto(pacchetto1, pacchetto2);
+
+        ProdottoBase banana = new ProdottoBase();
+        banana.setNome("Banana");
+        banana.setCertificazioni("Fair Trade");
+        banana.setDescrizione("Banane dolci e nutrienti, ideali per uno spuntino sano");
+        banana.setMetodiDiColtivazione("Coltivate come in Sud America con pratiche sostenibili");
+        banana.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        banana.setPrezzo(45);
+        banana.setQuantita(50);
+        banana.setOperatore(produttore);
+        banana.setStatorichiesta(StatoContenuto.RIFIUTATA);
+        prodottoRepository.save(banana);
+    }
+
+    private void initSamplePacchetto(Set<Prodotto> pacchetto1prodotti, Set<Prodotto> pacchetto2prodotti) {
+        Users distributore = new Users();
+        distributore.setUsername("distributore");
+        distributore.setPassword("distributore");
+        distributore.getRoles().add(UserRole.DISTRIBUTORE_DI_TIPICITA);
+        userRepository.save(distributore);
+
+        Pacchetto pacchetto1 = new Pacchetto();
+        pacchetto1.setNome("Pacchetto Degustazione");
+        pacchetto1.setDescrizione("Un mix di prodotti freschi e trasformati");
+        pacchetto1.setPrezzo(120);
+        pacchetto1.setProdottiSet(pacchetto1prodotti);
+        pacchetto1.setOperatore(distributore);
+        pacchetto1.setStatorichiesta(StatoContenuto.ACCETTATA);
+        pacchetto1.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchettoRepository.save(pacchetto1);
+
+        Pacchetto pacchetto2 = new Pacchetto();
+        pacchetto2.setNome("Pacchetto Merenda");
+        pacchetto2.setDescrizione("Un'ottima combinazione di sapori");
+        pacchetto2.setPrezzo(100);
+        pacchetto2.setProdottiSet(pacchetto2prodotti);
+        pacchetto2.setOperatore(distributore);
+        pacchetto2.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchettoRepository.save(pacchetto2);
     }
 }

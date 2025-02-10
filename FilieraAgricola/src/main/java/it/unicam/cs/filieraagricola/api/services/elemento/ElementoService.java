@@ -1,6 +1,8 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.ElementoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,8 +16,8 @@ public class ElementoService<T extends Elemento> {
     @Autowired
     protected ElementoRepository elementoRepository;
 
-    public List<T> getElementi() {
-        return (List<T>) elementoRepository.findAll();
+    public List<T> getElementiValidi() {
+        return (List<T>) elementoRepository.findElementiByStatorichiestaEquals(StatoContenuto.ACCETTATA);
     }
 
     public Optional<T> getElemento(int id) {
@@ -31,8 +33,12 @@ public class ElementoService<T extends Elemento> {
     }
 
     public boolean checkDisponibilita(Elemento elemento, int quantita) {
-        if(existsElemento(elemento.getId())) {
+        if(existsElementoAndValido(elemento.getId())) {
             return elemento.getQuantita()>=quantita;
         } else throw new IllegalArgumentException("Elemento non esistente");
+    }
+
+    public boolean existsElementoAndValido(int id) {
+        return elementoRepository.existsByIdAndStatorichiesta(id, StatoContenuto.ACCETTATA);
     }
 }

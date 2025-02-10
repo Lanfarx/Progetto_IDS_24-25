@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
@@ -28,6 +29,10 @@ public class PacchettoService extends ElementoService<Pacchetto> {
 
     public List<Pacchetto> getPacchetti() {
         return this.pacchettoRepository.findByOperatore(userService.getCurrentUser());
+    }
+
+    public List<Pacchetto> getAllPacchettiValidi() {
+        return this.pacchettoRepository.findByStatorichiestaEquals(StatoContenuto.ATTESA);
     }
 
     public Pacchetto getPacchetto(int id) {
@@ -63,7 +68,7 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         return true;
     }
 
-    public boolean aggiungiPacchettoWithParam(String nome, String descrizione, Set<Integer> idProdottiSet){
+    public boolean aggiungiPacchettoConParametri(String nome, String descrizione, double prezzo, Set<Integer> idProdottiSet){
         Set<Prodotto> prodottoSet = findSetProdotti(idProdottiSet);
         if(prodottoSet == null || prodottoSet.size() < 2) {
             return false;
@@ -73,8 +78,10 @@ public class PacchettoService extends ElementoService<Pacchetto> {
 
         Pacchetto pacchetto = new Pacchetto();
         pacchetto.setOperatore(userService.getCurrentUser());
+        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
         pacchetto.setNome(nome);
         pacchetto.setDescrizione(descrizione);
+        pacchetto.setPrezzo(prezzo);
         pacchetto.setProdottiSet(prodottoSet);
         this.pacchettoRepository.save(pacchetto);
         return true;
@@ -83,17 +90,18 @@ public class PacchettoService extends ElementoService<Pacchetto> {
     public void eliminaPacchetto(int id) { this.pacchettoRepository.deleteById(id); }
 
     public boolean eliminaProdotto(int id, int idProdotto) {
-        if(!this.pacchettoRepository.existsById(id) || !prodottoRepository.existsById(idProdotto)) {
+        if (!pacchettoRepository.existsById(id) || !prodottoRepository.existsById(idProdotto)) {
             return false;
         }
-        Pacchetto pacchetto = pacchettoRepository.findById(idProdotto).get();
-        Prodotto prodotto = prodottoRepository.findById(id).get();
-        pacchetto.removeProdotto(prodotto);
-        if(pacchetto.getProdottiSet().size() < 2){
-            eliminaPacchetto(id);
-        } else {
-            pacchettoRepository.save(pacchetto);
+
+        Pacchetto pacchetto = pacchettoRepository.findById(id).get();
+        Prodotto prodotto = prodottoRepository.findById(idProdotto).get();
+        if (!pacchetto.getProdottiSet().contains(prodotto)) {
+            return false;
         }
+
+        pacchetto.removeProdotto(prodotto);
+        pacchettoRepository.save(pacchetto);
         return true;
     }
 
@@ -117,9 +125,6 @@ public class PacchettoService extends ElementoService<Pacchetto> {
             }
         }
     }
-
-    //TODO aggiungere rimozione e getter di quantita
-
 
     //--METODI INTERNI UTILI PER LA CLASSE--\\
 
@@ -162,4 +167,7 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         return true;
     }
 
+    public boolean existsPacchetto(int id) {
+        return pacchettoRepository.existsById(id);
+    }
 }

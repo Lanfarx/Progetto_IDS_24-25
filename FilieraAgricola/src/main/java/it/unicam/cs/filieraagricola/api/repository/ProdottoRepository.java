@@ -1,6 +1,7 @@
 
 package it.unicam.cs.filieraagricola.api.repository;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
@@ -93,4 +94,9 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
             @Param("processoTrasformazione") String processoTrasformazione,
             @Param("certificazioni") String certificazioni);
 
+    List<Prodotto> findByStatorichiestaEquals(StatoContenuto statorichiesta);
+
+    List<ProdottoBase> findProdottiBaseByStatorichiestaEquals(StatoContenuto statoContenuto);
+
+    List<ProdottoTrasformato> findProdottiTrasformatoByStatorichiestaEquals(StatoContenuto statoContenuto);
 }

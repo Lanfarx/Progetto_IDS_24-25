@@ -18,12 +18,15 @@ public class WebSecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/auth/**", "/elementi/**").permitAll()
                         .requestMatchers("/h2-console/**").hasRole("GESTORE_DELLA_PIATTAFORMA")
                         .requestMatchers("/autenticato/**").authenticated()
                         .requestMatchers("/richieste/ruoli/**", "/richieste/eliminazione/**","/categorie/**", "/gestisci/**")
                         .hasRole("GESTORE_DELLA_PIATTAFORMA")
-                        .requestMatchers("/operatore/**").hasAnyRole("PRODUTTORE","TRASFORMATORE","DISTRIBUTORE_DI_TIPICITA")
+                        .requestMatchers("/operatore/**", "/categorie").hasAnyRole("PRODUTTORE","TRASFORMATORE","DISTRIBUTORE_DI_TIPICITA")
+                        .requestMatchers("/operatore/produttore").hasRole("PRODUTTORE")
+                        .requestMatchers("/operatore/trasformatore").hasRole("TRASFORMATORE")
+                        .requestMatchers("/operatore/distributore").hasRole("DISTRIBUTORE")
                         .requestMatchers("/richieste/validazione/**").hasRole("CURATORE")
                         .requestMatchers("/attivita/**").hasRole("ANIMATORE_DELLA_FILIERA")
                         .anyRequest().authenticated()

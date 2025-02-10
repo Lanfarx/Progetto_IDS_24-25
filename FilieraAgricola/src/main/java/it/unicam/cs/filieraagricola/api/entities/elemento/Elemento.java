@@ -28,9 +28,12 @@ public abstract class Elemento {
     @Enumerated(EnumType.STRING)
     private StatoContenuto statorichiesta;
 
+    public Elemento() {
+        this.statorichiesta = StatoContenuto.ATTESA;
+    }
+
     public Categoria getCategoria() { return categoria; }
     public void setCategoria(Categoria categoria){ this.categoria = categoria; }
-
     public String getDescrizione() {
         return descrizione;
     }

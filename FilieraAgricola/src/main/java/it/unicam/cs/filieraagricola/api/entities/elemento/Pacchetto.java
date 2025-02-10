@@ -9,10 +9,7 @@ import java.util.Set;
 
 @Entity
 public class Pacchetto extends Elemento{
-
-    private String descrizione; //TODO vedere se toglierla
-
-    @ManyToMany @JsonManagedReference
+    @ManyToMany
     @JoinTable(
             name = "Rpacchetto", // Nome della tabella di associazione
             joinColumns = @JoinColumn(name = "pacchetto_id"), // Chiave esterna per il Pacchetto
@@ -20,12 +17,6 @@ public class Pacchetto extends Elemento{
     )
     private Set<Prodotto> prodottiSet = new HashSet<Prodotto>();
 
-    public String getDescrizione() {
-        return descrizione;
-    }
-    public void setDescrizione(String descrizione) {
-        this.descrizione = descrizione;
-    }
     public Set<Prodotto> getProdottiSet() {
         return prodottiSet;
     }
@@ -36,9 +27,6 @@ public class Pacchetto extends Elemento{
         prodottiSet.add(prodotto);
     }
     public void removeProdotto(Prodotto prodotto) { prodottiSet.remove(prodotto); }
-
-
-    public boolean disponibile(){ return getQuantita()>0; }
 
     @Override
     public int getQuantita() {

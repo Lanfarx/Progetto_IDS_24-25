@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/autenticato")
+@RequestMapping
 public class UserController {
 
     @Autowired
@@ -41,13 +41,13 @@ public class UserController {
     @Autowired
     private RichiestaRuoloService richiestaRuoloService;
 
-    @GetMapping("/me")
+    @GetMapping("/autenticato/me")
     public ResponseEntity<Users> getMyInfo() {
         Users currentUser = userService.getCurrentUser();
         return new ResponseEntity<>(currentUser, HttpStatus.OK);
     }
 
-    @PutMapping("/me")
+    @PutMapping("/autenticato/me")
     public ResponseEntity<String> modificaCredenziali(@RequestParam String username, @RequestParam String password) {
         Users user = userService.getCurrentUser();
         if (!user.getUsername().equals(username) && !user.getPassword().equals(password)) {
@@ -58,27 +58,27 @@ public class UserController {
         } else return new ResponseEntity<>("Credenziali inserite già presenti", HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/attivita")
+    @GetMapping("/autenticato/attivita")
     public ResponseEntity<Object> getAttivita() {
         return new ResponseEntity<>(attivitaService.getAllAttivita(), HttpStatus.OK);
     }
 
-    @GetMapping("/visite")
+    @GetMapping("/autenticato/visite")
     public ResponseEntity<Object> getVisite() {
         return new ResponseEntity<>(attivitaService.getAllVisite(), HttpStatus.OK);
     }
 
-    @GetMapping("/eventi")
+    @GetMapping("/autenticato/eventi")
     public ResponseEntity<Object> getEventi() {
         return new ResponseEntity<>(attivitaService.getAllEventi(), HttpStatus.OK);
     }
 
-    @GetMapping("/attivita/prenotazione")
+    @GetMapping("/autenticato/attivita/prenotazione")
     public ResponseEntity<Object> getPrenotazioni() {
         return new ResponseEntity<>(attivitaService.getAllPrenotazioni(userService.getCurrentUser()), HttpStatus.OK);
     }
 
-    @PostMapping("/attivita/prenotazione")
+    @PostMapping("/autenticato/attivita/prenotazione")
     public ResponseEntity<String> prenotazione(@RequestParam Integer id) {
         Users currentUser = userService.getCurrentUser();
         if (attivitaService.existsAttivita(id)) {
@@ -93,7 +93,7 @@ public class UserController {
         } else return new ResponseEntity<>("L'attività non esiste", HttpStatus.BAD_REQUEST);
     }
 
-    @DeleteMapping("/attivita/prenotazione")
+    @DeleteMapping("/autenticato/attivita/prenotazione")
     public ResponseEntity<String> rimuoviPrenotazione(@RequestParam Integer id) {
         Users currentUser = userService.getCurrentUser();
         if (attivitaService.existsAttivita(id)) {
@@ -110,44 +110,44 @@ public class UserController {
 
     @GetMapping("/elementi")
     public ResponseEntity<List<Elemento>> getElementi() {
-        return new ResponseEntity<>(elementoService.getElementi(), HttpStatus.OK);
+        return new ResponseEntity<>(elementoService.getElementiValidi(), HttpStatus.OK);
     }
 
-    @GetMapping("/prodotti")
+    @GetMapping("/elementi/prodotti")
     public ResponseEntity<List<Prodotto>> getProdotti() {
-        return new ResponseEntity<>(prodottoService.getProdotti(), HttpStatus.OK);
+        return new ResponseEntity<>(prodottoService.getProdottiValidi(), HttpStatus.OK);
     }
 
-    @GetMapping("/pacchetti")
+    @GetMapping("/elementi/pacchetti")
     public ResponseEntity<List<Pacchetto>> getPacchetti() {
-        return new ResponseEntity<>(pacchettoService.getPacchetti(), HttpStatus.OK);
+        return new ResponseEntity<>(pacchettoService.getAllPacchettiValidi(), HttpStatus.OK);
     }
 
-    @GetMapping("/prodotti-base")
+    @GetMapping("/elementi/prodotti-base")
     public ResponseEntity<List<ProdottoBase>> getAllProdottiBase() {
-        return new ResponseEntity<>(prodottoBaseService.getProdottiBase(), HttpStatus.OK);
+        return new ResponseEntity<>(prodottoBaseService.getAllProdottiBaseValidi(), HttpStatus.OK);
     }
 
-    @GetMapping("/prodotti-trasformati")
+    @GetMapping("/elementi/prodotti-trasformati")
     public ResponseEntity<List<ProdottoTrasformato>> getAllProdottiTrasformati() {
-        return new ResponseEntity<>(prodottoTrasformatoService.getProdottiTrasformati(), HttpStatus.OK);
+        return new ResponseEntity<>(prodottoTrasformatoService.getAllProdottiTrasformatiValidi(), HttpStatus.OK);
     }
 
-    @GetMapping("/richieste")
+    @GetMapping("/autenticato/richieste")
     public ResponseEntity<List<Richiesta>> getMieRichieste() {
         Users currentUser = userService.getCurrentUser();
         List<Richiesta> richieste = richiestaRuoloService.getRichiesteByUser(currentUser);
         return new ResponseEntity<>(richieste, HttpStatus.OK);
     }
 
-    @GetMapping("/richiesta-ruolo")
+    @GetMapping("/autenticato/richiesta-ruolo")
     public ResponseEntity<List<RichiestaRuolo>> getMieRichiesteRuolo() {
         Users currentUser = userService.getCurrentUser();
         List<RichiestaRuolo> richieste = richiestaRuoloService.getMieRichiesteRuolo(currentUser);
         return new ResponseEntity<>(richieste, HttpStatus.OK);
     }
 
-    @GetMapping("/richiesta-eliminazione")
+    @GetMapping("/autenticato/richiesta-eliminazione")
     public ResponseEntity<List<RichiestaEliminazione>> getMieRichiesteEliminazione() {
         Users currentUser = userService.getCurrentUser();
         List<RichiestaEliminazione> richieste = richiestaEliminazioneService.getMieRichiesteEliminazione(currentUser);

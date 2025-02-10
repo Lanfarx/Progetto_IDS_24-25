@@ -10,7 +10,7 @@ import jakarta.persistence.*;
 public abstract class Richiesta {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private int id;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -19,8 +19,8 @@ public abstract class Richiesta {
     @Enumerated(EnumType.STRING)
     private StatoContenuto stato = StatoContenuto.ATTESA;
 
-    public Integer getId() { return id; }
-    public void setId(Integer id) { this.id = id; }
+    public int getId() { return id; }
+    public void setId(int id) { this.id = id; }
 
     public Users getUser() { return user; }
     public void setUser(Users user) { this.user = user; }

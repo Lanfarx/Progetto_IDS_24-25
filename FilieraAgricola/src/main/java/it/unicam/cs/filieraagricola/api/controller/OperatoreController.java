@@ -28,4 +28,6 @@ public class OperatoreController {
         List<RichiestaValidazione> richieste = richiestaValidazioneService.getMieRichiesteValidazione(currentUser);
         return new ResponseEntity<>(richieste, HttpStatus.OK);
     }
+
+
 }

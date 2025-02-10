@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.entities.elemento;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
@@ -14,7 +15,7 @@ public abstract class Prodotto extends Elemento{
     private String certificazioni;
     private int quantita;
 
-    @ManyToMany(mappedBy = "prodottiSet") @JsonBackReference
+    @ManyToMany(mappedBy = "prodottiSet") @JsonIgnore
     private Set<Pacchetto> pacchettiSet = new HashSet<>();
 
 
@@ -35,6 +36,6 @@ public abstract class Prodotto extends Elemento{
     public int getQuantita() { return quantita; }
     public void setQuantita(int quantita) { this.quantita = quantita; }
     @Override
-    public void aggiungiQuantita(int quantita) { this.quantita += this.quantita + quantita; }
-    public void removeQuantita(int quantita) { this.quantita = Math.min(this.quantita - quantita, 0); }
+    public void aggiungiQuantita(int quantita) { this.quantita += quantita; }
+    public void removeQuantita(int quantita) { this.quantita = Math.max(this.quantita - quantita, 0); }
 }
