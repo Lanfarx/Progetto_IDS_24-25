@@ -1,0 +1,2803 @@
+{
+	"info": {
+		"_postman_id": "dc6ccc8f-2798-4e04-897c-7e0e9502a885",
+		"name": "API IdS_24-25",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41139310",
+		"_collection_link": "https://ids2024-25.postman.co/workspace/IdS_2024-25-Workspace~ec84d556-5ff2-423c-861e-e6931eafe752/collection/41139310-dc6ccc8f-2798-4e04-897c-7e0e9502a885?action=share&source=collection_link&creator=41139310"
+	},
+	"item": [
+		{
+			"name": "Animatore",
+			"item": [
+				{
+					"name": "GetMieAttivita",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/mie-attivita",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"mie-attivita"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crea Visita",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titolo\": \"Visita Azienda Bio\",\r\n    \"descrizione\": \"Tour guidato alla scoperta della nostra azienda\",\r\n    \"luogo\": \"Firenze\",\r\n    \"data\": \"2025-06-10\",\r\n    \"prenotazioni\": [\r\n        { \"id\": 4 }\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/visite/aggiungi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"visite",
+								"aggiungi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crea Evento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titolo\": \"Fiera del Gusto\",\r\n    \"descrizione\": \"Evento dedicato ai prodotti tipici\",\r\n    \"luogo\": \"Roma\",\r\n    \"data\": \"2025-09-15\",\r\n    \"prenotazioni\": [],\r\n    \"invitati\": [\r\n        { \"id\": 2 }, // Operatore\r\n        { \"id\": 3 }  // Non-Operatore ergo lo escluderà\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/eventi/aggiungi",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"eventi",
+								"aggiungi"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crea Visita Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titolo\": \"Visita Azienda Bio\",\r\n    \"descrizione\": \"Tour guidato alla scoperta della nostra azienda\",\r\n    \"luogo\": \"Firenze\",\r\n    \"data\": \"2025-06-10\",\r\n    \"prenotazioni\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/aggiungiconparametri?titolo=Degustazione&descrizione=Vini pregiati&luogo=Siena&data=2025-07-01",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"aggiungiconparametri"
+							],
+							"query": [
+								{
+									"key": "titolo",
+									"value": "Degustazione"
+								},
+								{
+									"key": "descrizione",
+									"value": "Vini pregiati"
+								},
+								{
+									"key": "luogo",
+									"value": "Siena"
+								},
+								{
+									"key": "data",
+									"value": "2025-07-01"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crea Evento Params",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"titolo\": \"Fiera del Gusto\",\r\n    \"descrizione\": \"Evento dedicato ai prodotti tipici\",\r\n    \"luogo\": \"Roma\",\r\n    \"data\": \"2025-09-15\",\r\n    \"prenotazioni\": [],\r\n    \"invitati\": [2, 5]  // ID utenti operatori invitati\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/aggiungiconparametri?titolo=Fiera del Cioccolato&descrizione=Evento dedicato al cioccolato&luogo=Senigallia&data=2025-08-14&idInvitati=2,4,5",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"aggiungiconparametri"
+							],
+							"query": [
+								{
+									"key": "titolo",
+									"value": "Fiera del Cioccolato"
+								},
+								{
+									"key": "descrizione",
+									"value": "Evento dedicato al cioccolato"
+								},
+								{
+									"key": "luogo",
+									"value": "Senigallia"
+								},
+								{
+									"key": "data",
+									"value": "2025-08-14"
+								},
+								{
+									"key": "idInvitati",
+									"value": "2,4,5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina Attivita",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/elimina/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"elimina",
+								"4"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Aggiorna Visita",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 5,\r\n    \"titolo\": \"Visita Aggiornata\",\r\n    \"descrizione\": \"Nuova descrizione aggiornamento\",\r\n    \"luogo\": \"Milano\",\r\n    \"data\": \"2025-08-10\",\r\n    \"prenotazioni\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/visite/aggiorna",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"visite",
+								"aggiorna"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Aggiorna Evento",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": 6,\r\n    \"titolo\": \"Evento Aggiornato\",\r\n    \"descrizione\": \"Nuova descrizione aggiornamento\",\r\n    \"luogo\": \"Torino\",\r\n    \"data\": \"2025-09-10\",\r\n    \"prenotazioni\": [],\r\n    \"invitati\": [\r\n        { \"id\": 3 }  // Non-Operatore ergo lo escluderà\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/attivita/eventi/aggiorna",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"eventi",
+								"aggiorna"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getPrenotati",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/3/prenotazioni",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"3",
+								"prenotazioni"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getInvitati",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/eventi/6/invitati",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"eventi",
+								"6",
+								"invitati"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Aggiungi Invitato",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/eventi/6/invitato?userId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"eventi",
+								"6",
+								"invitato"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Elimina Invitato",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/attivita/eventi/6/eliminainvitato?userId=2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"attivita",
+								"eventi",
+								"6",
+								"eliminainvitato"
+							],
+							"query": [
+								{
+									"key": "userId",
+									"value": "2"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "animatore",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "animatore",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Operatore",
+			"item": [
+				{
+					"name": "Distributore",
+					"item": [
+						{
+							"name": "Ottieni Pacchetti",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ottieni Pacchetto ID=10",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/13",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"13"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Pacchetto JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"Pacchetto Bio\",\r\n  \"descrizione\": \"Un pacchetto di prodotti biologici\",\r\n  \"prezzo\": 25.5,\r\n  \"prodottiIds\": [1,2,3]\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/aggiungi",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"aggiungi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Pacchetto PARAM",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/aggiungiconparametri?nome=Pacchetto Speciale&prodottiSet=1,2&prezzo=60&descrizione=Un pacchetto di esempio",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"aggiungiconparametri"
+									],
+									"query": [
+										{
+											"key": "nome",
+											"value": "Pacchetto Speciale"
+										},
+										{
+											"key": "prodottiSet",
+											"value": "1,2"
+										},
+										{
+											"key": "prezzo",
+											"value": "60"
+										},
+										{
+											"key": "descrizione",
+											"value": "Un pacchetto di esempio"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Prodotto Pacchetto ID = 13",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/aggiungi/prodotto?idPacchetto=13&idProdotto=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"aggiungi",
+										"prodotto"
+									],
+									"query": [
+										{
+											"key": "idPacchetto",
+											"value": "13"
+										},
+										{
+											"key": "idProdotto",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Prodotto Pacchetto ID=13",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/elimina/prodotto?idPacchetto=13&idProdotto=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"elimina",
+										"prodotto"
+									],
+									"query": [
+										{
+											"key": "idPacchetto",
+											"value": "13"
+										},
+										{
+											"key": "idProdotto",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Pacchetto ID=12",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/elimina/12",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"elimina",
+										"12"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Pacchetto ID=12",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 12,\r\n  \"nome\": \"Pacchetto Aggiornato\",\r\n  \"descrizione\": \"Descrizione aggiornata\",\r\n  \"prezzo\": 45,\r\n  \"prodottiIds\": [1, 2, 4]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/aggiorna",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"distributore",
+										"pacchetti",
+										"aggiorna"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "distributore",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "distributore",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Produttore",
+					"item": [
+						{
+							"name": "Ottieni Prodotti base",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Ottieni Prodotto Base ID=1",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Prodotto Base JSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"Mela Bio\",\r\n  \"metodiDiColtivazione\": \"Biologico\",\r\n  \"certificazioni\": \"Certificazione EU\",\r\n  \"descrizione\": \"Mela coltivata senza pesticidi\",\r\n  \"prezzo\": 2.5,\r\n  \"quantita\": 40,\r\n  \"categoria\": {\"nome\": \"Frutta\"}\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/aggiungi",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"aggiungi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Prodotto Base PARAM",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/aggiungiconparametri?nome=Mela&metodiDiColtivazione=Metodo naturale&certificazioni=Certificazione&descrizione=Sono una descrizione di un prodotto base!&prezzo=12.5&categoria=Frutta",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"aggiungiconparametri"
+									],
+									"query": [
+										{
+											"key": "nome",
+											"value": "Mela"
+										},
+										{
+											"key": "metodiDiColtivazione",
+											"value": "Metodo naturale"
+										},
+										{
+											"key": "certificazioni",
+											"value": "Certificazione"
+										},
+										{
+											"key": "descrizione",
+											"value": "Sono una descrizione di un prodotto base!"
+										},
+										{
+											"key": "prezzo",
+											"value": "12.5"
+										},
+										{
+											"key": "categoria",
+											"value": "Frutta"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Prodotto Base ID=1",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/elimina?id=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"elimina"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Prodotto ID=1",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 1,\r\n  \"nome\": \"Nuovo Nome\",\r\n  \"metodiDiColtivazione\": \"Nuovo Metodo\",\r\n  \"certificazioni\": \"Nuove Certificazioni\",\r\n  \"descrizione\": \"Nuova descrizione\",\r\n  \"prezzo\": 15.0\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/aggiorna",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"aggiorna"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Quantita",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/aggiorna-quantita?id=1&quantita=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"aggiorna-quantita"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "quantita",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rimuovi Quantita",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/produttore/prodottibase/rimuovi-quantita?id=1&quantita=200",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"produttore",
+										"prodottibase",
+										"rimuovi-quantita"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "1"
+										},
+										{
+											"key": "quantita",
+											"value": "200"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "produttore",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "produttore",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "Trasformatore",
+					"item": [
+						{
+							"name": "Ottieni Prodotti Traformati",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AggiungiProdottoJSON",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"nome\": \"Nome prodotto\",\r\n  \"processoTrasformazione\": \"Processo\",\r\n  \"certificazioni\": \"Certificato\",\r\n  \"prodottoBase\": {\"id\": 12},\r\n  \"descrizione\": \"Descrizione prodotto\",\r\n  \"prezzo\": 10.0,\r\n   \"categoria\": {\"nome\": \"Frutta\"}\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/aggiungi",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"aggiungi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Prodotto PARAM",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/aggiungiconparametri?nome=marmellata di mela&processoTrasformazione=pressato con pressa&certificazioni=è naturale&prodottoBase=1&descrizione=Ciao! Sono una descrizione d'esempio&prezzo=10.0&categoria=Frutta",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"aggiungiconparametri"
+									],
+									"query": [
+										{
+											"key": "nome",
+											"value": "marmellata di mela"
+										},
+										{
+											"key": "processoTrasformazione",
+											"value": "pressato con pressa"
+										},
+										{
+											"key": "certificazioni",
+											"value": "è naturale"
+										},
+										{
+											"key": "prodottoBase",
+											"value": "1"
+										},
+										{
+											"key": "descrizione",
+											"value": "Ciao! Sono una descrizione d'esempio"
+										},
+										{
+											"key": "prezzo",
+											"value": "10.0"
+										},
+										{
+											"key": "categoria",
+											"value": "Frutta"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Prodotto ID=4",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/elimina?id=4",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"elimina"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Prodotto ID=4",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"id\": 4,\r\n  \"nome\": \"Nuovo Nome\",\r\n  \"processoTrasformazione\": \"Nuovo Processo\",\r\n  \"certificazioni\": \"Nuove Certificazioni\",\r\n  \"prodottoBase\": {\"id\": 1},\r\n  \"descrizione\": \"Nuova descrizione\",\r\n  \"prezzo\": 15.0\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/aggiorna",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"aggiorna"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Quantita",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/aggiorna-quantita?id=5&quantita=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"aggiorna-quantita"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "5"
+										},
+										{
+											"key": "quantita",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rimuovi Quantita",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/operatore/trasformatore/prodottitrasformati/rimuovi-quantita?id=5&quantita=5",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"operatore",
+										"trasformatore",
+										"prodottitrasformati",
+										"rimuovi-quantita"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "5"
+										},
+										{
+											"key": "quantita",
+											"value": "5"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"auth": {
+						"type": "basic",
+						"basic": [
+							{
+								"key": "password",
+								"value": "trasformatore",
+								"type": "string"
+							},
+							{
+								"key": "username",
+								"value": "trasformatore",
+								"type": "string"
+							}
+						]
+					},
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"packages": {},
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				},
+				{
+					"name": "GetMieRichiesteValidazione",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "produttore",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "produttore",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/operatore/richiesta-validazione",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"operatore",
+								"richiesta-validazione"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "operatore",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "operatore",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Gestore Della Piattaforma",
+			"item": [
+				{
+					"name": "Richieste",
+					"item": [
+						{
+							"name": "Ruolo",
+							"item": [
+								{
+									"name": "Richiesta di Ruolo",
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "produttore",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "produttore",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/autenticato/richiesta-ruolo?ruolo=TRASFORMATORE",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"richiesta-ruolo"
+											],
+											"query": [
+												{
+													"key": "ruolo",
+													"value": "TRASFORMATORE"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetRichiesteInAttesa",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/richieste/ruoli/attesa",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"richieste",
+												"ruoli",
+												"attesa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Processa Richiesta",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/richieste/ruoli/processa?id=1&approvato=false",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"richieste",
+												"ruoli",
+												"processa"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "approvato",
+													"value": "false"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Eliminazione",
+							"item": [
+								{
+									"name": "Richiesta di Eliminazione",
+									"request": {
+										"auth": {
+											"type": "basic",
+											"basic": [
+												{
+													"key": "password",
+													"value": "produttore",
+													"type": "string"
+												},
+												{
+													"key": "username",
+													"value": "produttore",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/autenticato/richiesta-eliminazione?motivazione=\"Voglio eliminare il mio account\"",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"richiesta-eliminazione"
+											],
+											"query": [
+												{
+													"key": "motivazione",
+													"value": "\"Voglio eliminare il mio account\"",
+													"description": "(Facoltativa) Motivazione della richiesta"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "GetRichiesteInAttesa",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/richieste/eliminazione/attesa",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"richieste",
+												"eliminazione",
+												"attesa"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Processa Richiesta",
+									"request": {
+										"method": "PUT",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/json",
+												"type": "text"
+											}
+										],
+										"body": {
+											"mode": "raw",
+											"raw": "",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "http://localhost:8080/richieste/eliminazione/processa?id=1&approvato=true",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"richieste",
+												"eliminazione",
+												"processa"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "approvato",
+													"value": "true"
+												}
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Categorie",
+					"item": [
+						{
+							"name": "getCategorie",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/categorie",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"categorie"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Categoria",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/categorie/aggiungi?nome=Cioccolato",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"categorie",
+										"aggiungi"
+									],
+									"query": [
+										{
+											"key": "nome",
+											"value": "Cioccolato"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Categoria",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/categorie/elimina?nome=Cioccolato",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"categorie",
+										"elimina"
+									],
+									"query": [
+										{
+											"key": "nome",
+											"value": "Cioccolato"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiorna Categoria",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"id\": 12,\r\n \"nome\": \"Formaggi di Capra\"   \r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:8080/categorie/aggiorna",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"categorie",
+										"aggiorna"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Altro",
+					"item": [
+						{
+							"name": "Visualizza Permessi",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/gestisci/utente/ruoli?userId=1",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"gestisci",
+										"utente",
+										"ruoli"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Permessi",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/gestisci/utente/ruoli/aggiungi?userId=1&role=TRASFORMATORE",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"gestisci",
+										"utente",
+										"ruoli",
+										"aggiungi"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "1"
+										},
+										{
+											"key": "role",
+											"value": "TRASFORMATORE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rimuovi Permessi",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/gestisci/utente/ruoli/rimuovi?userId=1&role=TRASFORMATORE",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"gestisci",
+										"utente",
+										"ruoli",
+										"rimuovi"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "1"
+										},
+										{
+											"key": "role",
+											"value": "TRASFORMATORE"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Aggiungi Utente",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/gestisci/utente/aggiungi?username=nuovoUtente&password=123456",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"gestisci",
+										"utente",
+										"aggiungi"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "nuovoUtente"
+										},
+										{
+											"key": "password",
+											"value": "123456"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rimuovi Utente",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/gestisci/utente/rimuovi?userId=10",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"gestisci",
+										"utente",
+										"rimuovi"
+									],
+									"query": [
+										{
+											"key": "userId",
+											"value": "10"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "admin",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "admin",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Utente",
+			"item": [
+				{
+					"name": "Elementi",
+					"item": [
+						{
+							"name": "Visualizza Elementi",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/elementi",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"elementi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza Pacchetti",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/elementi/pacchetti",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"elementi",
+										"pacchetti"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza Prodotti",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/elementi/prodotti",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"elementi",
+										"prodotti"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza ProdottiBase",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/elementi/prodotti-base",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"elementi",
+										"prodotti-base"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza ProdottiTrasformati",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/elementi/prodotti-trasformati",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"elementi",
+										"prodotti-trasformati"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "testUsername",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPassword",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "testUsername",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "testPassword",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8080/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "noauth"
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Acquirente",
+			"item": [
+				{
+					"name": "Utente",
+					"item": [
+						{
+							"name": "GetInfo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"me"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Modifica Credenziali",
+							"request": {
+								"method": "PUT",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/me?username=acquirenteAggiornato&password=acquirenteAggiornato",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"me"
+									],
+									"query": [
+										{
+											"key": "username",
+											"value": "acquirenteAggiornato"
+										},
+										{
+											"key": "password",
+											"value": "acquirenteAggiornato"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetInfo Modificato",
+							"request": {
+								"auth": {
+									"type": "basic",
+									"basic": [
+										{
+											"key": "password",
+											"value": "acquirenteAggiornato",
+											"type": "string"
+										},
+										{
+											"key": "username",
+											"value": "acquirenteAggiornato",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/me",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Attività",
+					"item": [
+						{
+							"name": "Visualizza Attivita",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/attivita",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"attivita"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza Visite",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/visite",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"visite"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza Eventi",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/eventi",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"eventi"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Visualizza Attivita Prenotate",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/attivita/prenotazione",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"attivita",
+										"prenotazione"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Elimina Prenotazione Attivita",
+							"request": {
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/attivita/prenotazione?id=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"attivita",
+										"prenotazione"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Prenota Attivita",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/attivita/prenotazione?id=2",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"attivita",
+										"prenotazione"
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": "2"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Elementi",
+					"item": [
+						{
+							"name": "Carrello",
+							"item": [
+								{
+									"name": "Aggiungi elemento al carrello",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/aggiungi?id=1&quantita=5",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"aggiungi"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "1"
+												},
+												{
+													"key": "quantita",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Rimuovi elemento dal carrello",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/rimuovi?id=10&quantita=5",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"rimuovi"
+											],
+											"query": [
+												{
+													"key": "id",
+													"value": "10"
+												},
+												{
+													"key": "quantita",
+													"value": "5"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Visualizza carrello",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Checkout con carta",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "cartaDiCredito",
+													"value": "0000000000000000",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=cartaDiCredito&datiPagamento=A123456789012",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"checkout"
+											],
+											"query": [
+												{
+													"key": "metodo",
+													"value": "cartaDiCredito"
+												},
+												{
+													"key": "datiPagamento",
+													"value": "A123456789012"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Checkout con paypal",
+									"request": {
+										"method": "POST",
+										"header": [
+											{
+												"key": "Content-Type",
+												"value": "application/x-www-form-urlencoded"
+											}
+										],
+										"body": {
+											"mode": "urlencoded",
+											"urlencoded": [
+												{
+													"key": "cartaDiCredito",
+													"value": "1234567812345678",
+													"type": "text",
+													"disabled": true
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=payPal&datiPagamento=email@unicam.it",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"checkout"
+											],
+											"query": [
+												{
+													"key": "metodo",
+													"value": "payPal"
+												},
+												{
+													"key": "datiPagamento",
+													"value": "email@unicam.it"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Checkout con bonifico",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=bonifico&datiPagamento=IT60X0542811101000000123456",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"checkout"
+											],
+											"query": [
+												{
+													"key": "metodo",
+													"value": "bonifico"
+												},
+												{
+													"key": "datiPagamento",
+													"value": "IT60X0542811101000000123456"
+												}
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Visualizza Ordini",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:8080/autenticato/carrello/ordini",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "8080",
+											"path": [
+												"autenticato",
+												"carrello",
+												"ordini"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "Richieste",
+					"item": [
+						{
+							"name": "GetMieRichieste",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/richieste",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"richieste"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetMieRichiesteRuolo",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/richiesta-ruolo",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"richiesta-ruolo"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetMieRichiesteEliminazione",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8080/autenticato/richiesta-eliminazione",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8080",
+									"path": [
+										"autenticato",
+										"richiesta-eliminazione"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "acquirente",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "acquirente",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Curatore",
+			"item": [
+				{
+					"name": "Richiesta di Validazione",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "produttore",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "produttore",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/operatore/richiesta-validazione?id=12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"operatore",
+								"richiesta-validazione"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "GetRichiesteInAttesa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/richieste/validazione/attesa",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"richieste",
+								"validazione",
+								"attesa"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Processa Richiesta",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8080/richieste/validazione/processa?id=1&approvato=true",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"richieste",
+								"validazione",
+								"processa"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "1"
+								},
+								{
+									"key": "approvato",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "basic",
+				"basic": [
+					{
+						"key": "password",
+						"value": "curatore",
+						"type": "string"
+					},
+					{
+						"key": "username",
+						"value": "curatore",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"packages": {},
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	]
+}

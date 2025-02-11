@@ -6,7 +6,6 @@ import jakarta.persistence.*;
 
 import java.util.HashSet;
 import java.util.Set;
-
 @Entity
 public class Pacchetto extends Elemento{
     @ManyToMany
@@ -54,3 +53,4 @@ public class Pacchetto extends Elemento{
     }
 
 }
+

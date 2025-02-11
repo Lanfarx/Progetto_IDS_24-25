@@ -79,11 +79,11 @@ public class CarrelloController {
     }
 
     @PostMapping("/checkout")
-    public ResponseEntity<Object> checkout(@RequestParam String cartaDiCredito) {
+    public ResponseEntity<Object> checkout(@RequestParam String metodo, @RequestParam String datiPagamento) {
         Users currentUser = userService.getCurrentUser();
         Carrello carrello = carrelloService.getCarrello(currentUser);
         if(!carrello.getElementi().isEmpty()){
-            if(paymentManager.verificaPagamento(cartaDiCredito)){
+            if(paymentManager.effettuaPagamento(metodo, datiPagamento)){
                 Ordine ordine = ordineService.creaOrdine(carrello);
                 return new ResponseEntity<>(ordine,HttpStatus.OK);
             } else return new ResponseEntity<>("Pagamento non valido, l'ordine non può essere completato", HttpStatus.BAD_REQUEST);
