@@ -1,11 +1,14 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.services.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,7 +17,7 @@ import java.util.Set;
 @Service
 public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
 
-    @Autowired
+    @Autowired @Lazy
     private UserService userService;
 
     public boolean aggiungiProdottoBase(String nome, String metodiColtivazione,
@@ -54,11 +57,15 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
     public List<ProdottoBase> getAllProdottiBaseValidi() {
         return this.prodottoRepository.findProdottiBaseByStatorichiestaEquals(StatoContenuto.ATTESA);
     }
+    public List<ProdottoBase> getAllProdottiBaseByUser(Users user){
+        return this.prodottoRepository.findProdottiBaseByOperatore(user);
+    }
 
+    @Transactional
     public void deleteProdottoBase(int id) {
         Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
-        this.prodottoRepository.deleteProdottiTrasformatiByProdottoBaseId(id);
         this.carrelloService.rimuoviDaCarrelli(id);
+        this.prodottoRepository.deleteProdottiTrasformatiByProdottoBaseId(id);
         this.prodottoRepository.deleteProdottoBaseById(id);
         pacchettoService.checkAndDelete(pacchettoSet);
     }
@@ -113,4 +120,5 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
     public boolean existsProdottoBase(int id) {
         return prodottoRepository.existsProdottoBaseById(id);
     }
+
 }

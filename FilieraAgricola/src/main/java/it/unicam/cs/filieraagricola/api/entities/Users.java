@@ -39,15 +39,7 @@ public class Users {
 
     @JsonIgnore
     @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Pacchetto> pacchettiCreati = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProdottoTrasformato> prodottiTrasformatiCreati = new ArrayList<>();
-
-    @JsonIgnore
-    @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ProdottoBase> prodottiBaseCreati = new ArrayList<>();
+    private List<Elemento> elementiCreati = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "organizzatore", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -113,27 +105,13 @@ public class Users {
         this.attivitaPrenotate = attivitaPrenotate;
     }
 
-    public List<Pacchetto> getPacchettiCreati() {
-        return pacchettiCreati;
+    public List<Elemento> getElementiCreati() {
+        return elementiCreati;
     }
 
-    public void setPacchettiCreati(List<Pacchetto> pacchettiCreati) {
-        this.pacchettiCreati = pacchettiCreati;
+    public void setElementiCreati(List<Elemento> elementiCreati) {
+        this.elementiCreati = elementiCreati;
     }
 
-    public List<ProdottoTrasformato> getProdottiTrasformatiCreati() {
-        return prodottiTrasformatiCreati;
-    }
 
-    public void setProdottiTrasformatiCreati(List<ProdottoTrasformato> prodottiTrasformatiCreati) {
-        this.prodottiTrasformatiCreati = prodottiTrasformatiCreati;
-    }
-
-    public List<ProdottoBase> getProdottiBaseCreati() {
-        return prodottiBaseCreati;
-    }
-
-    public void setProdottiBaseCreati(List<ProdottoBase> prodottiBaseCreati) {
-        this.prodottiBaseCreati = prodottiBaseCreati;
-    }
 }

@@ -38,4 +38,5 @@ public abstract class Prodotto extends Elemento{
     @Override
     public void aggiungiQuantita(int quantita) { this.quantita += quantita; }
     public void removeQuantita(int quantita) { this.quantita = Math.max(this.quantita - quantita, 0); }
+
 }

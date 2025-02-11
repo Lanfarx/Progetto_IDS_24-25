@@ -16,6 +16,7 @@ public class ProdottoTrasformato extends Prodotto {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private ProdottoBase prodottoBase;
 
+
     public ProdottoBase getProdottoBase() {
         return this.prodottoBase;
     }

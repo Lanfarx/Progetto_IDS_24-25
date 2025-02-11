@@ -2,10 +2,11 @@ package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
-import it.unicam.cs.filieraagricola.api.services.elemento.ElementoService;
+import it.unicam.cs.filieraagricola.api.services.elemento.ProdottoBaseService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,7 +29,7 @@ public class UserService implements UserDetailsService {
     @Autowired
     private  UserRepository userRepository;
     @Autowired
-    private ElementoService elementoService;
+    private ProdottoBaseService prodottoBaseService;
 
     public Optional<Users> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -50,9 +51,13 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
     }
 
+    @Transactional
     public void delete(Users user) {
+        deleteProdottiBase(user);
+        userRepository.flush();
         userRepository.delete(user);
     }
+
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -149,6 +154,12 @@ public class UserService implements UserDetailsService {
         user.setUsername(username);
         user.setPassword(password);
         userRepository.save(user);
+    }
+
+    protected void deleteProdottiBase(Users user) {
+        for (ProdottoBase prodottoBase : prodottoBaseService.getAllProdottiBaseByUser(user)) {
+            this.prodottoBaseService.deleteProdottoBase(prodottoBase.getId());
+        }
     }
 }
 

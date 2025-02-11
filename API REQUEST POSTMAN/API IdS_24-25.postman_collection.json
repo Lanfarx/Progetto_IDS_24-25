@@ -3,8 +3,8 @@
 		"_postman_id": "dc6ccc8f-2798-4e04-897c-7e0e9502a885",
 		"name": "API IdS_24-25",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "41139310",
-		"_collection_link": "https://ids2024-25.postman.co/workspace/IdS_2024-25-Workspace~ec84d556-5ff2-423c-861e-e6931eafe752/collection/41139310-dc6ccc8f-2798-4e04-897c-7e0e9502a885?action=share&source=collection_link&creator=41139310"
+		"_exporter_id": "41341053",
+		"_collection_link": "https://ids2024-25.postman.co/workspace/IdS_2024-25-Workspace~ec84d556-5ff2-423c-861e-e6931eafe752/collection/41139310-dc6ccc8f-2798-4e04-897c-7e0e9502a885?action=share&source=collection_link&creator=41341053"
 	},
 	"item": [
 		{
@@ -1460,12 +1460,12 @@
 											"type": "basic",
 											"basic": [
 												{
-													"key": "password",
+													"key": "username",
 													"value": "produttore",
 													"type": "string"
 												},
 												{
-													"key": "username",
+													"key": "password",
 													"value": "produttore",
 													"type": "string"
 												}
@@ -2432,7 +2432,7 @@
 											]
 										},
 										"url": {
-											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=cartaDiCredito&datiPagamento=A123456789012",
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=cartaDiCreditoPayment&datiPagamento=123456789012",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -2446,11 +2446,11 @@
 											"query": [
 												{
 													"key": "metodo",
-													"value": "cartaDiCredito"
+													"value": "cartaDiCreditoPayment"
 												},
 												{
 													"key": "datiPagamento",
-													"value": "A123456789012"
+													"value": "123456789012"
 												}
 											]
 										}
@@ -2479,7 +2479,7 @@
 											]
 										},
 										"url": {
-											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=payPal&datiPagamento=email@unicam.it",
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=payPalPayment&datiPagamento=email@unicam.it",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -2493,7 +2493,7 @@
 											"query": [
 												{
 													"key": "metodo",
-													"value": "payPal"
+													"value": "payPalPayment"
 												},
 												{
 													"key": "datiPagamento",
@@ -2510,7 +2510,7 @@
 										"method": "POST",
 										"header": [],
 										"url": {
-											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=bonifico&datiPagamento=IT60X0542811101000000123456",
+											"raw": "http://localhost:8080/autenticato/carrello/checkout?metodo=bonificoPayment&datiPagamento=IT60X0542811101000000123456",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -2524,7 +2524,7 @@
 											"query": [
 												{
 													"key": "metodo",
-													"value": "bonifico"
+													"value": "bonificoPayment"
 												},
 												{
 													"key": "datiPagamento",

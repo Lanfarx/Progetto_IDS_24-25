@@ -26,9 +26,9 @@ public class SampleDataConstructor {
     @Autowired
     private CategoriaRepository categoriaRepository;
     @Autowired
-    ProdottoRepository prodottoRepository;
+    private ProdottoRepository prodottoRepository;
     @Autowired
-    PacchettoRepository pacchettoRepository;
+    private PacchettoRepository pacchettoRepository;
     @Autowired
     private CategoriaService categoriaService;
 
