@@ -1,7 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
-import it.unicam.cs.filieraagricola.api.commons.PacchettoAggiornatoDTO;
-import it.unicam.cs.filieraagricola.api.commons.PacchettoCreatoDTO;
+import it.unicam.cs.filieraagricola.api.commons.utils.PacchettoAggiornatoDTO;
+import it.unicam.cs.filieraagricola.api.commons.utils.PacchettoCreatoDTO;
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
 
-import static it.unicam.cs.filieraagricola.api.commons.ResponseEntityUtil.unauthorizedResponse;
+import static it.unicam.cs.filieraagricola.api.commons.utils.ResponseEntityUtil.unauthorizedResponse;
 
 @RestController
 @RequestMapping("/operatore/distributore")

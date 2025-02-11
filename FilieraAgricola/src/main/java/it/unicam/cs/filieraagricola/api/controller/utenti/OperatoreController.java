@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.controller;
+package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaValidazione;

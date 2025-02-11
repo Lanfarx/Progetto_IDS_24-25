@@ -10,6 +10,9 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 @Service
 public class CarrelloService {
 
@@ -90,5 +93,13 @@ public class CarrelloService {
         }
         aggiornaPrezzo(carrello);
         carrelloRepository.save(carrello);
+    }
+
+    public void rimuoviDaCarrelli(int id) {
+        carrelloRepository.rimuoviElementoDaCarrelli(id);
+        List<Carrello> carrelli = carrelloRepository.findAll();
+        for (Carrello carrello : carrelli) {
+            aggiornaPrezzo(carrello);
+        }
     }
 }

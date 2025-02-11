@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.controller;
+package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
@@ -8,7 +8,7 @@ import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.elemento.*;
-import it.unicam.cs.filieraagricola.api.services.gestore.AttivitaService;
+import it.unicam.cs.filieraagricola.api.services.AttivitaService;
 import it.unicam.cs.filieraagricola.api.services.gestore.richieste.RichiestaEliminazioneService;
 import it.unicam.cs.filieraagricola.api.services.gestore.richieste.RichiestaRuoloService;
 import org.springframework.beans.factory.annotation.Autowired;

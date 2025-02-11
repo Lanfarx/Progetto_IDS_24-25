@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static it.unicam.cs.filieraagricola.api.commons.ResponseEntityUtil.unauthorizedResponse;
+import static it.unicam.cs.filieraagricola.api.commons.utils.ResponseEntityUtil.unauthorizedResponse;
 
 @RestController
 @RequestMapping("/operatore/produttore")

@@ -30,20 +30,6 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
             "FROM ProdottoTrasformato p WHERE p.id = :id")
     Boolean existsProdottoTrasformatoById(@Param("id") Integer id);
 
-    // Find all ProdottoBase
-    @Query("SELECT p FROM ProdottoBase p")
-    List<ProdottoBase> findAllProdottiBase();
-
-    // Find all ProdottoTrasformato
-    @Query("SELECT p FROM ProdottoTrasformato p")
-    List<ProdottoTrasformato> findAllProdottiTrasformati();
-
-    @Query("SELECT p FROM ProdottoBase p")
-    List<ProdottoBase> findProdottiBase();
-
-    @Query("SELECT p FROM ProdottoTrasformato p")
-    List<ProdottoTrasformato> findProdottiTrasformati();
-
     // Restituisce un ProdottoBase dato il suo ID
     @Query("SELECT p FROM ProdottoBase p WHERE p.id = :id")
     Optional<ProdottoBase> findProdottoBaseById(@Param("id") Integer id);
@@ -51,16 +37,6 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
     // Restituisce un ProdottoTrasformato dato il suo ID
     @Query("SELECT p FROM ProdottoTrasformato p WHERE p.id = :id")
     Optional<ProdottoTrasformato> findProdottoTrasformatoById(@Param("id") Integer id);
-
-    // Query per ottenere prodotti base o trasformati filtrati per nome
-    @Query("SELECT p FROM ProdottoBase p WHERE p.nome LIKE %:nome%")
-    List<ProdottoBase> findProdottiBaseByNome(@Param("nome") String nome);
-
-    @Query("SELECT p FROM ProdottoTrasformato p WHERE p.nome LIKE %:nome%")
-    List<ProdottoTrasformato> findProdottiTrasformatiByNome(@Param("nome") String nome);
-
-    @Query("SELECT pt FROM ProdottoTrasformato pt WHERE pt.prodottoBase.id = :prodottoBaseId")
-    List<ProdottoTrasformato> findTrasformatiByProdottoBaseId(@Param("prodottoBaseId") int prodottoBaseId);
 
     @Transactional
     @Modifying

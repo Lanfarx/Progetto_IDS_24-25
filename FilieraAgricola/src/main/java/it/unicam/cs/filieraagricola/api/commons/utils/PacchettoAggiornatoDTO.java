@@ -1,12 +1,21 @@
-package it.unicam.cs.filieraagricola.api.commons;
+package it.unicam.cs.filieraagricola.api.commons.utils;
 
 import java.util.Set;
 
-public class PacchettoCreatoDTO {
+public class PacchettoAggiornatoDTO {
+    private int id;
     private String nome;
     private String descrizione;
     private double prezzo;
     private Set<Integer> prodottiIds;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getNome() {
         return nome;

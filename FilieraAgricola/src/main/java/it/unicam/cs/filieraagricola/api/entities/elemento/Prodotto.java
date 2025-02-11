@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -17,7 +18,6 @@ public abstract class Prodotto extends Elemento{
 
     @ManyToMany(mappedBy = "prodottiSet") @JsonIgnore
     private Set<Pacchetto> pacchettiSet = new HashSet<>();
-
 
     @PreRemove
     private void preRemove() {

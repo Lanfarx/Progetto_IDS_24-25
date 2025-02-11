@@ -58,6 +58,7 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
     public void deleteProdottoBase(int id) {
         Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteProdottiTrasformatiByProdottoBaseId(id);
+        this.carrelloService.rimuoviDaCarrelli(id);
         this.prodottoRepository.deleteProdottoBaseById(id);
         pacchettoService.checkAndDelete(pacchettoSet);
     }

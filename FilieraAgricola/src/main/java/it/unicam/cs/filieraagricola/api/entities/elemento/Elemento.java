@@ -1,9 +1,14 @@
 package it.unicam.cs.filieraagricola.api.entities.elemento;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
+import java.util.List;
 
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
@@ -23,6 +28,7 @@ public abstract class Elemento {
 
     @ManyToOne
     @JoinColumn(name = "operatore_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private Users operatore;
 
     @Enumerated(EnumType.STRING)

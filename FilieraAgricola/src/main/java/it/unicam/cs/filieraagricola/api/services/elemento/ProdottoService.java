@@ -4,6 +4,7 @@ import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
+import it.unicam.cs.filieraagricola.api.services.carrello.CarrelloService;
 import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,8 @@ public class ProdottoService<T extends Prodotto> extends ElementoService<Prodott
     protected PacchettoService pacchettoService;
     @Autowired
     protected CategoriaService categoriaService;
+    @Autowired
+    protected CarrelloService carrelloService;
 
     public List<T> getProdottiValidi() {
         return (List<T>) prodottoRepository.findByStatorichiestaEquals(StatoContenuto.ACCETTATA);

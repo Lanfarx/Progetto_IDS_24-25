@@ -3,7 +3,9 @@ package it.unicam.cs.filieraagricola.api.services;
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.repository.UserRepository;
+import it.unicam.cs.filieraagricola.api.services.elemento.ElementoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -25,6 +27,8 @@ public class UserService implements UserDetailsService {
 
     @Autowired
     private  UserRepository userRepository;
+    @Autowired
+    private ElementoService elementoService;
 
     public Optional<Users> findByUsername(String username) {
         return userRepository.findByUsername(username);
@@ -55,11 +59,10 @@ public class UserService implements UserDetailsService {
         Users user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        // Se i ruoli sono memorizzati come Set<UserRole>, li convertiamo in SimpleGrantedAuthority
         Collection<? extends GrantedAuthority> authorities =
                 user.getRoles().stream()
-                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name())) // Converte UserRole in SimpleGrantedAuthority
-                        .collect(Collectors.toList()); // Raccoglie i ruoli in una lista di GrantedAuthority
+                        .map(role -> new SimpleGrantedAuthority("ROLE_" + role.name()))
+                        .collect(Collectors.toList());
 
         return new User(user.getUsername(),
                 user.getPassword(),

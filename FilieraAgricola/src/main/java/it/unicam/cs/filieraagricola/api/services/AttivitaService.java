@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.services.gestore;
+package it.unicam.cs.filieraagricola.api.services;
 
 import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;

@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.controller;
+package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.entities.Users;

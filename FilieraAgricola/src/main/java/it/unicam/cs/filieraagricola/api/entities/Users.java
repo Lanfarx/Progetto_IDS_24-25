@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
+import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import jakarta.persistence.*;
 
@@ -36,7 +39,15 @@ public class Users {
 
     @JsonIgnore
     @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Elemento> elementiCreati = new ArrayList<>();
+    private List<Pacchetto> pacchettiCreati = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdottoTrasformato> prodottiTrasformatiCreati = new ArrayList<>();
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "operatore", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ProdottoBase> prodottiBaseCreati = new ArrayList<>();
 
     @JsonIgnore
     @OneToMany(mappedBy = "organizzatore", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -102,11 +113,27 @@ public class Users {
         this.attivitaPrenotate = attivitaPrenotate;
     }
 
-    public List<Elemento> getElementiCreati() {
-        return elementiCreati;
+    public List<Pacchetto> getPacchettiCreati() {
+        return pacchettiCreati;
     }
 
-    public void setElementiCreati(List<Elemento> elementiCreati) {
-        this.elementiCreati = elementiCreati;
+    public void setPacchettiCreati(List<Pacchetto> pacchettiCreati) {
+        this.pacchettiCreati = pacchettiCreati;
+    }
+
+    public List<ProdottoTrasformato> getProdottiTrasformatiCreati() {
+        return prodottiTrasformatiCreati;
+    }
+
+    public void setProdottiTrasformatiCreati(List<ProdottoTrasformato> prodottiTrasformatiCreati) {
+        this.prodottiTrasformatiCreati = prodottiTrasformatiCreati;
+    }
+
+    public List<ProdottoBase> getProdottiBaseCreati() {
+        return prodottiBaseCreati;
+    }
+
+    public void setProdottiBaseCreati(List<ProdottoBase> prodottiBaseCreati) {
+        this.prodottiBaseCreati = prodottiBaseCreati;
     }
 }

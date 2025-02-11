@@ -4,7 +4,7 @@ import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.services.UserService;
-import it.unicam.cs.filieraagricola.api.services.gestore.AttivitaService;
+import it.unicam.cs.filieraagricola.api.services.AttivitaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static it.unicam.cs.filieraagricola.api.commons.ResponseEntityUtil.unauthorizedResponse;
+import static it.unicam.cs.filieraagricola.api.commons.utils.ResponseEntityUtil.unauthorizedResponse;
 
 @RestController
 @RequestMapping("/attivita")

@@ -12,7 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import static it.unicam.cs.filieraagricola.api.commons.ResponseEntityUtil.unauthorizedResponse;
+import static it.unicam.cs.filieraagricola.api.commons.utils.ResponseEntityUtil.unauthorizedResponse;
 
 @RestController
 @RequestMapping
@@ -28,7 +28,7 @@ public class RichiestaValidazioneController {
     @PostMapping("operatore/richiesta-validazione")
     public ResponseEntity<Object> aggiungiRichiestaValidazione(@RequestParam Integer id) {
         Users user = userService.getCurrentUser();
-        if (elementoService.existsElemento(id)) {
+        if (elementoService.existsElementoAndAttesa(id)) {
             Elemento elemento = elementoService.getElemento(id).get();
             if (elemento.getOperatore().equals(user)) {
                 if (!richiestaValidazioneService.existsSameRichiesta(user, elemento)) {
@@ -36,7 +36,7 @@ public class RichiestaValidazioneController {
                     return new ResponseEntity<>("Richiesta di validazione per l'elemento '" + elemento.getNome() + "' inviata con successo.", HttpStatus.CREATED);
                 } else return new ResponseEntity<>("Esiste già una richiesta di validazione per l'elemento '" + elemento.getNome() + "'", HttpStatus.CONFLICT);
             } else return unauthorizedResponse();
-        } else return new ResponseEntity<>("L'elemento: " + id + " non esiste", HttpStatus.NOT_FOUND);
+        } else return new ResponseEntity<>("L'elemento in attesa: " + id + " non esiste", HttpStatus.NOT_FOUND);
     }
 
     @GetMapping("/richieste/validazione/attesa")

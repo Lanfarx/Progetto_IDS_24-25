@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.repository.ElementoRepository;
@@ -40,5 +41,9 @@ public class ElementoService<T extends Elemento> {
 
     public boolean existsElementoAndValido(int id) {
         return elementoRepository.existsByIdAndStatorichiesta(id, StatoContenuto.ACCETTATA);
+    }
+
+    public boolean existsElementoAndAttesa(Integer id) {
+        return elementoRepository.existsByIdAndStatorichiesta(id, StatoContenuto.ATTESA);
     }
 }

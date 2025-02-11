@@ -1,9 +1,12 @@
 package it.unicam.cs.filieraagricola.api.entities.carrello;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import jakarta.persistence.*;
 
+import javax.swing.text.Element;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,7 +19,7 @@ public class Ordine {
     private Users user;
 
     @OneToMany(mappedBy = "ordine", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<ElementoCarrello> elementi;
+    private List<ElementoOrdine> elementi = new ArrayList<>();
 
     private double prezzoTotale;
 
@@ -38,11 +41,11 @@ public class Ordine {
         this.user = user;
     }
 
-    public List<ElementoCarrello> getElementi() {
+    public List<ElementoOrdine> getElementi() {
         return elementi;
     }
 
-    public void setElementi(List<ElementoCarrello> elementi) {
+    public void setElementi(List<ElementoOrdine> elementi) {
         this.elementi = elementi;
     }
 

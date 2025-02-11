@@ -3,6 +3,7 @@ package it.unicam.cs.filieraagricola.api.services.carrello;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.carrello.Carrello;
 import it.unicam.cs.filieraagricola.api.entities.carrello.ElementoCarrello;
+import it.unicam.cs.filieraagricola.api.entities.carrello.ElementoOrdine;
 import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
 import it.unicam.cs.filieraagricola.api.repository.CarrelloRepository;
 import it.unicam.cs.filieraagricola.api.repository.OrdineRepository;
@@ -23,30 +24,33 @@ public class OrdineService {
     @Autowired
     private CarrelloRepository carrelloRepository;
 
+
     public Ordine creaOrdine(Carrello carrello){
         Ordine ordine = new Ordine();
         ordine.setUser(carrello.getUser());
-        List<ElementoCarrello> nuoviElementi = getElementiOrdine(carrello, ordine);
-        ordine.setElementi(nuoviElementi);
-        ordine.setPrezzoTotale(carrello.getPrezzoTotale());
         ordine.setDataOrdine(LocalDateTime.now());
+
+        List<ElementoOrdine> dettagliOrdine = getElementiOrdine(carrello, ordine);
+        ordine.setElementi(dettagliOrdine);
+
+        ordine.setPrezzoTotale(carrello.getPrezzoTotale());
         ordineRepository.save(ordine);
 
         pulisciCarrello(carrello);
         return ordine;
     }
 
-    private List<ElementoCarrello> getElementiOrdine(Carrello carrello, Ordine ordine) {
-        List<ElementoCarrello> nuoviElementi = new ArrayList<>();
+    private List<ElementoOrdine> getElementiOrdine(Carrello carrello, Ordine ordine) {
+        List<ElementoOrdine> elementiOrdine = new ArrayList<>();
         for (ElementoCarrello elemento : carrello.getElementi()) {
-            ElementoCarrello nuovoElemento = new ElementoCarrello();
-            nuovoElemento.setElemento(elemento.getElemento());
-            nuovoElemento.setQuantita(elemento.getQuantita());
-            nuovoElemento.setPrezzoTotale(elemento.getPrezzoTotale());
-            nuovoElemento.setOrdine(ordine);
-            nuoviElementi.add(nuovoElemento);
+            ElementoOrdine elementoOrdine = new ElementoOrdine(
+                    elemento.getQuantita(), elemento.getElemento().getPrezzo(),
+                    elemento.getElemento().getDescrizione(), elemento.getElemento().getNome()
+            );
+            elementoOrdine.setOrdine(ordine);
+            elementiOrdine.add(elementoOrdine);
         }
-        return nuoviElementi;
+        return elementiOrdine;
     }
 
     private void pulisciCarrello(Carrello carrello) {

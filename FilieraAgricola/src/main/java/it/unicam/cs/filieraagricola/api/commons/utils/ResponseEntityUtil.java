@@ -1,4 +1,4 @@
-package it.unicam.cs.filieraagricola.api.commons;
+package it.unicam.cs.filieraagricola.api.commons.utils;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
