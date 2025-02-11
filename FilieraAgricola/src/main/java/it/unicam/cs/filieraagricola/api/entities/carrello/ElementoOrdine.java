@@ -24,7 +24,7 @@ public class ElementoOrdine {
         this.descrizione = descrizione;
         this.nomeProdotto = nomeProdotto;
     }
-
+ 
     public ElementoOrdine() {
 
     }
