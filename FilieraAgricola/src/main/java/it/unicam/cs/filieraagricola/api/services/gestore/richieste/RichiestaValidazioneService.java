@@ -14,8 +14,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
-
 @Service
 public class RichiestaValidazioneService extends AbstractRichiestaService<RichiestaValidazione> {
 
@@ -28,7 +26,7 @@ public class RichiestaValidazioneService extends AbstractRichiestaService<Richie
     @Override
     public void aggiungiRichiesta(Integer userId, Object valore) {
         Users user = userService.getUserById(userId).get();
-        richiestaRepository.save(creaRichiesta(TipoRichiesta.VALIDAZIONE, user, valore));
+        richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.VALIDAZIONE, user, valore));
     }
 
     @Override
