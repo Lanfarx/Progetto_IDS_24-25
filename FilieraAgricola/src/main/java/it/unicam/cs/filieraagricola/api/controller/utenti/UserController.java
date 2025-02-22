@@ -2,11 +2,13 @@ package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.services.UserService;
+import it.unicam.cs.filieraagricola.api.services.carrello.OrdineService;
 import it.unicam.cs.filieraagricola.api.services.elemento.*;
 import it.unicam.cs.filieraagricola.api.services.AttivitaService;
 import it.unicam.cs.filieraagricola.api.services.gestore.richieste.RichiestaEliminazioneService;
@@ -40,6 +42,8 @@ public class UserController {
     private RichiestaEliminazioneService richiestaEliminazioneService;
     @Autowired
     private RichiestaRuoloService richiestaRuoloService;
+    @Autowired
+    private OrdineService ordineService;
 
     @GetMapping("/autenticato/me")
     public ResponseEntity<Users> getMyInfo() {
@@ -76,6 +80,13 @@ public class UserController {
     @GetMapping("/autenticato/attivita/prenotazione")
     public ResponseEntity<Object> getPrenotazioni() {
         return new ResponseEntity<>(attivitaService.getAllPrenotazioni(userService.getCurrentUser()), HttpStatus.OK);
+    }
+
+    @GetMapping("/autenticato/ordini")
+    public ResponseEntity<List<Ordine>> getOrdini() {
+        Users currentUser = userService.getCurrentUser();
+        List<Ordine> ordini = ordineService.getOrdini(currentUser);
+        return new ResponseEntity<>(ordini, HttpStatus.OK);
     }
 
     @PostMapping("/autenticato/attivita/prenotazione")

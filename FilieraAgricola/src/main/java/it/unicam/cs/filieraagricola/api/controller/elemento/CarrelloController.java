@@ -71,13 +71,6 @@ public class CarrelloController {
         return new ResponseEntity<>(carrello, HttpStatus.OK);
     }
 
-    @GetMapping("/ordini")
-    public ResponseEntity<List<Ordine>> getOrdini() {
-        Users currentUser = userService.getCurrentUser();
-        List<Ordine> ordini = ordineService.getOrdini(currentUser);
-        return new ResponseEntity<>(ordini, HttpStatus.OK);
-    }
-
     @PostMapping("/checkout")
     public ResponseEntity<Object> checkout(@RequestParam String metodo, @RequestParam String datiPagamento) {
         Users currentUser = userService.getCurrentUser();
