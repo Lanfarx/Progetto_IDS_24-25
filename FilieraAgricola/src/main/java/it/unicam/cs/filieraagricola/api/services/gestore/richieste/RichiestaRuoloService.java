@@ -14,53 +14,53 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
-    public class RichiestaRuoloService extends AbstractRichiestaService<RichiestaRuolo> {
+public class RichiestaRuoloService extends AbstractRichiestaService<RichiestaRuolo> {
 
-        @Autowired
-        private UserService userService;
+    @Autowired
+    private UserService userService;
 
-        @Override
-        public void aggiungiRichiesta(Integer userId, Object ruoloRichiesto) {
-            Users user = userService.getUserById(userId).get();
-            richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
-        }
-
-        @Override
-        public boolean existsRichiesta(Integer id) {
-            return richiestaRepository.existsRichiestaRuoloById(id);
-        }
-
-        @Override
-        public boolean existsSameRichiesta(Users user, Object ruolo) {
-            return richiestaRepository.existsRichiestRuoloByUserAndRuoloRichiesto(user, (UserRole) ruolo);
-        }
-
-        @Override
-        public Optional<RichiestaRuolo> getRichiesta(Integer id) {
-            return richiestaRepository.findRichiestaRuoloById(id);
-        }
-
-        @Override
-        public List<RichiestaRuolo> getRichiesteInAttesa() {
-            return richiestaRepository.findRichiestaRuoloByStato(StatoContenuto.ATTESA);
-        }
-
-        public List<RichiestaRuolo> getMieRichiesteRuolo(Users currentUser){
-        return richiestaRepository.findRichiesteRuoloByUser(currentUser);
-        }
-
-        @Override
-        public void processaRichiesta(Integer richiestaId, boolean approvato) {
-            if (richiestaRepository.existsRichiestaRuoloById(richiestaId)) {
-                RichiestaRuolo richiesta = (RichiestaRuolo) richiestaRepository.findById(richiestaId).get();
-                if (approvato) {
-                    userService.aggiungiRuolo(richiesta.getUser().getId(), richiesta.getRuoloRichiesto());
-                    richiesta.setStato(StatoContenuto.ACCETTATA);
-                } else {
-                    richiesta.setStato(StatoContenuto.RIFIUTATA);
-                }
-                richiestaRepository.save(richiesta);
-            } else throw new RuntimeException("Richiesta non trovata");
-        }
+    @Override
+    public void aggiungiRichiesta(Users user, Object ruoloRichiesto) {
+        richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
     }
+
+
+    @Override
+    public boolean existsRichiesta(Integer id) {
+        return richiestaRepository.existsRichiestaRuoloById(id);
+    }
+
+    @Override
+    public boolean existsSameRichiesta(Users user, Object ruolo) {
+        return richiestaRepository.existsRichiestRuoloByUserAndRuoloRichiesto(user, (UserRole) ruolo);
+    }
+
+    @Override
+    public Optional<RichiestaRuolo> getRichiesta(Integer id) {
+        return richiestaRepository.findRichiestaRuoloById(id);
+    }
+
+    @Override
+    public List<RichiestaRuolo> getRichiesteInAttesa() {
+           return richiestaRepository.findRichiestaRuoloByStato(StatoContenuto.ATTESA);
+    }
+
+    public List<RichiestaRuolo> getMieRichiesteRuolo(Users currentUser){
+        return richiestaRepository.findRichiesteRuoloByUser(currentUser);
+    }
+
+    @Override
+    public void processaRichiesta(Integer richiestaId, boolean approvato) {
+        if (richiestaRepository.existsRichiestaRuoloById(richiestaId)) {
+            RichiestaRuolo richiesta = (RichiestaRuolo) richiestaRepository.findById(richiestaId).get();
+            if (approvato) {
+                userService.aggiungiRuolo(richiesta.getUser().getId(), richiesta.getRuoloRichiesto());
+                richiesta.setStato(StatoContenuto.ACCETTATA);
+            } else {
+                richiesta.setStato(StatoContenuto.RIFIUTATA);
+            }
+            richiestaRepository.save(richiesta);
+        } else throw new RuntimeException("Richiesta non trovata");
+    }
+}
 

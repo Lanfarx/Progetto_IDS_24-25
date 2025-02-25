@@ -2,6 +2,7 @@ package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
@@ -56,6 +57,12 @@ public class UserController {
     @GetMapping("/autenticato/attivita/prenotazione")
     public ResponseEntity<Object> getPrenotazioni() {
         return new ResponseEntity<>(userFacade.getAllPrenotazioni(), HttpStatus.OK);
+    }
+
+    @GetMapping("/autenticato/ordini")
+    public ResponseEntity<List<Ordine>> getOrdini() {
+        List<Ordine> ordini = userFacade.getOrdini();
+        return new ResponseEntity<>(ordini, HttpStatus.OK);
     }
 
     @PostMapping("/autenticato/attivita/prenotazione")

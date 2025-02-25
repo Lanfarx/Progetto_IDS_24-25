@@ -3,11 +3,13 @@ package it.unicam.cs.filieraagricola.api.facades;
 import it.unicam.cs.filieraagricola.api.commons.UserRole;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
+import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaEliminazione;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaRuolo;
 import it.unicam.cs.filieraagricola.api.services.*;
+import it.unicam.cs.filieraagricola.api.services.carrello.OrdineService;
 import it.unicam.cs.filieraagricola.api.services.elemento.*;
 import it.unicam.cs.filieraagricola.api.services.gestore.richieste.*;
 
@@ -39,6 +41,8 @@ public class UserFacade {
     private RichiestaEliminazioneService richiestaEliminazioneService;
     @Autowired
     private RichiestaRuoloService richiestaRuoloService;
+    @Autowired
+    private OrdineService ordineService;
 
     // Gestione Utente
     public void registerUser(String username, String password){
@@ -161,5 +165,11 @@ public class UserFacade {
 
     public List<RichiestaEliminazione> getRichiesteEliminazione(Users user) {
         return richiestaEliminazioneService.getMieRichiesteEliminazione(user);
+    }
+
+    // Gestione ordini
+    public List<Ordine> getOrdini(){
+        Users currentUser = getCurrentUser();
+        return ordineService.getOrdini(currentUser);
     }
 }

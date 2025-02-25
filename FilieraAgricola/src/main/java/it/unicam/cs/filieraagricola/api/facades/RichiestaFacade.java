@@ -76,7 +76,7 @@ public class RichiestaFacade {
 
     public boolean currentUserAlreadyHasRuolo(UserRole ruolo){
         Users currentUser = userService.getCurrentUser();
-        return richiestaRuoloService.userAlreadyHasRuolo(currentUser, ruolo);
+        return currentUser.getRoles().contains(ruolo);
     }
 
     public void aggiungiRichiestaRuolo(UserRole ruoloRichiesto) {
