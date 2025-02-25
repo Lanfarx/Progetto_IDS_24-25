@@ -7,7 +7,7 @@ import jakarta.persistence.*;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "tipo_richiesta")
-public abstract class Richiesta {
+public abstract class Richiesta implements iRichiesta{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;

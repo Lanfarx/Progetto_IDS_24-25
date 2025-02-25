@@ -13,17 +13,16 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
-
 @Service
-    public class RichiestaEliminazioneService extends AbstractRichiestaService<RichiestaEliminazione> {
+public class RichiestaEliminazioneService extends AbstractRichiestaService<RichiestaEliminazione> {
 
         @Autowired
         private UserService userService;
 
         @Override
-        public void aggiungiRichiesta(Users user, Object motivazione) {
-            richiestaRepository.save(creaRichiesta(TipoRichiesta.ELIMINAZIONE, user, motivazione));
+        public void aggiungiRichiesta(Integer userId, Object motivazione) {
+            Users user = userService.getUserById(userId).get();
+            richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.ELIMINAZIONE, user, motivazione));
         }
 
         @Override

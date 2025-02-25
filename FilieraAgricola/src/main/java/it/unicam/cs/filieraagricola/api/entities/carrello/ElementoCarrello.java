@@ -23,10 +23,6 @@ public class ElementoCarrello {
     @JoinColumn(name = "carrello_id")
     private Carrello carrello;
 
-    @ManyToOne @JsonIgnore
-    @JoinColumn(name = "ordine_id")
-    private Ordine ordine;
-
     public ElementoCarrello(Carrello carrello, Elemento elemento, int quantita) {
         this.carrello = carrello;
         this.elemento = elemento;
@@ -82,13 +78,5 @@ public class ElementoCarrello {
 
     public void setCarrello(Carrello carrello) {
         this.carrello = carrello;
-    }
-
-    public Ordine getOrdine() {
-        return ordine;
-    }
-
-    public void setOrdine(Ordine ordine) {
-        this.ordine = ordine;
     }
 }

@@ -13,8 +13,6 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory.creaRichiesta;
-
 @Service
     public class RichiestaRuoloService extends AbstractRichiestaService<RichiestaRuolo> {
 
@@ -22,8 +20,9 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         private UserService userService;
 
         @Override
-        public void aggiungiRichiesta(Users user, Object ruoloRichiesto) {
-            richiestaRepository.save(creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
+        public void aggiungiRichiesta(Integer userId, Object ruoloRichiesto) {
+            Users user = userService.getUserById(userId).get();
+            richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
         }
 
         @Override
@@ -44,10 +43,6 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         @Override
         public List<RichiestaRuolo> getRichiesteInAttesa() {
             return richiestaRepository.findRichiestaRuoloByStato(StatoContenuto.ATTESA);
-        }
-
-        public boolean userAlreadyHasRuolo(Users user, UserRole ruolo) {
-            return user.getRoles().contains(ruolo);
         }
 
         public List<RichiestaRuolo> getMieRichiesteRuolo(Users currentUser){

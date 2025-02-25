@@ -1,5 +1,6 @@
 package it.unicam.cs.filieraagricola.api.services.gestore.richieste;
 
+import it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactory;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.Richiesta;
 import it.unicam.cs.filieraagricola.api.repository.RichiestaRepository;
@@ -13,7 +14,10 @@ import java.util.Optional;
 public abstract class AbstractRichiestaService<T extends Richiesta> {
 
     @Autowired
-    protected RichiestaRepository richiestaRepository; // Proteggo per l'accesso dalle sottoclassi
+    protected RichiestaRepository richiestaRepository;
+
+    @Autowired
+    protected RichiestaFactory richiestaFactory; // Usata per creare richieste
 
     public List<Richiesta> getRichiesteByUser(Users user) {
         return richiestaRepository.findByUser(user);
