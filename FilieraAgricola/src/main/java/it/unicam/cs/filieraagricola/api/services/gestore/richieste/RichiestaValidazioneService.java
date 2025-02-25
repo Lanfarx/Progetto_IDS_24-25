@@ -26,8 +26,7 @@ public class RichiestaValidazioneService extends AbstractRichiestaService<Richie
     private UserService userService;
 
     @Override
-    public void aggiungiRichiesta(Integer userId, Object valore) {
-        Users user = userService.getUserById(userId).get();
+    public void aggiungiRichiesta(Users user, Object valore) {
         richiestaRepository.save(creaRichiesta(TipoRichiesta.VALIDAZIONE, user, valore));
     }
 
@@ -54,6 +53,7 @@ public class RichiestaValidazioneService extends AbstractRichiestaService<Richie
     public List<RichiestaValidazione> getMieRichiesteValidazione(Users currentUser){
         return richiestaRepository.findRichiesteValidazioneByUser(currentUser);
     }
+
 
     @Override
     public void processaRichiesta(Integer richiestaId, boolean approvato) {

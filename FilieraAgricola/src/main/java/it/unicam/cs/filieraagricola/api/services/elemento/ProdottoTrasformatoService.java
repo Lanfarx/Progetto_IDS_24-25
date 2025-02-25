@@ -17,8 +17,6 @@ import java.util.Set;
 
 @Service
 public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasformato> {
-    @Autowired
-    private UserService userService;
 
     public ProdottoTrasformato getProdottoTrasformato(int id) {
         if (this.prodottoRepository.existsProdottoTrasformatoById(id)) {
@@ -28,8 +26,8 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         }
     }
 
-    public List<ProdottoTrasformato> getProdottiTrasformati() {
-        return prodottoRepository.findProdottiTrasformatiByOperatore(userService.getCurrentUser());
+    public List<ProdottoTrasformato> getProdottiTrasformati(Users currentUser) {
+        return prodottoRepository.findProdottiTrasformatiByOperatore(currentUser);
     }
 
     public List<ProdottoTrasformato> getAllProdottiTrasformatiValidi() {
@@ -37,14 +35,12 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
     }
 
     public void deleteProdottoTrasformato(int id) {
-        Set<Pacchetto> pacchettoSet = pacchettoService.getPacchettiConProdotto(id);
         this.prodottoRepository.deleteById(id);
-        pacchettoService.checkAndDelete(pacchettoSet);
     }
 
-    public boolean aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+    public boolean aggiornaProdottoTrasformato(ProdottoTrasformato prodottoTrasformato, Users currentUser) {
         if (this.prodottoRepository.existsProdottoTrasformatoById(prodottoTrasformato.getId())) {
-            prodottoTrasformato.setOperatore(userService.getCurrentUser());
+            prodottoTrasformato.setOperatore(currentUser);
             prodottoTrasformato.setCategoria(getProdottoTrasformato(prodottoTrasformato.getId()).getCategoria());
             this.prodottoRepository.save(prodottoTrasformato);
             return true;
@@ -55,7 +51,7 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
 
     public boolean aggiungiProdottoTrasformato(String nome, String processo,
                                                String certificazioni, int prodottoBaseID,
-                                               String descrizione, double prezzo, Categoria categoria) {
+                                               String descrizione, double prezzo, Categoria categoria, Users currentUser) {
         Optional<ProdottoBase> prodottoBaseOpt = prodottoRepository.findProdottoBaseById(prodottoBaseID);
         ProdottoBase prodottoBase;
         if(prodottoBaseOpt.isPresent()) {
@@ -66,24 +62,22 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         if(prodottoRepository.existsByCaratteristicheTrasformato(nome, processo, certificazioni, prodottoBase)){
             return false;
         }
-        creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo, categoria);
+        creaTrasformato(nome, processo, certificazioni, prodottoBaseID, descrizione, prezzo, categoria, currentUser);
         return true;
     }
 
-    public boolean aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
+    public boolean aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato, Users currentUser) {
         if(prodottoRepository.existsByCaratteristicheBase(prodottoTrasformato.getNome(), prodottoTrasformato.getProcessoTrasformazione(),prodottoTrasformato.getCertificazioni())) {
             return false;
         }
-        Categoria categoria = categoriaService.getCategoriaByNome(prodottoTrasformato.getCategoria().getNome()).get();
-        prodottoTrasformato.setCategoria(categoria);
-        prodottoTrasformato.setOperatore(userService.getCurrentUser());
+        prodottoTrasformato.setOperatore(currentUser);
         prodottoRepository.save(prodottoTrasformato);
         return true;
     }
 
 
-    public void creaTrasformato(String nome, String processo, String certificazioni, int prodottoBaseID,
-                                String descrizione, double prezzo, Categoria categoria) {
+    private void creaTrasformato(String nome, String processo, String certificazioni, int prodottoBaseID,
+                                String descrizione, double prezzo, Categoria categoria, Users currentUser) {
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
         ProdottoBase prodottoBase = prodottoRepository.findProdottoBaseById(prodottoBaseID).get(); //Il controllo per esistenza viene già effettuato in esisteProdottoTrasformato
         prodottoTrasformato.setNome(nome);
@@ -92,33 +86,9 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
         prodottoTrasformato.setProdottoBase(prodottoBase);
         prodottoTrasformato.setDescrizione(descrizione);
         prodottoTrasformato.setPrezzo(prezzo);
-        prodottoTrasformato.setOperatore(userService.getCurrentUser());
+        prodottoTrasformato.setOperatore(currentUser);
         prodottoTrasformato.setCategoria(categoria);
         prodottoRepository.save(prodottoTrasformato);
-    }
-
-    public boolean aggiornaQuantitaProdotto(int id, int quantita) {
-        ProdottoTrasformato prodotto = prodottoRepository.findProdottoTrasformatoById(id).orElse(null);
-        if (prodotto != null) {
-            prodotto.setQuantita(prodotto.getQuantita() + quantita);
-            prodottoRepository.save(prodotto);
-            return true;
-        }
-        return false;
-    }
-
-    public boolean riduciQuantitaProdotto(int id, int quantita) {
-        ProdottoTrasformato prodotto = prodottoRepository.findProdottoTrasformatoById(id).orElse(null);
-        if (prodotto != null) {
-            if (prodotto.getQuantita() >= quantita) {
-                prodotto.setQuantita(prodotto.getQuantita() - quantita);
-                prodottoRepository.save(prodotto);
-            } else {
-                deleteProdottoTrasformato(id);
-            }
-            return true;
-        }
-        return false;
     }
 
     public boolean existsProdottoTrasformato(int id) {

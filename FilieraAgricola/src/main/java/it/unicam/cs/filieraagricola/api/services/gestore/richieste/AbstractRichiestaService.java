@@ -19,7 +19,7 @@ public abstract class AbstractRichiestaService<T extends Richiesta> {
         return richiestaRepository.findByUser(user);
     }
 
-    public abstract void aggiungiRichiesta(Integer userId, Object valore);
+    public abstract void aggiungiRichiesta(Users user, Object valore);
     public abstract boolean existsRichiesta(Integer id);
     public abstract boolean existsSameRichiesta(Users user, Object valore);
     public abstract Optional<T> getRichiesta(Integer id);

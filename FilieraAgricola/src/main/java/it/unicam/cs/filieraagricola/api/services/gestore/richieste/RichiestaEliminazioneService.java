@@ -22,8 +22,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         private UserService userService;
 
         @Override
-        public void aggiungiRichiesta(Integer userId, Object motivazione) {
-            Users user = userService.getUserById(userId).get();
+        public void aggiungiRichiesta(Users user, Object motivazione) {
             richiestaRepository.save(creaRichiesta(TipoRichiesta.ELIMINAZIONE, user, motivazione));
         }
 

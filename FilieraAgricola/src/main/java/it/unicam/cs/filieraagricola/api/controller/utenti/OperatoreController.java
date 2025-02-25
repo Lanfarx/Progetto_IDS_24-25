@@ -2,6 +2,7 @@ package it.unicam.cs.filieraagricola.api.controller.utenti;
 
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.richieste.RichiestaValidazione;
+import it.unicam.cs.filieraagricola.api.facades.RichiestaFacade;
 import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.gestore.richieste.RichiestaValidazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,14 +19,11 @@ import java.util.List;
 public class OperatoreController {
 
     @Autowired
-    UserService userService;
-    @Autowired
-    RichiestaValidazioneService richiestaValidazioneService;
+    private RichiestaFacade richiestaFacade;
 
     @GetMapping("/richiesta-validazione")
     public ResponseEntity<List<RichiestaValidazione>> getMieRichiesteValidazione() {
-        Users currentUser = userService.getCurrentUser();
-        List<RichiestaValidazione> richieste = richiestaValidazioneService.getMieRichiesteValidazione(currentUser);
+        List<RichiestaValidazione> richieste = richiestaFacade.getMieRichiesteValidazione();
         return new ResponseEntity<>(richieste, HttpStatus.OK);
     }
 

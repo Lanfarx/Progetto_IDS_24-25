@@ -22,8 +22,7 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         private UserService userService;
 
         @Override
-        public void aggiungiRichiesta(Integer userId, Object ruoloRichiesto) {
-            Users user = userService.getUserById(userId).get();
+        public void aggiungiRichiesta(Users user, Object ruoloRichiesto) {
             richiestaRepository.save(creaRichiesta(TipoRichiesta.RUOLO, user, ruoloRichiesto));
         }
 
@@ -45,6 +44,10 @@ import static it.unicam.cs.filieraagricola.api.commons.richiesta.RichiestaFactor
         @Override
         public List<RichiestaRuolo> getRichiesteInAttesa() {
             return richiestaRepository.findRichiestaRuoloByStato(StatoContenuto.ATTESA);
+        }
+
+        public boolean userAlreadyHasRuolo(Users user, UserRole ruolo) {
+            return user.getRoles().contains(ruolo);
         }
 
         public List<RichiestaRuolo> getMieRichiesteRuolo(Users currentUser){

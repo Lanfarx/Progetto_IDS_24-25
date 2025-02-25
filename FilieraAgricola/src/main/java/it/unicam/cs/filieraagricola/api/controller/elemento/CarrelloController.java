@@ -1,14 +1,11 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
+import it.unicam.cs.filieraagricola.api.facades.CarrelloFacade;
 import it.unicam.cs.filieraagricola.api.services.carrello.PaymentManager;
 import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.carrello.Carrello;
 import it.unicam.cs.filieraagricola.api.entities.carrello.Ordine;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Elemento;
-import it.unicam.cs.filieraagricola.api.services.UserService;
-import it.unicam.cs.filieraagricola.api.services.carrello.CarrelloService;
-import it.unicam.cs.filieraagricola.api.services.carrello.OrdineService;
-import it.unicam.cs.filieraagricola.api.services.elemento.ElementoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,24 +22,17 @@ import java.util.List;
 public class CarrelloController {
 
     @Autowired
-    private CarrelloService carrelloService;
-    @Autowired
-    private ElementoService elementoService;
-    @Autowired
-    private OrdineService ordineService;
-    @Autowired
-    private UserService userService;
+    private CarrelloFacade carrelloFacade;
     @Autowired
     private PaymentManager paymentManager;
 
     @PostMapping("/aggiungi")
     public ResponseEntity<String> aggiungiElementoAlCarrello(@RequestParam int id, @RequestParam int quantita) {
-        if(elementoService.existsElementoAndValido(id)){
-            Elemento elemento = (Elemento) elementoService.getElemento(id).get();
+        if(carrelloFacade.existsElementoAndValido(id)){
+            Elemento elemento = (Elemento) carrelloFacade.getElemento(id).get();
             if(quantita >= 1) {
-                if (elementoService.checkDisponibilita(elemento, quantita)) {
-                    Users currentUser = userService.getCurrentUser();
-                    carrelloService.aggiungiAlCarrello(currentUser, elemento, quantita);
+                if (carrelloFacade.checkDisponibilita(elemento, quantita)) {
+                    carrelloFacade.aggiungiAlCarrello(elemento, quantita);
                     return new ResponseEntity<>("Elemento aggiunto al carrello", HttpStatus.OK);
                 } else return new ResponseEntity<>("Elemento non disponibile in quantità sufficiente (Max: " + elemento.getQuantita() + ")" , HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("Inserire almeno quantita da aggiungere pari a 1", HttpStatus.OK);
@@ -51,13 +41,11 @@ public class CarrelloController {
 
     @PostMapping("/rimuovi")
     public ResponseEntity<String> rimuoviElementoDalCarrello(@RequestParam int id, @RequestParam int quantita) {
-        if(elementoService.existsElementoAndValido(id)){
-            Elemento elemento = (Elemento) elementoService.getElemento(id).get();
-            Users currentUser = userService.getCurrentUser();
-            Carrello carrello = carrelloService.getCarrello(currentUser);
+        if(carrelloFacade.existsElementoAndValido(id)){
+            Elemento elemento = (Elemento) carrelloFacade.getElemento(id).get();
             if(quantita >= 1) {
-                if (carrelloService.contieneElemento(carrello, elemento)) {
-                    carrelloService.rimuoviDalCarrello(currentUser, elemento, quantita);
+                if (carrelloFacade.contieneElemento(elemento)) {
+                    carrelloFacade.rimuoviDalCarrello(elemento, quantita);
                     return new ResponseEntity<>("Elemento rimosso dal carrello", HttpStatus.OK);
                 } else return new ResponseEntity<>("Elemento non presente nel carrello", HttpStatus.BAD_REQUEST);
             } else return new ResponseEntity<>("Inserire almeno quantita da rimuovere pari a 1", HttpStatus.BAD_REQUEST);
@@ -66,25 +54,22 @@ public class CarrelloController {
 
     @GetMapping
     public ResponseEntity<Carrello> getCarrello() {
-        Users currentUser = userService.getCurrentUser();
-        Carrello carrello = carrelloService.getCarrello(currentUser);
+        Carrello carrello = carrelloFacade.getCarrello();
         return new ResponseEntity<>(carrello, HttpStatus.OK);
     }
 
     @GetMapping("/ordini")
     public ResponseEntity<List<Ordine>> getOrdini() {
-        Users currentUser = userService.getCurrentUser();
-        List<Ordine> ordini = ordineService.getOrdini(currentUser);
+        List<Ordine> ordini = carrelloFacade.getOrdini();
         return new ResponseEntity<>(ordini, HttpStatus.OK);
     }
 
     @PostMapping("/checkout")
     public ResponseEntity<Object> checkout(@RequestParam String metodo, @RequestParam String datiPagamento) {
-        Users currentUser = userService.getCurrentUser();
-        Carrello carrello = carrelloService.getCarrello(currentUser);
+        Carrello carrello = carrelloFacade.getCarrello();
         if(!carrello.getElementi().isEmpty()){
             if(paymentManager.effettuaPagamento(metodo, datiPagamento)){
-                Ordine ordine = ordineService.creaOrdine(carrello);
+                Ordine ordine = carrelloFacade.creaOrdine();
                 return new ResponseEntity<>(ordine,HttpStatus.OK);
             } else return new ResponseEntity<>("Pagamento non valido, l'ordine non può essere completato", HttpStatus.BAD_REQUEST);
         } else return new ResponseEntity<>("Impossibile fare il checkout con un carrello vuoto",HttpStatus.BAD_REQUEST);
