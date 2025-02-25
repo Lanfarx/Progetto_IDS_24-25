@@ -20,7 +20,8 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, Integer> {
 
     List<ProdottoBase> findProdottiBaseByOperatore(Users operatore);
     List<ProdottoTrasformato> findProdottiTrasformatiByOperatore(Users operatore);
-
+    Prodotto findProdottoById(Integer id);
+    void deleteProdottoById(Integer id);
 
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN TRUE ELSE FALSE END " +
             "FROM ProdottoBase p WHERE p.id = :id")

@@ -58,7 +58,6 @@ public class UserService implements UserDetailsService {
         userRepository.delete(user);
     }
 
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Users user = userRepository.findByUsername(username)
@@ -85,13 +84,11 @@ public class UserService implements UserDetailsService {
         userRepository.save(newUser);
     }
 
-
     public Users getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
         return userRepository.findByUsername(username).get();
     }
-
 
     public boolean isOperatore(Users user) {
         return user.getRoles().contains(UserRole.PRODUTTORE) ||

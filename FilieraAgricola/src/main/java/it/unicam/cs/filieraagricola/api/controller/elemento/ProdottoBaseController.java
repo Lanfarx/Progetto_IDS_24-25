@@ -1,9 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
-import it.unicam.cs.filieraagricola.api.services.UserService;
-import it.unicam.cs.filieraagricola.api.services.elemento.ProdottoBaseService;
-import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
+import it.unicam.cs.filieraagricola.api.facades.ElementoFacade;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,25 +14,21 @@ import static it.unicam.cs.filieraagricola.api.commons.utils.ResponseEntityUtil.
 public class ProdottoBaseController {
 
     @Autowired
-    private ProdottoBaseService prodottoBaseService;
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private CategoriaService categoriaService;
+    private ElementoFacade elementoFacade;
 
     @RequestMapping({"/prodottibase"})
     public ResponseEntity<Object> getProdottiBase() {
-        if(!prodottoBaseService.getProdottiBase().isEmpty()){
-            return new ResponseEntity<>(prodottoBaseService.getProdottiBase(), HttpStatus.FOUND);
+        if(!elementoFacade.getAllProdottiBase().isEmpty()){
+            return new ResponseEntity<>(elementoFacade.getAllProdottiBase(), HttpStatus.FOUND);
         }
         return new ResponseEntity<>("Non esistono prodotti base", HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping({"/prodottibase/{id}"})
-    public ResponseEntity<Object> getProdottoBase(@PathVariable int id) {
-        if(prodottoBaseService.getProdottoBase(id) != null){
-            if(prodottoBaseService.getProdottoBase(id).getOperatore() == userService.getCurrentUser()) {
-                return new ResponseEntity<>(prodottoBaseService.getProdottoBase(id), HttpStatus.FOUND);
+    public ResponseEntity<Object> getProdottoBaseById(@PathVariable int id) {
+        if(elementoFacade.getProdottoBaseById(id) != null){
+            if(elementoFacade.isUserCurrentUser(elementoFacade.getProdottoBaseById(id).getOperatore())) {
+                return new ResponseEntity<>(elementoFacade.getProdottoBaseById(id), HttpStatus.FOUND);
             } else return unauthorizedResponse();
         }
         return new ResponseEntity<>("Prodotto base non esistente", HttpStatus.NOT_FOUND);
@@ -42,10 +36,11 @@ public class ProdottoBaseController {
 
     @PostMapping({"/prodottibase/aggiungi"})
     public ResponseEntity<Object> aggiungiProdottoBase(@RequestBody ProdottoBase prodotto) {
-        if(!categoriaService.existsSameCategoria(prodotto.getCategoria().getNome())){
-            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + categoriaService.getAllCategorie(), HttpStatus.NOT_FOUND);
+        if(!elementoFacade.existsSameCategoria(prodotto.getCategoria().getNome())){
+            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + elementoFacade.getAllCategorie(), HttpStatus.NOT_FOUND);
         }
-        if(prodottoBaseService.aggiungiProdottoBase(prodotto)){
+        //TODO aggiungi condizione di esistenza
+        if(elementoFacade.aggiungiProdottoBase(prodotto)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);
@@ -59,11 +54,11 @@ public class ProdottoBaseController {
                                                        @RequestParam("prezzo") double prezzo,
                                                        @RequestParam("categoria") String categoria) {
 
-        if(!categoriaService.existsSameCategoria(categoria)){
-            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + categoriaService.getAllCategorie(), HttpStatus.NOT_FOUND);
+        if(!elementoFacade.existsSameCategoria(categoria)){
+            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + elementoFacade.getAllCategorie(), HttpStatus.NOT_FOUND);
         }
-        Categoria cat = categoriaService.getCategoriaByNome(categoria).get();
-        if(prodottoBaseService.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo, cat)){
+        Categoria cat = (Categoria) elementoFacade.getCategoriaByNome(categoria).get();
+        if(elementoFacade.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo, cat)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);
@@ -71,23 +66,23 @@ public class ProdottoBaseController {
 
     @DeleteMapping({"/prodottibase/elimina"})
     public ResponseEntity<Object> eliminaProdotto(@RequestParam int id) {
-        if(prodottoBaseService.getProdottoBase(id) != null) {
-            if (prodottoBaseService.getProdottoBase(id).getOperatore() != userService.getCurrentUser()) {
+        if(elementoFacade.getProdottoBaseById(id) != null) {
+            if (!elementoFacade.isUserCurrentUser(elementoFacade.getProdottoBaseById(id).getOperatore())) {
                 return unauthorizedResponse();
             }
-            prodottoBaseService.deleteProdottoBase(id);
+            elementoFacade.deleteProdottoBase(id);
             return new ResponseEntity<>("Prodotto eliminato", HttpStatus.OK);
         } else return new ResponseEntity<>("Prodotto non esistente", HttpStatus.NOT_FOUND);
     }
 
     @PutMapping("/prodottibase/aggiorna")
     public ResponseEntity<Object> aggiornaProdottoBase(@RequestBody ProdottoBase prodottoBase) {
-        if(prodottoBaseService.existsProdottoBase(prodottoBase.getId())){
-            ProdottoBase prodotto = prodottoBaseService.getProdottoBase(prodottoBase.getId());
-            if (prodotto.getOperatore() != userService.getCurrentUser()) {
+        if(elementoFacade.existsProdottoBase(prodottoBase.getId())){
+            ProdottoBase prodotto = elementoFacade.getProdottoBaseById(prodottoBase.getId());
+            if (!elementoFacade.isUserCurrentUser(prodotto.getOperatore())) {
                 return unauthorizedResponse();
             }
-            if (prodottoBaseService.aggiornaProdottoBase(prodottoBase)) {
+            if (elementoFacade.aggiornaProdottoBase(prodottoBase)) {
                 return new ResponseEntity<>("Prodotto aggiornato", HttpStatus.FOUND);
             }
             return new ResponseEntity<>("Prodotto non aggiornato", HttpStatus.NOT_FOUND);
@@ -97,12 +92,12 @@ public class ProdottoBaseController {
 
     @PutMapping("/prodottibase/aggiorna-quantita")
     public ResponseEntity<Object> aggiornaQuantitaProdotto(@RequestParam int id, @RequestParam int quantita) {
-        ProdottoBase prodotto = prodottoBaseService.getProdottoBase(id);
+        ProdottoBase prodotto = elementoFacade.getProdottoBaseById(id);
         if (prodotto != null) {
-            if (prodotto.getOperatore() != userService.getCurrentUser()) {
+            if (!elementoFacade.isUserCurrentUser(prodotto.getOperatore())) {
                 return unauthorizedResponse();
             }
-            if (prodottoBaseService.aggiornaQuantitaProdotto(id, quantita)) {
+            if (elementoFacade.aggiornaQuantitaProdotto(id, quantita)) {
                 return new ResponseEntity<>("Quantità aggiornata", HttpStatus.OK);
             }
             return new ResponseEntity<>("Impossibile aggiornare la quantità", HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,12 +107,12 @@ public class ProdottoBaseController {
 
     @PutMapping("/prodottibase/rimuovi-quantita")
     public ResponseEntity<Object> rimuoviQuantitaProdotto(@RequestParam int id, @RequestParam int quantita) {
-        ProdottoBase prodotto = prodottoBaseService.getProdottoBase(id);
+        ProdottoBase prodotto = elementoFacade.getProdottoBaseById(id);
         if (prodotto != null) {
-            if (prodotto.getOperatore() != userService.getCurrentUser()) {
+            if (!elementoFacade.isUserCurrentUser(prodotto.getOperatore())) {
                 return unauthorizedResponse();
             }
-            if (prodottoBaseService.riduciQuantitaProdotto(id, quantita)) {
+            if (elementoFacade.riduciQuantitaProdotto(id, quantita)) {
                 return new ResponseEntity<>("Quantità ridotta", HttpStatus.OK);
             } else {
                 return new ResponseEntity<>("Quantità insufficiente per rimuovere", HttpStatus.BAD_REQUEST);

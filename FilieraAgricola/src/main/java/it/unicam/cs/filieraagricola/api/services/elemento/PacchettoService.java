@@ -1,6 +1,7 @@
 package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
+import it.unicam.cs.filieraagricola.api.entities.Users;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
@@ -29,8 +30,8 @@ public class PacchettoService extends ElementoService<Pacchetto> {
     @Lazy
     UserService userService;
 
-    public List<Pacchetto> getPacchetti() {
-        return this.pacchettoRepository.findByOperatore(userService.getCurrentUser());
+    public List<Pacchetto> getPacchetti(Users currentUser) {
+        return this.pacchettoRepository.findByOperatore(currentUser);
     }
 
     public List<Pacchetto> getAllPacchettiValidi() {

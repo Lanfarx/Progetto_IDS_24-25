@@ -20,8 +20,7 @@ public class RichiestaEliminazioneService extends AbstractRichiestaService<Richi
         private UserService userService;
 
         @Override
-        public void aggiungiRichiesta(Integer userId, Object motivazione) {
-            Users user = userService.getUserById(userId).get();
+        public void aggiungiRichiesta(Users user, Object motivazione) {
             richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.ELIMINAZIONE, user, motivazione));
         }
 

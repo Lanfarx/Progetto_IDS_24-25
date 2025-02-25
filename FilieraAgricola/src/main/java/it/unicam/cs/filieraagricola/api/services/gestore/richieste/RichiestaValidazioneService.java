@@ -24,8 +24,7 @@ public class RichiestaValidazioneService extends AbstractRichiestaService<Richie
     private UserService userService;
 
     @Override
-    public void aggiungiRichiesta(Integer userId, Object valore) {
-        Users user = userService.getUserById(userId).get();
+    public void aggiungiRichiesta(Users user, Object valore) {
         richiestaRepository.save(richiestaFactory.creaRichiesta(TipoRichiesta.VALIDAZIONE, user, valore));
     }
 
