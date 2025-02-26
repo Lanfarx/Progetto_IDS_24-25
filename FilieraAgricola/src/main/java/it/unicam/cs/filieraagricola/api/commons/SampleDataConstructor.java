@@ -6,7 +6,7 @@ import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.repository.*;
-import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
+import it.unicam.cs.filieraagricola.api.services.elemento.CategoriaService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;

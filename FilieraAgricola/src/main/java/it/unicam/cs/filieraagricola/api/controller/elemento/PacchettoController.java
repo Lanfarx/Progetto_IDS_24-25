@@ -1,7 +1,7 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
-import it.unicam.cs.filieraagricola.api.commons.utils.PacchettoAggiornatoDTO;
-import it.unicam.cs.filieraagricola.api.commons.utils.PacchettoCreatoDTO;
+import it.unicam.cs.filieraagricola.api.commons.dto.PacchettoAggiornatoDTO;
+import it.unicam.cs.filieraagricola.api.commons.dto.PacchettoCreatoDTO;
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
