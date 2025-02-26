@@ -440,7 +440,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/operatore/distributore/pacchetti/13",
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/10",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -450,7 +450,7 @@
 										"operatore",
 										"distributore",
 										"pacchetti",
-										"13"
+										"10"
 									]
 								}
 							},
@@ -594,7 +594,7 @@
 							"response": []
 						},
 						{
-							"name": "Elimina Pacchetto ID=12",
+							"name": "Elimina Pacchetto ID=9",
 							"request": {
 								"method": "DELETE",
 								"header": [],
@@ -617,7 +617,7 @@
 							"response": []
 						},
 						{
-							"name": "Aggiorna Pacchetto ID=12",
+							"name": "Aggiorna Pacchetto ID=9",
 							"request": {
 								"method": "PUT",
 								"header": [],
@@ -1115,7 +1115,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": 4,\r\n  \"nome\": \"Nuovo Nome\",\r\n  \"processoTrasformazione\": \"Nuovo Processo\",\r\n  \"certificazioni\": \"Nuove Certificazioni\",\r\n  \"prodottoBase\": {\"id\": 1},\r\n  \"descrizione\": \"Nuova descrizione\",\r\n  \"prezzo\": 15.0\r\n}\r\n",
+									"raw": "{\r\n  \"id\": 4,\r\n  \"nome\": \"Nuovo Nome\",\r\n  \"processoTrasformazione\": \"Nuovo Processo\",\r\n  \"certificazioni\": \"Nuove Certificazioni\",\r\n  \"prodottoBase\": {\"id\": 2},\r\n  \"descrizione\": \"Nuova descrizione\",\r\n  \"prezzo\": 15.0\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1460,13 +1460,13 @@
 											"type": "basic",
 											"basic": [
 												{
-													"key": "username",
-													"value": "produttore",
+													"key": "password",
+													"value": "acquirente",
 													"type": "string"
 												},
 												{
-													"key": "password",
-													"value": "produttore",
+													"key": "username",
+													"value": "acquirente",
 													"type": "string"
 												}
 											]
@@ -2541,7 +2541,7 @@
 										"method": "GET",
 										"header": [],
 										"url": {
-											"raw": "http://localhost:8080/autenticato/carrello/ordini",
+											"raw": "http://localhost:8080/autenticato/ordini",
 											"protocol": "http",
 											"host": [
 												"localhost"
@@ -2549,7 +2549,6 @@
 											"port": "8080",
 											"path": [
 												"autenticato",
-												"carrello",
 												"ordini"
 											]
 										}
