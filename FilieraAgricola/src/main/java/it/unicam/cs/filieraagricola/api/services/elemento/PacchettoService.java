@@ -7,7 +7,6 @@ import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
 import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
 import it.unicam.cs.filieraagricola.api.services.UserService;
-import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;

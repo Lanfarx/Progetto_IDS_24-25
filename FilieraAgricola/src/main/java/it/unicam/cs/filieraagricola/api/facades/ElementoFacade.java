@@ -5,7 +5,6 @@ import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.services.UserService;
 import it.unicam.cs.filieraagricola.api.services.carrello.CarrelloService;
 import it.unicam.cs.filieraagricola.api.services.elemento.*;
-import it.unicam.cs.filieraagricola.api.services.gestore.CategoriaService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Component;
@@ -190,7 +189,6 @@ public class ElementoFacade<T extends Prodotto> {
         pacchettoService.checkAndDelete(pacchettoSet);
     }
 
-    //MIAO
 
     // Operazioni specifiche per Prodotto
 
@@ -238,7 +236,4 @@ public class ElementoFacade<T extends Prodotto> {
     public boolean isUserCurrentUser(Users user) {
         return user == userService.getCurrentUser();
     }
-
-    //TODO AGGIUNGI QUANTITA PER ELEMENTO CON ISDISPONOBILE ???? da capire cosa ho scritto wtf
-
 }
