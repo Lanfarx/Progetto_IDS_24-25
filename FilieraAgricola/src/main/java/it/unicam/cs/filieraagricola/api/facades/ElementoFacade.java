@@ -69,13 +69,15 @@ public class ElementoFacade<T extends Prodotto> {
     }
 
     public boolean aggiungiPacchetto(Pacchetto pacchetto) {
-        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
-        pacchetto.setOperatore(userService.getCurrentUser());
-        return pacchettoService.aggiungiPacchetto(pacchetto);
+        Categoria categoria = categoriaService.getCategoriaByNome("Pacchetto").get();
+        Users operatore = userService.getCurrentUser();
+        return pacchettoService.aggiungiPacchetto(pacchetto, operatore, categoria);
     }
 
     public boolean aggiungiPacchettoConParametri(String nome, String descrizione, double prezzo, Set<Integer> idProdottiSet){
-        return pacchettoService.aggiungiPacchettoConParametri(nome, descrizione, prezzo, idProdottiSet);
+        Categoria categoria = categoriaService.getCategoriaByNome("Pacchetto").get();
+        Users operatore = userService.getCurrentUser();
+        return pacchettoService.aggiungiPacchettoConParametri(nome, descrizione, prezzo, idProdottiSet, operatore, categoria);
     }
 
     public boolean aggiungiProdotto(int idPacchetto, int idProdotto){

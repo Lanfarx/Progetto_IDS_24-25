@@ -2,6 +2,7 @@ package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
+import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.Prodotto;
 import it.unicam.cs.filieraagricola.api.repository.PacchettoRepository;
@@ -24,11 +25,7 @@ public class PacchettoService extends ElementoService<Pacchetto> {
     PacchettoRepository pacchettoRepository;
     @Autowired
     ProdottoRepository prodottoRepository;
-    @Autowired
-    CategoriaService categoriaService;
-    @Autowired
-    @Lazy
-    UserService userService;
+
 
     public List<Pacchetto> getPacchetti(Users currentUser) {
         return this.pacchettoRepository.findByOperatore(currentUser);
@@ -46,12 +43,12 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         }
     }
 
-    public boolean aggiungiPacchetto(Pacchetto pacchetto) {
+    public boolean aggiungiPacchetto(Pacchetto pacchetto, Users operatore, Categoria categoria) {
         boolean BAD_REQUEST = getObjectResponseEntity(pacchetto.getNome(),
                 pacchetto.getDescrizione(), pacchetto.getProdottiSet());
         if(!BAD_REQUEST) return false;
-        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
-        pacchetto.setOperatore(userService.getCurrentUser());
+        pacchetto.setCategoria(categoria);
+        pacchetto.setOperatore(operatore);
         pacchettoRepository.save(pacchetto);
         return true;
     }
@@ -61,17 +58,20 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         Pacchetto pacchetto = new Pacchetto();
         if (pacchettoOptional.isPresent()) {
             pacchetto = pacchettoOptional.get();
+        } else {
+            return false;
         }
         boolean response = aggiungiProdottoAlPacchetto(pacchetto, idProdotto); //aggiunge il prodotto al pacchetto
         if(!response) { //In caso di errore, lo mando subito
             return false;
         }
-        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
         pacchettoRepository.save(pacchetto);
         return true;
     }
 
-    public boolean aggiungiPacchettoConParametri(String nome, String descrizione, double prezzo, Set<Integer> idProdottiSet){
+    public boolean aggiungiPacchettoConParametri(String nome, String descrizione,
+                                                 double prezzo, Set<Integer> idProdottiSet, Users operatore,
+                                                 Categoria categoria) {
         Set<Prodotto> prodottoSet = findSetProdotti(idProdottiSet);
         if(prodottoSet == null || prodottoSet.size() < 2) {
             return false;
@@ -80,8 +80,8 @@ public class PacchettoService extends ElementoService<Pacchetto> {
         if (!BAD_REQUEST) return false;
 
         Pacchetto pacchetto = new Pacchetto();
-        pacchetto.setOperatore(userService.getCurrentUser());
-        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchetto.setOperatore(operatore);
+        pacchetto.setCategoria(categoria);
         pacchetto.setNome(nome);
         pacchetto.setDescrizione(descrizione);
         pacchetto.setPrezzo(prezzo);
