@@ -27,10 +27,11 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
         return true;
     }
 
-    public boolean aggiungiProdottoBase(ProdottoBase prodottoBase, Users currentUser) {
+    public boolean aggiungiProdottoBase(ProdottoBase prodottoBase, Users currentUser, Categoria categoria) {
         if(prodottoRepository.existsByCaratteristicheBase(prodottoBase.getNome(), prodottoBase.getMetodiDiColtivazione(), prodottoBase.getCertificazioni())) {
             return false;
         }
+        prodottoBase.setCategoria(categoria);
         prodottoBase.setOperatore(currentUser);
         prodottoRepository.save(prodottoBase);
         return true;

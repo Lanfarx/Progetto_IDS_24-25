@@ -69,6 +69,8 @@ public class ElementoFacade<T extends Prodotto> {
     }
 
     public boolean aggiungiPacchetto(Pacchetto pacchetto) {
+        pacchetto.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchetto.setOperatore(userService.getCurrentUser());
         return pacchettoService.aggiungiPacchetto(pacchetto);
     }
 
@@ -115,7 +117,7 @@ public class ElementoFacade<T extends Prodotto> {
 
         Categoria categoria = categoriaService.getCategoriaByNome(prodottoBase.getCategoria().getNome()).get();
 
-        return prodottoBaseService.aggiungiProdottoBase(prodottoBase, userService.getCurrentUser());
+        return prodottoBaseService.aggiungiProdottoBase(prodottoBase, userService.getCurrentUser(), categoria);
     }
 
     public List<ProdottoBase> getAllProdottiBaseValidi() {
