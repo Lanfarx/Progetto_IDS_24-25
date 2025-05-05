@@ -21,10 +21,7 @@ public abstract class Elemento {
     private String descrizione;
     private double prezzo;
 
-
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    private String categoria;
 
     @ManyToOne
     @JoinColumn(name = "operatore_id", nullable = false)
@@ -38,8 +35,8 @@ public abstract class Elemento {
         this.statorichiesta = StatoContenuto.ATTESA;
     }
 
-    public Categoria getCategoria() { return categoria; }
-    public void setCategoria(Categoria categoria){ this.categoria = categoria; }
+    public String getCategoria() { return categoria; }
+    public void setCategoria(String categoria){ this.categoria = categoria; }
     public String getDescrizione() {
         return descrizione;
     }

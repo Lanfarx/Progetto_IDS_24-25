@@ -2,18 +2,12 @@ package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
-import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
-import it.unicam.cs.filieraagricola.api.entities.elemento.Pacchetto;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
-import it.unicam.cs.filieraagricola.api.repository.ProdottoRepository;
-import it.unicam.cs.filieraagricola.api.services.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasformato> {
@@ -51,7 +45,7 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
 
     public boolean aggiungiProdottoTrasformato(String nome, String processo,
                                                String certificazioni, int prodottoBaseID,
-                                               String descrizione, double prezzo, Categoria categoria, Users currentUser) {
+                                               String descrizione, double prezzo, String categoria, Users currentUser) {
         Optional<ProdottoBase> prodottoBaseOpt = prodottoRepository.findProdottoBaseById(prodottoBaseID);
         ProdottoBase prodottoBase;
         if(prodottoBaseOpt.isPresent()) {
@@ -77,7 +71,7 @@ public class ProdottoTrasformatoService extends ProdottoService<ProdottoTrasform
 
 
     private void creaTrasformato(String nome, String processo, String certificazioni, int prodottoBaseID,
-                                String descrizione, double prezzo, Categoria categoria, Users currentUser) {
+                                String descrizione, double prezzo, String categoria, Users currentUser) {
         ProdottoTrasformato prodottoTrasformato = new ProdottoTrasformato();
         ProdottoBase prodottoBase = prodottoRepository.findProdottoBaseById(prodottoBaseID).get(); //Il controllo per esistenza viene già effettuato in esisteProdottoTrasformato
         prodottoTrasformato.setNome(nome);

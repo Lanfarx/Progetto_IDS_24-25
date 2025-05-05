@@ -6,7 +6,6 @@ import it.unicam.cs.filieraagricola.api.entities.attivita.Evento;
 import it.unicam.cs.filieraagricola.api.entities.attivita.Visita;
 import it.unicam.cs.filieraagricola.api.entities.elemento.*;
 import it.unicam.cs.filieraagricola.api.repository.*;
-import it.unicam.cs.filieraagricola.api.services.elemento.CategoriaService;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -24,13 +23,9 @@ public class SampleDataConstructor {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private CategoriaRepository categoriaRepository;
-    @Autowired
     private ProdottoRepository prodottoRepository;
     @Autowired
     private PacchettoRepository pacchettoRepository;
-    @Autowired
-    private CategoriaService categoriaService;
 
 
 
@@ -38,7 +33,6 @@ public class SampleDataConstructor {
     public void initSampleData(){
         initSampleUsers();
         initSampleAttivita();
-        initSampleCategorie();
         initSampleProdotti(); //Chiama anche il metodo per il pacchetto
     }
 
@@ -119,19 +113,6 @@ public class SampleDataConstructor {
         attivitaRepository.save(evento);
     }
 
-    private void initSampleCategorie() {
-        List<String> categorie = List.of("Vini", "Formaggi",
-                "Salumi", "Olio d'oliva", "Miele", "Pacchetto", "Frutta");
-
-        for (String nome : categorie) {
-            if (categoriaRepository.findByNome(nome).isEmpty()) {
-                Categoria categoria = new Categoria();
-                categoria.setNome(nome);
-                categoriaRepository.save(categoria);
-            }
-        }
-    }
-
     private void initSampleProdotti(){
         Users produttore = new Users();
         produttore.setUsername("produttore");
@@ -155,7 +136,7 @@ public class SampleDataConstructor {
         mela.setQuantita(100);
         mela.setOperatore(produttore);
         mela.setStatorichiesta(StatoContenuto.ACCETTATA);
-        mela.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        mela.setCategoria("Frutta");
         prodottoRepository.save(mela);
 
         ProdottoBase pomodoro = new ProdottoBase();
@@ -167,7 +148,7 @@ public class SampleDataConstructor {
         pomodoro.setQuantita(80);
         pomodoro.setOperatore(produttore);
         pomodoro.setStatorichiesta(StatoContenuto.ACCETTATA);
-        pomodoro.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        pomodoro.setCategoria("Frutta");
         prodottoRepository.save(pomodoro);
 
         ProdottoBase latte = new ProdottoBase();
@@ -179,7 +160,7 @@ public class SampleDataConstructor {
         latte.setQuantita(50);
         latte.setOperatore(produttore);
         latte.setStatorichiesta(StatoContenuto.ACCETTATA);
-        latte.setCategoria(categoriaService.getCategoriaByNome("Formaggi").get());
+        latte.setCategoria("Formaggio");
         prodottoRepository.save(latte);
 
         Set<Prodotto> pacchetto1 = new HashSet<>();
@@ -193,7 +174,7 @@ public class SampleDataConstructor {
         passataPomodoro.setDescrizione("Passata di pomodoro artigianale");
         passataPomodoro.setProdottoBase(pomodoro);
         passataPomodoro.setProcessoTrasformazione("Pomodori schiacciati e cotti lentamente");
-        passataPomodoro.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        passataPomodoro.setCategoria("Frutta");
         passataPomodoro.setPrezzo(70);
         passataPomodoro.setQuantita(20);
         passataPomodoro.setOperatore(trasformatore);
@@ -207,7 +188,7 @@ public class SampleDataConstructor {
         formaggioStagionato.setDescrizione("Formaggio stagionato 12 mesi");
         formaggioStagionato.setProdottoBase(latte);
         formaggioStagionato.setProcessoTrasformazione("Latte fermentato e lasciato stagionare");
-        formaggioStagionato.setCategoria(categoriaService.getCategoriaByNome("Formaggi").get());
+        formaggioStagionato.setCategoria("Formaggio");
         formaggioStagionato.setPrezzo(90);
         formaggioStagionato.setQuantita(15);
         formaggioStagionato.setOperatore(trasformatore);
@@ -223,7 +204,7 @@ public class SampleDataConstructor {
         pera.setPrezzo(45);
         pera.setQuantita(30);
         pera.setOperatore(produttore);
-        pera.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        pera.setCategoria("Frutta");
         pera.setStatorichiesta(StatoContenuto.ACCETTATA);
         prodottoRepository.save(pera);
 
@@ -235,7 +216,7 @@ public class SampleDataConstructor {
         arancia.setCertificazioni("Certificazione");
         arancia.setDescrizione("Prodotto di prova");
         arancia.setMetodiDiColtivazione("Coltivato in sicilia");
-        arancia.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        arancia.setCategoria("Frutta");
         arancia.setPrezzo(60);
         arancia.setQuantita(40);
         arancia.setOperatore(produttore);
@@ -249,7 +230,7 @@ public class SampleDataConstructor {
         marmellataArancia.setDescrizione("Prodotto di marmellata");
         marmellataArancia.setProdottoBase(arancia);
         marmellataArancia.setProcessoTrasformazione("Marmellizzazione");
-        marmellataArancia.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        marmellataArancia.setCategoria("Frutta");
         marmellataArancia.setPrezzo(75);
         marmellataArancia.setQuantita(5);
         marmellataArancia.setOperatore(trasformatore);
@@ -264,7 +245,7 @@ public class SampleDataConstructor {
         banana.setCertificazioni("Fair Trade");
         banana.setDescrizione("Banane dolci e nutrienti, ideali per uno spuntino sano");
         banana.setMetodiDiColtivazione("Coltivate come in Sud America con pratiche sostenibili");
-        banana.setCategoria(categoriaService.getCategoriaByNome("Frutta").get());
+        banana.setCategoria("Frutta");
         banana.setPrezzo(45);
         banana.setQuantita(50);
         banana.setOperatore(produttore);
@@ -286,7 +267,7 @@ public class SampleDataConstructor {
         pacchetto1.setProdottiSet(pacchetto1prodotti);
         pacchetto1.setOperatore(distributore);
         pacchetto1.setStatorichiesta(StatoContenuto.ACCETTATA);
-        pacchetto1.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchetto1.setCategoria("Pacchetto");
         pacchettoRepository.save(pacchetto1);
 
         Pacchetto pacchetto2 = new Pacchetto();
@@ -295,7 +276,7 @@ public class SampleDataConstructor {
         pacchetto2.setPrezzo(100);
         pacchetto2.setProdottiSet(pacchetto2prodotti);
         pacchetto2.setOperatore(distributore);
-        pacchetto2.setCategoria(categoriaService.getCategoriaByNome("Pacchetto").get());
+        pacchetto2.setCategoria("Pacchetto");
         pacchettoRepository.save(pacchetto2);
     }
 }

@@ -14,4 +14,5 @@ public interface ElementoRepository extends JpaRepository<Elemento, Integer> {
     List<Elemento> findElementiByStatorichiestaEquals(StatoContenuto statorichiesta);
 
     boolean existsByIdAndStatorichiesta(int id, StatoContenuto statorichiesta);
+
 }

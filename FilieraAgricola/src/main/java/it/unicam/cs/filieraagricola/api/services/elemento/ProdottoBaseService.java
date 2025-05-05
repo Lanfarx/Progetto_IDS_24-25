@@ -2,12 +2,8 @@ package it.unicam.cs.filieraagricola.api.services.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
 import it.unicam.cs.filieraagricola.api.entities.Users;
-import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
-import it.unicam.cs.filieraagricola.api.services.UserService;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,7 +14,7 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
 
     public boolean aggiungiProdottoBase(String nome, String metodiColtivazione,
                                         String certificazioni, String descrizione,
-                                        double prezzo, Categoria categoria, Users currentUser) {
+                                        double prezzo, String categoria, Users currentUser) {
 
         if(prodottoRepository.existsByCaratteristicheBase(nome, metodiColtivazione, certificazioni)){
             return false;
@@ -27,7 +23,7 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
         return true;
     }
 
-    public boolean aggiungiProdottoBase(ProdottoBase prodottoBase, Users currentUser, Categoria categoria) {
+    public boolean aggiungiProdottoBase(ProdottoBase prodottoBase, Users currentUser, String categoria) {
         if(prodottoRepository.existsByCaratteristicheBase(prodottoBase.getNome(), prodottoBase.getMetodiDiColtivazione(), prodottoBase.getCertificazioni())) {
             return false;
         }
@@ -74,7 +70,7 @@ public class ProdottoBaseService extends ProdottoService<ProdottoBase> {
     }
 
     private void creaBase(String nome, String metodiColtivazione, String certificazioni,
-                          String descrizone, double prezzo, Categoria categoria, Users currentUser) {
+                          String descrizone, double prezzo, String categoria, Users currentUser) {
         ProdottoBase prodottoBase = new ProdottoBase();
         prodottoBase.setNome(nome);
         prodottoBase.setMetodiDiColtivazione(metodiColtivazione);

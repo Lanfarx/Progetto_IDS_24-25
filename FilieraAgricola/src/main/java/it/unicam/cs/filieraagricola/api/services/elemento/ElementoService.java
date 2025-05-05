@@ -46,4 +46,5 @@ public class ElementoService<T extends Elemento> {
     public boolean existsElementoAndAttesa(Integer id) {
         return elementoRepository.existsByIdAndStatorichiesta(id, StatoContenuto.ATTESA);
     }
+
 }

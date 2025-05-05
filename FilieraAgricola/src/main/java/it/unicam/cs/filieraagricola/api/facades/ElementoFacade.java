@@ -28,8 +28,6 @@ public class ElementoFacade<T extends Prodotto> {
     @Autowired
     private ProdottoService prodottoService;
     @Autowired
-    protected CategoriaService categoriaService;
-    @Autowired
     protected CarrelloService carrelloService;
     @Autowired
     @Lazy
@@ -68,15 +66,13 @@ public class ElementoFacade<T extends Prodotto> {
     }
 
     public boolean aggiungiPacchetto(Pacchetto pacchetto) {
-        Categoria categoria = categoriaService.getCategoriaByNome("Pacchetto").get();
         Users operatore = userService.getCurrentUser();
-        return pacchettoService.aggiungiPacchetto(pacchetto, operatore, categoria);
+        return pacchettoService.aggiungiPacchetto(pacchetto, operatore);
     }
 
     public boolean aggiungiPacchettoConParametri(String nome, String descrizione, double prezzo, Set<Integer> idProdottiSet){
-        Categoria categoria = categoriaService.getCategoriaByNome("Pacchetto").get();
         Users operatore = userService.getCurrentUser();
-        return pacchettoService.aggiungiPacchettoConParametri(nome, descrizione, prezzo, idProdottiSet, operatore, categoria);
+        return pacchettoService.aggiungiPacchettoConParametri(nome, descrizione, prezzo, idProdottiSet, operatore);
     }
 
     public boolean aggiungiProdotto(int idPacchetto, int idProdotto){
@@ -108,17 +104,14 @@ public class ElementoFacade<T extends Prodotto> {
 
     public boolean aggiungiProdottoBase(String nome, String metodiColtivazione,
                                         String certificazioni, String descrizione,
-                                        double prezzo, Categoria categoria) {
+                                        double prezzo, String categoria) {
         return prodottoBaseService.aggiungiProdottoBase(nome, metodiColtivazione,
                 certificazioni, descrizione, prezzo, categoria, userService.getCurrentUser());
     }
 
     public boolean aggiungiProdottoBase(ProdottoBase prodottoBase) {
         //get perché la condizione di esistenza della categoria è verificata nel controller.
-
-        Categoria categoria = categoriaService.getCategoriaByNome(prodottoBase.getCategoria().getNome()).get();
-
-        return prodottoBaseService.aggiungiProdottoBase(prodottoBase, userService.getCurrentUser(), categoria);
+        return prodottoBaseService.aggiungiProdottoBase(prodottoBase, userService.getCurrentUser(), prodottoBase.getCategoria());
     }
 
     public List<ProdottoBase> getAllProdottiBaseValidi() {
@@ -170,7 +163,7 @@ public class ElementoFacade<T extends Prodotto> {
 
     public boolean aggiungiProdottoTrasformato(String nome, String processo,
                                                String certificazioni, int prodottoBaseID,
-                                               String descrizione, double prezzo, Categoria categoria) {
+                                               String descrizione, double prezzo, String categoria) {
         return prodottoTrasformatoService.aggiungiProdottoTrasformato(nome, processo, certificazioni,
                 prodottoBaseID, descrizione, prezzo, categoria, userService.getCurrentUser());
     }
@@ -180,8 +173,6 @@ public class ElementoFacade<T extends Prodotto> {
     }
 
     public boolean aggiungiProdottoTrasformato(ProdottoTrasformato prodottoTrasformato) {
-        Categoria categoria = categoriaService.getCategoriaByNome(prodottoTrasformato.getCategoria().getNome()).get();
-        prodottoTrasformato.setCategoria(categoria);
         return prodottoTrasformatoService.aggiungiProdottoTrasformato(prodottoTrasformato, userService.getCurrentUser());
     }
 
@@ -212,23 +203,6 @@ public class ElementoFacade<T extends Prodotto> {
 
     public boolean existsProdotto(int id) {
         return prodottoService.existsProdotto(id);
-    }
-
-    //Operazioni per la categoria sugli elementi
-    public List<Categoria> getAllCategorie() {
-        return categoriaService.getAllCategorie();
-    }
-
-    public Optional<Categoria> getCategoriaByNome(String nomeCategoria) {
-        return categoriaService.getCategoriaByNome(nomeCategoria);
-    }
-
-    public boolean existsCategoria(Integer idCategoria) {
-        return categoriaService.existsCategoria(idCategoria);
-    }
-
-    public boolean existsSameCategoria(String nomeCategoria) {
-        return categoriaService.existsSameCategoria(nomeCategoria);
     }
 
 

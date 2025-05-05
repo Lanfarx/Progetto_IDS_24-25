@@ -1,5 +1,4 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
-import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.facades.ElementoFacade;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +35,6 @@ public class ProdottoBaseController {
 
     @PostMapping({"/prodottibase/aggiungi"})
     public ResponseEntity<Object> aggiungiProdottoBase(@RequestBody ProdottoBase prodotto) {
-        if(!elementoFacade.existsSameCategoria(prodotto.getCategoria().getNome())){
-            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + elementoFacade.getAllCategorie(), HttpStatus.NOT_FOUND);
-        }
         //TODO aggiungi condizione di esistenza
         if(elementoFacade.aggiungiProdottoBase(prodotto)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
@@ -54,11 +50,7 @@ public class ProdottoBaseController {
                                                        @RequestParam("prezzo") double prezzo,
                                                        @RequestParam("categoria") String categoria) {
 
-        if(!elementoFacade.existsSameCategoria(categoria)){
-            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + elementoFacade.getAllCategorie(), HttpStatus.NOT_FOUND);
-        }
-        Categoria cat = (Categoria) elementoFacade.getCategoriaByNome(categoria).get();
-        if(elementoFacade.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo, cat)){
+        if(elementoFacade.aggiungiProdottoBase(nome, metodiDiColtivazione, certificazioni, descrizione, prezzo, categoria)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Prodotto già esistente", HttpStatus.CONFLICT);

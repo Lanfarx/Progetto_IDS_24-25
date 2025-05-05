@@ -1,7 +1,6 @@
 package it.unicam.cs.filieraagricola.api.controller.elemento;
 
 import it.unicam.cs.filieraagricola.api.commons.richiesta.StatoContenuto;
-import it.unicam.cs.filieraagricola.api.entities.elemento.Categoria;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoBase;
 import it.unicam.cs.filieraagricola.api.entities.elemento.ProdottoTrasformato;
 import it.unicam.cs.filieraagricola.api.facades.ElementoFacade;
@@ -71,11 +70,7 @@ public class ProdottoTrasformatoController {
         if (prodottoBase.getStatorichiesta() != StatoContenuto.ACCETTATA) {
             return new ResponseEntity<>("Il prodotto base associato deve essere stato precedentemente validato", HttpStatus.BAD_REQUEST);
         }
-        if(!elementoFacade.existsSameCategoria(categoria)){
-            return new ResponseEntity<>("Categoria non esistente, Categorie esistenti: " + elementoFacade.getAllCategorie(), HttpStatus.NOT_FOUND);
-        }
-        Categoria cat = (Categoria) elementoFacade.getCategoriaByNome(categoria).get();
-        if(elementoFacade.aggiungiProdottoTrasformato(nome, processoTrasformazione, certificazioni, IDprodottoBase, descrizione, prezzo, cat)){
+        if(elementoFacade.aggiungiProdottoTrasformato(nome, processoTrasformazione, certificazioni, IDprodottoBase, descrizione, prezzo, categoria)){
             return new ResponseEntity<>("Prodotto creato", HttpStatus.CREATED);
         }
         return new ResponseEntity<>("Prodotto trasformato esistente", HttpStatus.CONFLICT);
