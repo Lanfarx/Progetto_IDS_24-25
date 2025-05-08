@@ -3,8 +3,8 @@
 		"_postman_id": "dc6ccc8f-2798-4e04-897c-7e0e9502a885",
 		"name": "API IdS_24-25",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "41341053",
-		"_collection_link": "https://ids2024-25.postman.co/workspace/IdS_2024-25-Workspace~ec84d556-5ff2-423c-861e-e6931eafe752/collection/41139310-dc6ccc8f-2798-4e04-897c-7e0e9502a885?action=share&source=collection_link&creator=41341053"
+		"_exporter_id": "41139310",
+		"_collection_link": "https://ids2024-25.postman.co/workspace/IdS_2024-25-Workspace~ec84d556-5ff2-423c-861e-e6931eafe752/collection/41139310-dc6ccc8f-2798-4e04-897c-7e0e9502a885?action=share&source=collection_link&creator=41139310"
 	},
 	"item": [
 		{
@@ -599,7 +599,7 @@
 								"method": "DELETE",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:8080/operatore/distributore/pacchetti/elimina/12",
+									"raw": "http://localhost:8080/operatore/distributore/pacchetti/elimina/9",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -610,7 +610,7 @@
 										"distributore",
 										"pacchetti",
 										"elimina",
-										"12"
+										"9"
 									]
 								}
 							},
@@ -623,7 +623,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n  \"id\": 12,\r\n  \"nome\": \"Pacchetto Aggiornato\",\r\n  \"descrizione\": \"Descrizione aggiornata\",\r\n  \"prezzo\": 45,\r\n  \"prodottiIds\": [1, 2, 4]\r\n}\r\n",
+									"raw": "{\r\n  \"id\": 9,\r\n  \"nome\": \"Pacchetto Aggiornato\",\r\n  \"descrizione\": \"Descrizione aggiornata\",\r\n  \"prezzo\": 45,\r\n  \"prodottiIds\": [1, 2, 4]\r\n}\r\n",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1578,111 +1578,6 @@
 									"response": []
 								}
 							]
-						}
-					]
-				},
-				{
-					"name": "Categorie",
-					"item": [
-						{
-							"name": "getCategorie",
-							"request": {
-								"method": "GET",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/categorie",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"categorie"
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Aggiungi Categoria",
-							"request": {
-								"method": "POST",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/categorie/aggiungi?nome=Cioccolato",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"categorie",
-										"aggiungi"
-									],
-									"query": [
-										{
-											"key": "nome",
-											"value": "Cioccolato"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Elimina Categoria",
-							"request": {
-								"method": "DELETE",
-								"header": [],
-								"url": {
-									"raw": "http://localhost:8080/categorie/elimina?nome=Cioccolato",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"categorie",
-										"elimina"
-									],
-									"query": [
-										{
-											"key": "nome",
-											"value": "Cioccolato"
-										}
-									]
-								}
-							},
-							"response": []
-						},
-						{
-							"name": "Aggiorna Categoria",
-							"request": {
-								"method": "PUT",
-								"header": [],
-								"body": {
-									"mode": "raw",
-									"raw": "{\r\n \"id\": 12,\r\n \"nome\": \"Formaggi di Capra\"   \r\n}",
-									"options": {
-										"raw": {
-											"language": "json"
-										}
-									}
-								},
-								"url": {
-									"raw": "http://localhost:8080/categorie/aggiorna",
-									"protocol": "http",
-									"host": [
-										"localhost"
-									],
-									"port": "8080",
-									"path": [
-										"categorie",
-										"aggiorna"
-									]
-								}
-							},
-							"response": []
 						}
 					]
 				},
